@@ -1,8 +1,11 @@
 import React from 'react'
+import Loginpage from './pages/Loginpage'
 
 const App = () => {
   return (
-    <div className='text-5xl text'>App</div>
+    <div>
+      <Loginpage />
+    </div>
   )
 }
 
