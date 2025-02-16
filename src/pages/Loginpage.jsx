@@ -1,7 +1,9 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Loginpage = () => {
     const [formData, setFormData] = useState({ email: "", teamname: "" });
+    const navigate = useNavigate();
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -11,6 +13,7 @@ const Loginpage = () => {
         e.preventDefault();
         console.log("Email:", formData.email);
         console.log("Team Name:", formData.teamname);
+        navigate("/level1")
     };
     return (
         <div className="h-screen flex items-center justify-center bg-cover bg-center bg-[url('/images/image1.jpg')]">
