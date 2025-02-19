@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const questions = [
     {
@@ -34,50 +34,125 @@ const questions = [
 ];
 
 const SpaceshipConsole = () => {
-    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+    // Persist current question index.
+    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(() => {
+        const saved = localStorage.getItem("currentQuestionIndex");
+        return saved ? JSON.parse(saved) : 0;
+    });
+
     const [answer, setAnswer] = useState("");
     const [hintsRevealed, setHintsRevealed] = useState(0);
-    const [score, setScore] = useState(0);
-    const [feedback, setFeedback] = useState("");
-    const [answeredQuestions, setAnsweredQuestions] = useState({});
 
+    // Persist score
+    const [score, setScore] = useState(() => {
+        const saved = localStorage.getItem("score");
+        return saved ? JSON.parse(saved) : 0;
+    });
+
+    const [feedback, setFeedback] = useState("");
+
+    // Persist answers, hints count, and submission status per question.
+    const [userAnswers, setUserAnswers] = useState(() => {
+        const saved = localStorage.getItem("userAnswers");
+        return saved ? JSON.parse(saved) : {};
+    });
+    const [hintsState, setHintsState] = useState(() => {
+        const saved = localStorage.getItem("hintsState");
+        return saved ? JSON.parse(saved) : {};
+    });
+    const [submittedQuestions, setSubmittedQuestions] = useState(() => {
+        const saved = localStorage.getItem("submittedQuestions");
+        return saved ? JSON.parse(saved) : {};
+    });
 
     const currentQuestion = questions[currentQuestionIndex];
 
+    useEffect(() => {
+        localStorage.setItem(
+            "currentQuestionIndex",
+            JSON.stringify(currentQuestionIndex)
+        );
+    }, [currentQuestionIndex]);
+
+    useEffect(() => {
+        localStorage.setItem("userAnswers", JSON.stringify(userAnswers));
+    }, [userAnswers]);
+
+    useEffect(() => {
+        localStorage.setItem("hintsState", JSON.stringify(hintsState));
+    }, [hintsState]);
+
+    useEffect(() => {
+        localStorage.setItem(
+            "submittedQuestions",
+            JSON.stringify(submittedQuestions)
+        );
+    }, [submittedQuestions]);
+
+    // Persist score to localStorage
+    useEffect(() => {
+        localStorage.setItem("score", JSON.stringify(score));
+    }, [score]);
+
+    // Whenever the current question index changes, refresh answer and hints for that question.
+    useEffect(() => {
+        setAnswer(userAnswers[currentQuestionIndex] || "");
+        setHintsRevealed(hintsState[currentQuestionIndex] || 0);
+        setFeedback("");
+    }, [currentQuestionIndex, userAnswers, hintsState]);
+
     const handleHintReveal = () => {
-        if (hintsRevealed < currentQuestion.hints.length) {
-            setHintsRevealed(hintsRevealed + 1);
-        }
+        if (
+            submittedQuestions[currentQuestionIndex] ||
+            hintsRevealed >= currentQuestion.hints.length
+        )
+            return;
+
+        const newHintsRevealed = hintsRevealed + 1;
+        setHintsRevealed(newHintsRevealed);
+        setHintsState((prev) => ({
+            ...prev,
+            [currentQuestionIndex]: newHintsRevealed,
+        }));
     };
 
-    const handleAnswerChange = (e) => setAnswer(e.target.value);
+    const handleAnswerChange = (e) => {
+        const newAnswer = e.target.value;
+        setAnswer(newAnswer);
+        setUserAnswers((prev) => ({
+            ...prev,
+            [currentQuestionIndex]: newAnswer,
+        }));
+    };
 
     const handleSubmitAnswer = () => {
-        let questionScore = 5 - hintsRevealed;
-    
-        if (answer.trim().toLowerCase() === currentQuestion.correctAnswer.toLowerCase()) {
-            setScore((prevScore) => prevScore + questionScore);
+        if (submittedQuestions[currentQuestionIndex]) return;
+
+        const normalizedAnswer = answer.trim().toLowerCase();
+        const normalizedCorrect = currentQuestion.correctAnswer.toLowerCase();
+        const questionScore = Math.max(5 - hintsRevealed, 0);
+
+        if (normalizedAnswer === normalizedCorrect) {
+            setScore((prev) => prev + questionScore);
             setFeedback(`Correct! You earned ${questionScore} marks.`);
-            setAnsweredQuestions((prev) => ({
+            setSubmittedQuestions((prev) => ({
                 ...prev,
-                [currentQuestionIndex]: currentQuestion.correctAnswer,
+                [currentQuestionIndex]: true,
             }));
-            
-            // Disable further input if the answer is correct
-            setAnswer(`✔ Correct! (${currentQuestion.correctAnswer})`); // Display as read-only
+            const finalAnswer = `✔ Correct! (${currentQuestion.correctAnswer})`;
+            setUserAnswers((prev) => ({
+                ...prev,
+                [currentQuestionIndex]: finalAnswer,
+            }));
+            setAnswer(finalAnswer);
         } else {
             setFeedback("Incorrect. Keep trying, space explorer!");
-            setAnswer(""); // Allow retry for incorrect answers
         }
     };
-    
 
     const handleNextQuestion = () => {
         if (currentQuestionIndex < questions.length - 1) {
             setCurrentQuestionIndex(currentQuestionIndex + 1);
-            setAnswer(answeredQuestions[currentQuestionIndex + 1] ? `✔ Correct! (${answeredQuestions[currentQuestionIndex + 1]})` : "");
-            setHintsRevealed(0);
-            setFeedback(""); // Reset feedback
         } else {
             alert("Level complete!");
         }
@@ -85,10 +160,9 @@ const SpaceshipConsole = () => {
 
     const handleQuestionNavigation = (index) => {
         setCurrentQuestionIndex(index);
-        setHintsRevealed(0);
-        setFeedback("");
-        setAnswer(answeredQuestions[index] ? `✔ Correct! (${answeredQuestions[index]})` : "");
     };
+
+    const isSubmitted = submittedQuestions[currentQuestionIndex];
 
     return (
         <div className="min-h-screen bg-cover bg-center bg-[url('/images/image2.jpg')] flex flex-col">
@@ -104,18 +178,12 @@ const SpaceshipConsole = () => {
                 {questions.map((q, index) => (
                     <button
                         key={index}
-                        onClick={() => {
-                            setCurrentQuestionIndex(index);
-                            setAnswer("");
-                            setHintsRevealed(0);
-                            setFeedback(""); // Reset feedback when navigating using stars
-                        }}
-                        className={`relative w-16 h-16 flex items-center justify-center text-2xl font-bold 
-                            ${
-                                currentQuestionIndex === index
-                                    ? "text-yellow-300"
-                                    : "text-gray-500 hover:text-yellow-300"
-                            }`}
+                        onClick={() => handleQuestionNavigation(index)}
+                        className={`relative w-16 h-16 flex items-center justify-center text-2xl font-bold ${
+                            currentQuestionIndex === index
+                                ? "text-yellow-300"
+                                : "text-gray-500 hover:text-yellow-300"
+                        }`}
                     >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -132,7 +200,7 @@ const SpaceshipConsole = () => {
                 ))}
             </div>
 
-            {/* Question Display */}
+            {/* Main Content */}
             <div className="flex-grow flex flex-col items-center justify-center px-4 relative">
                 <div className="bg-transparent backdrop-blur-md bg-opacity-80 p-8 rounded-lg shadow-2xl border border-gray-600 w-full max-w-3xl relative">
                     <h2 className="text-4xl font-extrabold text-center mb-6 text-pink-400 tracking-wider uppercase">
@@ -141,17 +209,21 @@ const SpaceshipConsole = () => {
 
                     <div className="mb-6 flex items-center justify-center">
                         <p className="text-2xl text-center text-white">
-                            {currentQuestion?.question}
+                            {currentQuestion.question}
                         </p>
                         <span
                             title="Request Satellite Data"
+                            onClick={
+                                !isSubmitted ? handleHintReveal : undefined
+                            }
                             className={`relative ml-3 cursor-pointer ${
+                                isSubmitted ||
                                 hintsRevealed === currentQuestion.hints.length
                                     ? "text-gray-400 cursor-not-allowed"
                                     : "text-yellow-300 hover:text-yellow-500"
                             }`}
-                            onClick={handleHintReveal}
                             style={
+                                isSubmitted ||
                                 hintsRevealed === currentQuestion.hints.length
                                     ? { pointerEvents: "none", opacity: 0.5 }
                                     : {}
@@ -181,7 +253,7 @@ const SpaceshipConsole = () => {
                         </span>
                     </div>
 
-                    {/* Hints Display */}
+                    {/* Hints Section */}
                     {hintsRevealed > 0 && (
                         <div className="mt-6 p-4 bg-gray-900 bg-opacity-75 rounded border border-blue-400 shadow-lg animate-fade-in">
                             <h3 className="text-xl font-bold mb-2 text-blue-300">
@@ -195,7 +267,8 @@ const SpaceshipConsole = () => {
                                             key={index}
                                             className="text-lg text-blue-200 animate-pulse mb-2"
                                         >
-                                            [Satellite Signal {index + 1}] - {hint}
+                                            [Satellite Signal {index + 1}] -{" "}
+                                            {hint}
                                         </p>
                                     ))}
                             </div>
@@ -205,30 +278,34 @@ const SpaceshipConsole = () => {
                         </div>
                     )}
 
-                    {/* Feedback Display */}
+                    {/* Feedback Message */}
                     {feedback && (
                         <div className="mt-4 text-xl font-semibold text-center text-yellow-500">
                             {feedback}
                         </div>
                     )}
 
-                    {/* Answer Input & Buttons */}
+                    {/* Answer Input and Controls */}
                     <div className="mt-6 flex flex-col items-center">
                         <input
                             type="text"
-                            value={answeredQuestions[currentQuestionIndex] ? `✔ Correct! (${answeredQuestions[currentQuestionIndex]})` : answer}
+                            value={answer}
                             onChange={handleAnswerChange}
                             placeholder="Enter your answer..."
-                            disabled={!!answeredQuestions[currentQuestionIndex]}
+                            disabled={!!isSubmitted}
                             className="w-full max-w-md p-3 text-xl bg-transparent border-b-2 border-purple-400 text-white rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                         <div className="flex mt-4 space-x-4">
                             <button
                                 onClick={handleSubmitAnswer}
-                                disabled={!!answeredQuestions[currentQuestionIndex]}
-                                className="px-6 py-3 bg-green-500 hover:bg-green-600 rounded text-xl font-bold shadow-lg"
+                                disabled={!!isSubmitted}
+                                className={`px-6 py-3 rounded text-xl font-bold shadow-lg ${
+                                    isSubmitted
+                                        ? "bg-gray-500 cursor-not-allowed"
+                                        : "bg-green-500 hover:bg-green-600"
+                                }`}
                             >
-                                Submit Answer
+                                {isSubmitted ? "Submitted" : "Submit Answer"}
                             </button>
                             <button
                                 onClick={handleNextQuestion}
