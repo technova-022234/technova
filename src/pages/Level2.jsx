@@ -2,15 +2,11 @@ import React, { useState, useEffect } from "react";
 
 const Puzzle = ({ gridSize = 4, imageUrl = "/images/puzzle.png" }) => {
     const totalTiles = gridSize * gridSize;
-    // Solved board: [1, 2, 3, ..., totalTiles - 1, 0]
     const initialBoard = Array.from(
         { length: totalTiles },
         (_, i) => (i + 1) % totalTiles
     );
 
-    // --------------------------------------------------
-    // 1) Check if an arrangement is solvable
-    // --------------------------------------------------
     const isSolvable = (arr) => {
         let inversions = 0;
         for (let i = 0; i < arr.length; i++) {
@@ -21,10 +17,8 @@ const Puzzle = ({ gridSize = 4, imageUrl = "/images/puzzle.png" }) => {
             }
         }
         if (gridSize % 2 !== 0) {
-            // For odd grid sizes, solvable if inversions count is even
             return inversions % 2 === 0;
         } else {
-            // For even grid sizes, consider the blank’s row from the bottom (1-based)
             const blankIndex = arr.indexOf(0);
             const rowFromTop = Math.floor(blankIndex / gridSize);
             const rowFromBottom = gridSize - rowFromTop;
@@ -197,7 +191,7 @@ const Puzzle = ({ gridSize = 4, imageUrl = "/images/puzzle.png" }) => {
                     })}
                 </div>
 
-                <div className="mt-4 text-center">
+                {/* <div className="mt-4 text-center">
                     <button
                         onClick={() => {
                             const newBoard = getShuffledBoard();
@@ -208,7 +202,7 @@ const Puzzle = ({ gridSize = 4, imageUrl = "/images/puzzle.png" }) => {
                     >
                         Shuffle
                     </button>
-                </div>
+                </div> */}
             </div>
         </div>
     );
