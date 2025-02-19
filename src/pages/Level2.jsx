@@ -169,18 +169,7 @@ const Puzzle = ({ gridSize = 4, imageUrl = "/images/puzzle.png" }) => {
           })}
         </div>
 
-        <div className="mt-4 text-center">
-          <button
-            onClick={() => {
-              const newBoard = getShuffledBoard();
-              setBoard(newBoard);
-              setMoveCount(0);
-            }}
-            className="px-4 py-2 bg-blue-500 text-white rounded"
-          >
-            Shuffle
-          </button>
-        </div>
+        
       </div>
     </div>
   );
