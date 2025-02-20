@@ -125,7 +125,7 @@ const SpaceshipConsole = () => {
         }));
     };
 
-    const handleSubmitAnswer = () => {
+    const handleSubmitAnswer = async () => {
         if (submittedQuestions[currentQuestionIndex]) return;
 
         const normalizedAnswer = answer.trim().toLowerCase();
@@ -133,7 +133,8 @@ const SpaceshipConsole = () => {
         const questionScore = Math.max(5 - hintsRevealed, 0);
 
         if (normalizedAnswer === normalizedCorrect) {
-            setScore((prev) => prev + questionScore);
+            const newTotalScore = score + questionScore;
+            setScore(newTotalScore);
             setFeedback(`Correct! You earned ${questionScore} marks.`);
             setSubmittedQuestions((prev) => ({
                 ...prev,
@@ -145,6 +146,29 @@ const SpaceshipConsole = () => {
                 [currentQuestionIndex]: finalAnswer,
             }));
             setAnswer(finalAnswer);
+            const now = new Date();
+            const utcTime = now.getTime() + now.getTimezoneOffset() * 60000;
+            const istTime = new Date(utcTime + 5.5 * 60 * 60000);
+
+            try {
+                const response = await fetch(
+                    "http://localhost:5000/api/level1/submit",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            score: newTotalScore,
+                            submissionTime: istTime.toISOString(),
+                        }),
+                    }
+                );
+                const data = await response.json();
+                console.log("Level1 update:", data);
+            } catch (error) {
+                console.error("Error updating level1 score:", error);
+            }
         } else {
             setFeedback("Incorrect. Keep trying, space explorer!");
         }
