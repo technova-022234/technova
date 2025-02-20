@@ -65,6 +65,23 @@ const SpaceshipConsole = () => {
         return saved ? JSON.parse(saved) : {};
     });
 
+const [levelComplete, setLevelComplete] = useState(false);
+
+useEffect(() => {
+  // Check if all questions are answered correctly.
+  const allCorrect = questions.every(
+    (_q, index) => submittedQuestions[index] === true
+  );
+  
+  // If all answers are correct and we haven't yet marked the level complete, trigger the alert.
+  if (allCorrect && !levelComplete) {
+    alert("Level complete!");
+    setLevelComplete(true);
+    
+    // You can also add any additional level-completion logic here, e.g., updating the backend.
+  }
+}, [submittedQuestions, levelComplete]);
+
     const currentQuestion = questions[currentQuestionIndex];
 
     useEffect(() => {
@@ -175,12 +192,31 @@ const SpaceshipConsole = () => {
     };
 
     const handleNextQuestion = () => {
+        // Allow free navigation between questions.
         if (currentQuestionIndex < questions.length - 1) {
-            setCurrentQuestionIndex(currentQuestionIndex + 1);
+          setCurrentQuestionIndex(currentQuestionIndex + 1);
         } else {
-            alert("Level complete!");
+          // When on the last question, check if all answers are correct.
+          completeLevelIfAllCorrect();
         }
-    };
+      };
+      
+      const completeLevelIfAllCorrect = () => {
+        const allCorrect = questions.every(
+          (_q, index) => submittedQuestions[index] === true
+        );
+        if (allCorrect) {
+          // Perform level completion actions (e.g., update backend, show success message, etc.)
+          alert("Level complete!");
+          // Or trigger any other completion logic here.
+        } else {
+          // Instead of alerting the user to answer correctly,
+          // you can simply update a feedback message.
+          setFeedback("Level not complete: please ensure you answer all questions correctly before completing the level.");
+        }
+      };
+      
+      
 
     const handleQuestionNavigation = (index) => {
         setCurrentQuestionIndex(index);
