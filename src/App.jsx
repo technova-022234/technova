@@ -6,11 +6,13 @@ import Puzzle from "./pages/Level2";
 import TalkingCharacterPage from "./pages/TalkingCharacterPage";
 import Loadingpage from "./pages/Loadingpage";
 import NavPage from "./pages/NavPage";
+import TopNavbar from "./components/TopNavbar";
 
 const App = () => {
     return (
         <div>
             <Router>
+                <TopNavbar />
                 <Routes>
                     <Route path="/" element={<Loadingpage />} />
                     <Route path="/talkingpage" element={<TalkingCharacterPage />} />

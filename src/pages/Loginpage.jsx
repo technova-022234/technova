@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import TopNavbar from "../components/TopNavbar";
 
 const Loginpage = () => {
     const [formData, setFormData] = useState({ email: "", password: "" });
@@ -18,32 +19,32 @@ const Loginpage = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!validateEmail(formData.email)) {
-            setError("Please enter a valid email address.");
-            return;
-        }
+        // if (!validateEmail(formData.email)) {
+        //     setError("Please enter a valid email address.");
+        //     return;
+        // }
 
-        setError("");
+        // setError("");
 
         try {
-            const response = await fetch(
-                "http://localhost:5000/api/users/login",
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(formData),
-                }
-            );
+            // const response = await fetch(
+            //     "http://localhost:5000/api/users/login",
+            //     {
+            //         method: "POST",
+            //         headers: {
+            //             "Content-Type": "application/json",
+            //         },
+            //         body: JSON.stringify(formData),
+            //     }
+            // );
 
-            if (!response.ok) {
-                throw new Error("Login failed");
-            }
+            // if (!response.ok) {
+            //     throw new Error("Login failed");
+            // }
 
-            const data = await response.json();
-            console.log("User logged in:", data.user);
-            navigate("/level1");
+            // const data = await response.json();
+            // console.log("User logged in:", data.user);
+            navigate("/nav");
         } catch (err) {
             console.error(err);
             setError("Login failed. Please try again.");
