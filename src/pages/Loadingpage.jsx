@@ -20,14 +20,15 @@ const Loadingpage = () => {
   }, []);
 
   return (
+    
     <div 
       className="relative h-screen bg-black text-white bg-cover bg-center" 
-      style={{ backgroundImage: "url('images/loadingpage1.jpg')" }}
+      style={{ backgroundImage: "url('images/loadingpage2.jpeg')" }}
     >
-      <div className="flex flex-col items-center justify-center h-full">
-        <h1 className="text-6xl font-bold mb-4">TECH NOVA</h1>
+      <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
+        <h1 className="text-8xl font-bold mb-4">TECH NOVA</h1>
       </div>
-      <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 w-60 h-7 bg-gray-700 rounded-full overflow-hidden relative" >
+      <div className="absolute top-[65%] left-1/2 transform -translate-x-1/2 w-72 h-12 bg-gray-700 rounded-full overflow-hidden relative">
         {progress < 100 ? (
           <>
             <div
@@ -41,6 +42,7 @@ const Loadingpage = () => {
         ) : (
           <button
             onClick={() => navigate('/login')}
+            
             className="w-full h-full bg-blue-500 text-white font-semibold rounded-lg shadow-lg hover:bg-blue-700 transition"
           >
             Explore
