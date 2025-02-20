@@ -1,8 +1,11 @@
 import React, { useRef, useEffect } from "react";
+import { AlignJustify ,X} from 'lucide-react';
 import { gsap } from "gsap";
+import { useNavigate } from "react-router-dom";
 
 const NavOverlay = ({ isOpen, onClose }) => {
     const leftRef = useRef(null);
+    const navigate=useNavigate();
     const rightRef = useRef(null);
     const navItemsRef = useRef(null);
 
@@ -65,6 +68,21 @@ const NavOverlay = ({ isOpen, onClose }) => {
             },
         });
     };
+    const items=[
+        {
+            level:"story",
+            url:"/story"
+        } ,{
+            level:"level1",
+            url:"/level1"
+        },{
+            level:"level2",
+            url:"/level2"
+        },{
+            level:"level3",
+            url:"/level3"
+        }
+    ]
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden">
@@ -92,18 +110,25 @@ const NavOverlay = ({ isOpen, onClose }) => {
 
             <nav className="relative z-10">
                 <ul ref={navItemsRef} className="space-y-4 text-center">
-                    <li className="text-2xl text-teal-400 uppercase tracking-widest hover:text-pink-500 transition-colors cursor-pointer">
-                        Story
-                    </li>
-                    <li className="text-2xl text-teal-400 uppercase tracking-widest hover:text-pink-500 transition-colors cursor-pointer">
-                        Level 1
-                    </li>
-                    <li className="text-2xl text-teal-400 uppercase tracking-widest hover:text-pink-500 transition-colors cursor-pointer">
-                        Level 2
-                    </li>
-                    <li className="text-2xl text-teal-400 uppercase tracking-widest hover:text-pink-500 transition-colors cursor-pointer">
-                        Level 3
-                    </li>
+                    {items.map((item, index) => (
+                        <li
+                            key={index}
+                            className="text-2xl text-teal-400 uppercase tracking-widest hover:text-pink-500 transition-colors cursor-pointer relative inline-block px-8 py-4"
+                            style={{
+                                clipPath: "polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)",
+                                background: "rgba(255, 255, 255, 0.1)",
+                                padding: "20px 40px",
+                                display: "block",
+                            }}
+                            onClick={
+                    () => navigate(item.url)
+                    
+                            }
+                        >
+                            {item.level}
+                        </li>
+                    ))}
+                
                 </ul>
             </nav>
 
@@ -112,7 +137,7 @@ const NavOverlay = ({ isOpen, onClose }) => {
                 className="absolute top-4 right-8 text-4xl text-teal-400 hover:text-pink-500 transition-colors z-20"
                 aria-label="Close navigation"
             >
-                &times;
+                {isOpen ?  <X />: <AlignJustify />}
             </button>
         </div>
     );
