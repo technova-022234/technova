@@ -72,20 +72,23 @@ const NavOverlay = ({ isOpen, onClose }) => {
                 ref={leftRef}
                 className="absolute top-0 left-0 w-1/2 h-full bg-black z-0"
                 style={{
-                    backgroundImage: 'url("/images/image1.jpg")',
-                    backgroundSize: "cover",
-                    backgroundRepeat: "repeat, no-repeat",
+                    backgroundImage: 'url("/images/Nav_Background.jpg")',
+                    backgroundSize: "200%",
+                    backgroundPosition: "left center",
+                    backgroundRepeat: "no-repeat",
                     opacity: 0.9,
                 }}
             ></div>
 
+            {/* Right half: shows the right portion of the image */}
             <div
                 ref={rightRef}
                 className="absolute top-0 right-0 w-1/2 h-full bg-black z-0"
                 style={{
-                    backgroundImage: 'url("/images/image1.jpg")',
-                    backgroundSize: "cover",
-                    backgroundRepeat: "repeat, no-repeat",
+                    backgroundImage: 'url("/images/Nav_Background.jpg")',
+                    backgroundSize: "200%",
+                    backgroundPosition: "right center",
+                    backgroundRepeat: "no-repeat",
                     opacity: 0.9,
                 }}
             ></div>
