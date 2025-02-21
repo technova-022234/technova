@@ -2,7 +2,10 @@ import React, { useState, useEffect } from "react";
 
 const Puzzle = ({ gridSize = 4, imageUrl = "/images/puzzle.png" }) => {
     const totalTiles = gridSize * gridSize;
-    const initialBoard = Array.from({ length: totalTiles }, (_, i) => (i + 1) % totalTiles);
+    const initialBoard = Array.from(
+        { length: totalTiles },
+        (_, i) => (i + 1) % totalTiles
+    );
 
     const isSolvable = (arr) => {
         let inversions = 0;
@@ -42,7 +45,11 @@ const Puzzle = ({ gridSize = 4, imageUrl = "/images/puzzle.png" }) => {
         const savedBoard = localStorage.getItem("puzzleBoard");
         if (savedBoard) {
             const parsed = JSON.parse(savedBoard);
-            if (parsed.length === totalTiles && isSolvable(parsed) && !isSolved(parsed)) {
+            if (
+                parsed.length === totalTiles &&
+                isSolvable(parsed) &&
+                !isSolved(parsed)
+            ) {
                 return parsed;
             }
         }
@@ -80,7 +87,10 @@ const Puzzle = ({ gridSize = 4, imageUrl = "/images/puzzle.png" }) => {
         const blankIndex = board.indexOf(0);
         if (isAdjacent(index, blankIndex)) {
             const newBoard = [...board];
-            [newBoard[index], newBoard[blankIndex]] = [newBoard[blankIndex], newBoard[index]];
+            [newBoard[index], newBoard[blankIndex]] = [
+                newBoard[blankIndex],
+                newBoard[index],
+            ];
             setBoard(newBoard);
             setMoveCount((prev) => prev + 1);
             if (isSolved(newBoard)) {
@@ -118,7 +128,9 @@ const Puzzle = ({ gridSize = 4, imageUrl = "/images/puzzle.png" }) => {
                 <div className="absolute inset-0 flex items-center justify-center">
                     <div className="w-[600px]">
                         <div className="mb-4 text-center">
-                            <span className="text-xl font-bold text-white">Moves: {moveCount}</span>
+                            <span className="text-xl font-bold text-white">
+                                Moves: {moveCount}
+                            </span>
                         </div>
                         <div
                             className="grid gap-1 p-12 rounded-[100px]"
@@ -126,7 +138,8 @@ const Puzzle = ({ gridSize = 4, imageUrl = "/images/puzzle.png" }) => {
                                 gridTemplateColumns: `repeat(${gridSize}, 1fr)`,
                                 width: "650px",
                                 height: "650px",
-                                backgroundImage: 'url("images/level2image.jpg")',
+                                backgroundImage:
+                                    'url("images/level2image.jpg")',
                                 backgroundSize: "contain",
                                 backgroundRepeat: "no-repeat",
                                 backgroundPosition: "center",
@@ -136,25 +149,42 @@ const Puzzle = ({ gridSize = 4, imageUrl = "/images/puzzle.png" }) => {
                                 const tileStyle =
                                     value !== 0
                                         ? {
-                                            backgroundImage: `url(${imageUrl})`,
-                                            backgroundSize: `${gridSize * 100}% ${gridSize * 100}%`,
-                                            backgroundPosition: (() => {
-                                                const tileIndex = value - 1;
-                                                const row = Math.floor(tileIndex / gridSize);
-                                                const col = tileIndex % gridSize;
-                                                return `-${col * 100}% -${row * 100}%`;
-                                            })(),
-                                        }
+                                              backgroundImage: `url(${imageUrl})`,
+                                              backgroundSize: `${
+                                                  gridSize * 100
+                                              }% ${gridSize * 100}%`,
+                                              backgroundPosition: (() => {
+                                                  const tileIndex = value - 1;
+                                                  const row = Math.floor(
+                                                      tileIndex / gridSize
+                                                  );
+                                                  const col =
+                                                      tileIndex % gridSize;
+                                                  return `-${col * 100}% -${
+                                                      row * 100
+                                                  }%`;
+                                              })(),
+                                          }
                                         : {};
                                 return (
                                     <div
                                         key={index}
                                         onClick={() => moveTile(index)}
-                                        className={`border ${value !== 0 ? "cursor-pointer" : "bg-gray-200"}`}
-                                        style={{ paddingTop: "100%", position: "relative" }}
+                                        className={`border ${
+                                            value !== 0
+                                                ? "cursor-pointer"
+                                                : "bg-gray-200"
+                                        }`}
+                                        style={{
+                                            paddingTop: "100%",
+                                            position: "relative",
+                                        }}
                                     >
                                         {value !== 0 && (
-                                            <div className="absolute inset-0" style={tileStyle}></div>
+                                            <div
+                                                className="absolute inset-0"
+                                                style={tileStyle}
+                                            ></div>
                                         )}
                                     </div>
                                 );

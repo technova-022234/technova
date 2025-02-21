@@ -12,14 +12,14 @@ const App = () => {
     return (
         <div>
             <Router>
-                <TopNavbar />
+                {/* <TopNavbar /> */}
                 <Routes>
                     <Route path="/" element={<Loadingpage />} />
                     <Route path="/talkingpage" element={<TalkingCharacterPage />} />
                     <Route path="/login" element={<Loginpage />} />
                     <Route path="/nav" element={<NavPage />} />
                     <Route path="/level1" element={<SpaceshipConsole />} />
-                    <Route path="/level2" element={<Puzzle /> } />
+                    <Route path="/level2" element={<Puzzle />} />
                 </Routes>
             </Router>
         </div>

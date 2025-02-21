@@ -11,7 +11,6 @@ const TopNavbar = () => {
         <div className="absolute inset-0 z-40">
           <NavOverlay isOpen={isOpen} />
         </div>
-        {/* Button overlayed on top */}
         <button onClick={() => setIsOpen(!isOpen)} className="relative z-50">
           <AlignJustify />
         </button>
