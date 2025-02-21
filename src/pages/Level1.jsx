@@ -357,6 +357,19 @@ const SpaceshipConsole = () => {
                             className="w-full max-w-md p-3 text-xl bg-transparent border-b-2 border-purple-400 text-white rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                         <div className="flex mt-4 space-x-4">
+                            {currentQuestionIndex > 0 && (
+                                <button
+                                    onClick={() =>
+                                        setCurrentQuestionIndex(
+                                            currentQuestionIndex - 1
+                                        )
+                                    }
+                                    className="px-6 py-3 bg-blue-500 hover:bg-blue-600 rounded text-xl font-bold shadow-lg"
+                                >
+                                    Previous Question
+                                </button>
+                            )}
+
                             <button
                                 onClick={handleSubmitAnswer}
                                 disabled={!!isSubmitted}
@@ -370,18 +383,6 @@ const SpaceshipConsole = () => {
                             </button>
 
                             {/* Render Previous Button if not the first question */}
-                            {currentQuestionIndex > 0 && (
-                                <button
-                                    onClick={() =>
-                                        setCurrentQuestionIndex(
-                                            currentQuestionIndex - 1
-                                        )
-                                    }
-                                    className="px-6 py-3 bg-blue-500 hover:bg-blue-600 rounded text-xl font-bold shadow-lg"
-                                >
-                                    Previous Question
-                                </button>
-                            )}
 
                             {/* Render Next Button if not the last question */}
                             {currentQuestionIndex < questions.length - 1 && (
