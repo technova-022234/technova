@@ -100,7 +100,7 @@ const Puzzle = ({ gridSize = 4, imageUrl = "/images/puzzle.png" }) => {
     return (
         <div
             className="min-h-screen bg-cover bg-center flex items-center justify-center"
-            style={{ backgroundImage: 'url("images/level2image1.jpeg")' }}
+            style={{ backgroundImage: 'url("images/backgroundimage.jpg")' }}
         >
             {/* Frame container with its own background image */}
             <div
@@ -126,7 +126,7 @@ const Puzzle = ({ gridSize = 4, imageUrl = "/images/puzzle.png" }) => {
                                 gridTemplateColumns: `repeat(${gridSize}, 1fr)`,
                                 width: "650px",
                                 height: "650px",
-                                backgroundImage: 'url("images/level2image.jpg")',
+                                backgroundImage: 'url("images/bg_image.jpeg")',
                                 backgroundSize: "contain",
                                 backgroundRepeat: "no-repeat",
                                 backgroundPosition: "center",
