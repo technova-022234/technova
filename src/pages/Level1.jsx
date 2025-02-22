@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { completeLevel } from "../redux/progressSlice";
 import TopNavbar from "../components/TopNavbar";
+import { useNavigate } from "react-router-dom";
 
 const questions = [
     {
@@ -35,6 +38,9 @@ const questions = [
 ];
 
 const SpaceshipConsole = () => {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
     // Persist current question index.
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(() => {
         const saved = localStorage.getItem("currentQuestionIndex");
@@ -78,10 +84,12 @@ const SpaceshipConsole = () => {
         if (allCorrect && !levelComplete) {
             alert("Level complete!");
             setLevelComplete(true);
-
+            // Open level2 by dispatching the action for level1 completion.
+            dispatch(completeLevel("level1"));
+            navigate("/level2");
             // You can also add any additional level-completion logic here, e.g., updating the backend.
         }
-    }, [submittedQuestions, levelComplete]);
+    }, [submittedQuestions, levelComplete, dispatch]);
 
     const currentQuestion = questions[currentQuestionIndex];
 
@@ -209,6 +217,8 @@ const SpaceshipConsole = () => {
         if (allCorrect) {
             // Perform level completion actions (e.g., update backend, show success message, etc.)
             alert("Level complete!");
+            dispatch(completeLevel("level1"));
+            navigate("/level2")
             // Or trigger any other completion logic here.
         } else {
             // Instead of alerting the user to answer correctly,
@@ -381,8 +391,6 @@ const SpaceshipConsole = () => {
                             >
                                 {isSubmitted ? "Submitted" : "Submit Answer"}
                             </button>
-
-                            {/* Render Previous Button if not the first question */}
 
                             {/* Render Next Button if not the last question */}
                             {currentQuestionIndex < questions.length - 1 && (
