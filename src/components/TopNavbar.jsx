@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { AlignJustify } from "lucide-react";
 import NavOverlay from "./Nav";
+import { use } from "react";
 
 const TopNavbar = () => {
   const [isOpen, setIsOpen] = useState(false);

@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { completeLevel } from "../redux/progressSlice";
 
 const Puzzle = ({ gridSize = 4, imageUrl = "/images/puzzle.png" }) => {
+    const navigate = useNavigate;
+    const dispatch = useDispatch();
     const totalTiles = gridSize * gridSize;
     const initialBoard = Array.from(
         { length: totalTiles },
@@ -95,6 +100,8 @@ const Puzzle = ({ gridSize = 4, imageUrl = "/images/puzzle.png" }) => {
             setMoveCount((prev) => prev + 1);
             if (isSolved(newBoard)) {
                 setTimeout(() => alert("Puzzle solved!"), 100);
+                dispatch(completeLevel("level2"));
+                navigate('/level3');
             }
         }
     };

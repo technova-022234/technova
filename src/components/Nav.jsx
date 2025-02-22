@@ -71,6 +71,13 @@ const NavOverlay = ({ isOpen }) => {
         });
     };
 
+    // Listen for changes in progress and clear GSAP-applied inline styles
+    useEffect(() => {
+        if (navItemsRef.current) {
+            gsap.set(navItemsRef.current.children, { clearProps: "all" });
+        }
+    }, [progress]);
+
     const items = [
         { level: "story", url: "/story" },
         { level: "level1", url: "/level1" },
@@ -110,6 +117,8 @@ const NavOverlay = ({ isOpen }) => {
                             item.level === "story" ||
                             item.level === "level1" ||
                             progress[item.level];
+
+                        console.log(progress);
                         return (
                             <li
                                 key={index}
