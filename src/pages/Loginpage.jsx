@@ -47,8 +47,8 @@ const Loginpage = () => {
             console.error(err);
             setError("Login failed. Please try again.");
         }
-        console.log("Email:", formData.email);
-        console.log("Password:", formData.password);
+        // console.log("Email:", formData.email);
+        // console.log("Password:", formData.password);
     };
     return (
         <div className="h-screen flex items-center justify-center bg-cover bg-center bg-[url('/images/image1.jpg')]">
