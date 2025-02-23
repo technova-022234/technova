@@ -41,7 +41,6 @@ const SpaceshipConsole = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    // Persist current question index.
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(() => {
         const saved = localStorage.getItem("currentQuestionIndex");
         return saved ? JSON.parse(saved) : 0;
@@ -50,7 +49,6 @@ const SpaceshipConsole = () => {
     const [answer, setAnswer] = useState("");
     const [hintsRevealed, setHintsRevealed] = useState(0);
 
-    // Persist score
     const [score, setScore] = useState(() => {
         const saved = localStorage.getItem("score");
         return saved ? JSON.parse(saved) : 0;
@@ -58,7 +56,6 @@ const SpaceshipConsole = () => {
 
     const [feedback, setFeedback] = useState("");
 
-    // Persist answers, hints count, and submission status per question.
     const [userAnswers, setUserAnswers] = useState(() => {
         const saved = localStorage.getItem("userAnswers");
         return saved ? JSON.parse(saved) : {};
@@ -75,19 +72,14 @@ const SpaceshipConsole = () => {
     const [levelComplete, setLevelComplete] = useState(false);
 
     useEffect(() => {
-        // Check if all questions are answered correctly.
         const allCorrect = questions.every(
             (_q, index) => submittedQuestions[index] === true
         );
 
-        // If all answers are correct and we haven't yet marked the level complete, trigger the alert.
         if (allCorrect && !levelComplete) {
             alert("Level complete!");
             setLevelComplete(true);
-            // Open level2 by dispatching the action for level1 completion.
             dispatch(completeLevel("level1"));
-            navigate("/level2");
-            // You can also add any additional level-completion logic here, e.g., updating the backend.
         }
     }, [submittedQuestions, levelComplete, dispatch]);
 
@@ -115,12 +107,10 @@ const SpaceshipConsole = () => {
         );
     }, [submittedQuestions]);
 
-    // Persist score to localStorage
     useEffect(() => {
         localStorage.setItem("score", JSON.stringify(score));
     }, [score]);
 
-    // Whenever the current question index changes, refresh answer and hints for that question.
     useEffect(() => {
         setAnswer(userAnswers[currentQuestionIndex] || "");
         setHintsRevealed(hintsState[currentQuestionIndex] || 0);
@@ -175,7 +165,7 @@ const SpaceshipConsole = () => {
             const now = new Date();
             const utcTime = now.getTime() + now.getTimezoneOffset() * 60000;
             const istTime = new Date(utcTime + 5.5 * 60 * 60000);
-
+            const email = localStorage.getItem("userEmail");
             try {
                 const response = await fetch(
                     "http://localhost:5000/api/level1/submit",
@@ -185,6 +175,7 @@ const SpaceshipConsole = () => {
                             "Content-Type": "application/json",
                         },
                         body: JSON.stringify({
+                            email: email,
                             score: newTotalScore,
                             submissionTime: istTime.toISOString(),
                         }),
@@ -201,11 +192,9 @@ const SpaceshipConsole = () => {
     };
 
     const handleNextQuestion = () => {
-        // Allow free navigation between questions.
         if (currentQuestionIndex < questions.length - 1) {
             setCurrentQuestionIndex(currentQuestionIndex + 1);
         } else {
-            // When on the last question, check if all answers are correct.
             completeLevelIfAllCorrect();
         }
     };
@@ -215,14 +204,9 @@ const SpaceshipConsole = () => {
             (_q, index) => submittedQuestions[index] === true
         );
         if (allCorrect) {
-            // Perform level completion actions (e.g., update backend, show success message, etc.)
             alert("Level complete!");
             dispatch(completeLevel("level1"));
-            navigate("/level2")
-            // Or trigger any other completion logic here.
         } else {
-            // Instead of alerting the user to answer correctly,
-            // you can simply update a feedback message.
             setFeedback(
                 "Level not complete: please ensure you answer all questions correctly before completing the level."
             );
@@ -237,14 +221,12 @@ const SpaceshipConsole = () => {
 
     return (
         <div className="min-h-screen bg-cover bg-center bg-[url('/images/image2.jpg')] flex flex-col">
-            {/* Score Display */}
             <div className="flex justify-center gap-6 pt-6">
                 <span className="text-white text-2xl font-bold">
                     Score: {score}
                 </span>
             </div>
 
-            {/* Question Navigation */}
             <div className="flex justify-center gap-6 pt-6">
                 {questions.map((q, index) => (
                     <button
@@ -271,7 +253,6 @@ const SpaceshipConsole = () => {
                 ))}
             </div>
 
-            {/* Main Content */}
             <div className="flex-grow flex flex-col items-center justify-center px-4 relative">
                 <div className="bg-transparent backdrop-blur-md bg-opacity-80 p-8 rounded-lg shadow-2xl border border-gray-600 w-full max-w-3xl relative">
                     <h2 className="text-4xl font-extrabold text-center mb-6 text-pink-400 tracking-wider uppercase">
@@ -324,7 +305,6 @@ const SpaceshipConsole = () => {
                         </span>
                     </div>
 
-                    {/* Hints Section */}
                     {hintsRevealed > 0 && (
                         <div className="mt-6 p-4 bg-gray-900 bg-opacity-75 rounded border border-blue-400 shadow-lg animate-fade-in">
                             <h3 className="text-xl font-bold mb-2 text-blue-300">
@@ -349,14 +329,12 @@ const SpaceshipConsole = () => {
                         </div>
                     )}
 
-                    {/* Feedback Message */}
                     {feedback && (
                         <div className="mt-4 text-xl font-semibold text-center text-yellow-500">
                             {feedback}
                         </div>
                     )}
 
-                    {/* Answer Input and Controls */}
                     <div className="mt-6 flex flex-col items-center">
                         <input
                             type="text"
@@ -392,7 +370,6 @@ const SpaceshipConsole = () => {
                                 {isSubmitted ? "Submitted" : "Submit Answer"}
                             </button>
 
-                            {/* Render Next Button if not the last question */}
                             {currentQuestionIndex < questions.length - 1 && (
                                 <button
                                     onClick={handleNextQuestion}

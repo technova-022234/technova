@@ -42,6 +42,7 @@ const Loginpage = () => {
 
             const data = await response.json();
             console.log("User logged in:", data.user);
+            localStorage.setItem("userEmail", data.user.email);
             navigate("/nav");
         } catch (err) {
             console.error(err);
@@ -90,7 +91,6 @@ const Loginpage = () => {
                         className="p-3 border border-white/30 rounded-lg w-full text-black shadow-md focus:ring-2 focus:ring-purple-300 outline-none"
                     />
 
-                    {/* Animated Button */}
                     <button
                         type="submit"
                         className="w-full mt-6 p-3 rounded-lg bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"

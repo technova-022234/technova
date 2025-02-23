@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { completeLevel } from "../redux/progressSlice";
 
 const Puzzle = ({ gridSize = 4, imageUrl = "/images/puzzle.png" }) => {
-    const navigate = useNavigate;
+    const navigate = useNavigate(); 
     const dispatch = useDispatch();
     const totalTiles = gridSize * gridSize;
     const initialBoard = Array.from(
@@ -50,11 +50,7 @@ const Puzzle = ({ gridSize = 4, imageUrl = "/images/puzzle.png" }) => {
         const savedBoard = localStorage.getItem("puzzleBoard");
         if (savedBoard) {
             const parsed = JSON.parse(savedBoard);
-            if (
-                parsed.length === totalTiles &&
-                isSolvable(parsed) &&
-                !isSolved(parsed)
-            ) {
+            if (parsed.length === totalTiles && isSolvable(parsed)) {
                 return parsed;
             }
         }
@@ -99,9 +95,48 @@ const Puzzle = ({ gridSize = 4, imageUrl = "/images/puzzle.png" }) => {
             setBoard(newBoard);
             setMoveCount((prev) => prev + 1);
             if (isSolved(newBoard)) {
-                setTimeout(() => alert("Puzzle solved!"), 100);
-                dispatch(completeLevel("level2"));
-                navigate('/level3');
+                const alreadySolved = localStorage.getItem("puzzleSolved");
+                if (!alreadySolved) {
+                    localStorage.setItem("puzzleSolved", "true");
+                    const email = localStorage.getItem("userEmail");
+                    if (!email) {
+                        console.error("User email is missing in localStorage.");
+                        return;
+                    }
+                    const now = new Date();
+                    const utcTime =
+                        now.getTime() + now.getTimezoneOffset() * 60000;
+                    const istTime = new Date(utcTime + 5.5 * 60 * 60000);
+
+                    fetch("http://localhost:5000/api/level2/submit", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            email: email,
+                            moves: moveCount + 1,
+                            submissionTime: istTime.toISOString(),
+                        }),
+                    })
+                        .then((response) => {
+                            if (!response.ok) {
+                                throw new Error("Network response was not ok");
+                            }
+                            return response.json();
+                        })
+                        .then((data) => {
+                            console.log("Puzzle solved data sent:", data);
+                        })
+                        .catch((error) => {
+                            console.error(
+                                "Error sending puzzle solved data:",
+                                error
+                            );
+                        });
+
+                    setTimeout(() => alert("Puzzle solved!"), 100);
+                    dispatch(completeLevel("level2"));
+                    navigate("/level3");
+                }
             }
         }
     };
@@ -119,19 +154,7 @@ const Puzzle = ({ gridSize = 4, imageUrl = "/images/puzzle.png" }) => {
             className="min-h-screen bg-cover bg-center flex items-center justify-center"
             style={{ backgroundImage: 'url("images/backgroundimage.jpg")' }}
         >
-            {/* Frame container with its own background image */}
-            <div
-                className="relative"
-                // style={{
-                //     width: "650px",
-                //     height: "650px",
-                //     backgroundImage: 'url("images/level2image.jpg")',
-                //     backgroundSize: "contain",
-                //     backgroundRepeat: "no-repeat",
-                //     backgroundPosition: "center",
-                // }}
-            >
-                {/* Puzzle grid centered inside the frame */}
+            <div className="relative">
                 <div className="absolute inset-0 flex items-center justify-center">
                     <div className="w-[600px]">
                         <div className="mb-4 text-center">
