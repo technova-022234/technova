@@ -16,6 +16,16 @@ export default {
             rotate: {
                 "y-180": "rotateY(180deg)",
             },
+            keyframes: {
+                radar: {
+                    '0%': { transform: 'scale(0.1)', opacity: '1' },
+                    '70%': { opacity: '0.2' },
+                    '100%': { transform: 'scale(2.5)', opacity: '0' },
+                },
+            },
+            animation: {
+                radar: 'radar 2s linear infinite',
+            },
         },
     },
     plugins: [
