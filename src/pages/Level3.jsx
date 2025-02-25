@@ -1,12 +1,12 @@
-import React, { useState } from "react";
-import { TypeAnimation } from "react-type-animation";
+import React, { useState } from 'react';
+import { TypeAnimation } from 'react-type-animation';
 
 const Level3 = () => {
   // Define the questions and hacking statements.
   const questions = [
     "who are you",
     "what is your mission",
-    "enter the passcode",
+    "enter the passcode"
   ];
 
   const hackingStatements = [
@@ -16,7 +16,7 @@ const Level3 = () => {
     "Loading modules...",
     "Initializing hack...",
     "Extracting data packets...",
-    "System override complete!",
+    "System override complete!"
   ];
 
   const totalRings = 3; // Total number of firewall rings
@@ -25,8 +25,8 @@ const Level3 = () => {
   // whether hacking is in progress, the number of remaining rings,
   // and which ring should flicker.
   const [questionIndex, setQuestionIndex] = useState(0);
-  const [inputValue, setInputValue] = useState("");
-  const [hackingText, setHackingText] = useState("");
+  const [inputValue, setInputValue] = useState('');
+  const [hackingText, setHackingText] = useState('');
   const [isHacking, setIsHacking] = useState(false);
   const [remainingRings, setRemainingRings] = useState(totalRings);
   const [flickerRingIndex, setFlickerRingIndex] = useState(null);
@@ -44,9 +44,9 @@ const Level3 = () => {
   // When the user presses Enter, start the hacking text animation.
   // (Do not trigger the ring flicker yet.)
   const handleKeyDown = (e) => {
-    if (e.key === "Enter" && inputValue.trim() !== "" && !isHacking) {
+    if (e.key === 'Enter' && inputValue.trim() !== '' && !isHacking) {
       const shuffled = shuffleArray(hackingStatements);
-      const allStatements = shuffled.join("\n");
+      const allStatements = shuffled.join('\n');
       setHackingText(allStatements);
       setIsHacking(true);
     }
@@ -58,23 +58,23 @@ const Level3 = () => {
   const handleHackingComplete = () => {
     // Determine which ring to flicker based on the number of remaining rings.
     const ringToFlicker = totalRings - remainingRings;
-    
-    setFlickerRingIndex(null);
+    setFlickerRingIndex(ringToFlicker);
+
     // Wait for the flicker animation to complete (600ms) before removing the ring.
     setTimeout(() => {
       // Remove one firewall ring.
       setRemainingRings((prev) => prev - 1);
       // Clear the flicker flag.
-      setFlickerRingIndex(ringToFlicker);
+      setFlickerRingIndex(null);
       // Reset the input and hacking text.
-      setInputValue("");
-      setHackingText("");
+      setInputValue('');
+      setHackingText('');
       // Move to the next question if available.
       if (questionIndex < questions.length - 1) {
         setQuestionIndex((prev) => prev + 1);
       }
       setIsHacking(false);
-    }, 1600);
+    }, 600);
   };
 
   return (
@@ -84,23 +84,17 @@ const Level3 = () => {
         <div className="relative h-[300px] w-[300px]">
           {remainingRings === 3 && (
             <div
-              className={`absolute inset-0 border-2 border-green-600 rounded-full ${
-                flickerRingIndex === 0 ? "animate-flicker" : ""
-              }`}
+              className={`absolute inset-0 border-2 border-green-600 rounded-full ${flickerRingIndex === 0 ? "animate-flicker" : ""}`}
             ></div>
           )}
           {remainingRings >= 2 && (
             <div
-              className={`absolute inset-0 m-auto h-[200px] w-[200px] border-2 border-green-600 rounded-full ${
-                flickerRingIndex === 1 ? "animate-flicker" : ""
-              }`}
+              className={`absolute inset-0 m-auto h-[200px] w-[200px] border-2 border-green-600 rounded-full ${flickerRingIndex === 1 ? "animate-flicker" : ""}`}
             ></div>
           )}
           {remainingRings >= 1 && (
             <div
-              className={`absolute inset-0 m-auto h-[100px] w-[100px] border-2 border-green-600 rounded-full ${
-                flickerRingIndex === 2 ? "animate-flicker" : ""
-              }`}
+              className={`absolute inset-0 m-auto h-[100px] w-[100px] border-2 border-green-600 rounded-full ${flickerRingIndex === 2 ? "animate-flicker" : ""}`}
             ></div>
           )}
         </div>
@@ -112,7 +106,7 @@ const Level3 = () => {
       {/* Right container: Question prompt, input, and hacking animation */}
       <div className="h-[500px] w-[800px] bg-black p-2">
         {/* If not hacking and no hacking text, display the current question and input */}
-        {!isHacking && hackingText === "" ? (
+        {!isHacking && hackingText === '' ? (
           <div>
             <p className="text-green-400">
               {">"} {questions[questionIndex]}
@@ -138,7 +132,7 @@ const Level3 = () => {
                 () => {
                   // Once the hacking text finishes, trigger the ring flicker.
                   handleHackingComplete();
-                },
+                }
               ]}
               wrapper="div"
               cursor={true}
@@ -149,7 +143,7 @@ const Level3 = () => {
         )}
 
         {/* Final message after all questions have been answered */}
-        {questionIndex === questions.length && hackingText === "" && (
+        {questionIndex === questions.length && hackingText === '' && (
           <p className="mt-4 text-green-400">All challenges completed.</p>
         )}
       </div>
