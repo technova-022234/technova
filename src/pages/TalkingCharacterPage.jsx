@@ -1,164 +1,160 @@
-import React, { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import gsap from "gsap";
+import React, { useState } from "react";
+import { TypeAnimation } from "react-type-animation";
 
-const scenes = [
-  // Scene 0: Intro video playing full screen (non-looping)
-  {
-    type: "video",
-    src: "/videos/asteroid_falling.mp4",
-    autoAdvance: true,
-  },
-  // Scene 1: Background image with character dialogue about uncovered zenithium coordinates,
-  // with a red circle (firewall) overlay
-  {
-    type: "image",
-    src: "/images/laboratory.webp",
-    dialogue:
-      "The coordinates of the zenithium have been uncovered. Look—the red circle indicates a firewall that may reveal the truth of alien life. We need to uncover the mystery.",
-    character: "/images/Scientist.png",
-    overlay: "redCircle",
-  },
-  // Scene 2: New image with another character announcing the space mission
-  {
-    type: "image",
-    src: "/images/laboratory2.webp",
-    dialogue:
-      "A space mission has been initiated to solve the mystery – and you will be joining the journey.",
-    character: "/images/Scientist.png",
-  },
-  // Scene 3: Spaceship launching video with overlay dialogue (looping)
-  {
-    type: "video",
-    src: "/videos/spaceship-launch.mp4",
-    autoAdvance: true,
-    dialogue: "We have successfully launched and are on our mission.",
-    character: "/images/astronaut.png",
-  },
-  // Scene 4: Asteroid approaching video with dialogue (looping).
-  // Pressing Enter (or clicking) on this scene will navigate to "level1".
-  {
-    type: "video",
-    src: "/videos/asteroids.mp4",
-    autoAdvance: true,
-    dialogue:
-      "We have entered the asteroid belt—we need to change our navigation to get out of this situation.",
-    character: "/images/astronaut.png",
-    onComplete: "navigate",
-  },
-];
+const Level3 = () => {
+  // Define the questions and hacking statements.
+  const questions = [
+    "who are you",
+    "what is your mission",
+    "enter the passcode",
+  ];
 
-const CinematicSequence = () => {
-  const [sceneIndex, setSceneIndex] = useState(0);
-  const dialogueRef = useRef(null);
-  const navigate = useNavigate();
+  const hackingStatements = [
+    "Accessing system files...",
+    "Bypassing firewall...",
+    "Decrypting secure data...",
+    "Loading modules...",
+    "Initializing hack...",
+    "Extracting data packets...",
+    "System override complete!",
+  ];
 
-  // Animate dialogue appearance on scene change
-  useEffect(() => {
-    if (dialogueRef.current) {
-      gsap.fromTo(
-        dialogueRef.current,
-        { opacity: 0, x: 20 },
-        { opacity: 1, x: 0, duration: 1, ease: "power2.out" }
-      );
+  const totalRings = 3; // Total number of firewall rings
+
+  // State for tracking questions, user input, hacking animation text,
+  // whether hacking is in progress, the number of remaining rings,
+  // and which ring should flicker.
+  const [questionIndex, setQuestionIndex] = useState(0);
+  const [inputValue, setInputValue] = useState("");
+  const [hackingText, setHackingText] = useState("");
+  const [isHacking, setIsHacking] = useState(false);
+  const [remainingRings, setRemainingRings] = useState(totalRings);
+  const [flickerRingIndex, setFlickerRingIndex] = useState(null);
+
+  // Fisher-Yates shuffle to randomize the hacking statements.
+  const shuffleArray = (array) => {
+    const arr = [...array];
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
     }
-  }, [sceneIndex]);
+    return arr;
+  };
 
-  // Always listen for Enter key to advance the scene
-  useEffect(() => {
-    const handleKeyPress = (e) => {
-      if (e.key === "Enter") {
-        advanceScene();
-      }
-    };
-    document.addEventListener("keydown", handleKeyPress);
-    return () => document.removeEventListener("keydown", handleKeyPress);
-  }, [sceneIndex]);
-
-  // Advance to the next scene or navigate if on the last scene
-  const advanceScene = () => {
-    if (sceneIndex < scenes.length - 1) {
-      setSceneIndex(sceneIndex + 1);
-    } else {
-      // On the last scene, navigate to level1
-      navigate("/level1");
+  // When the user presses Enter, start the hacking text animation.
+  // (Do not trigger the ring flicker yet.)
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" && inputValue.trim() !== "" && !isHacking) {
+      const shuffled = shuffleArray(hackingStatements);
+      const allStatements = shuffled.join("\n");
+      setHackingText(allStatements);
+      setIsHacking(true);
     }
   };
 
-  const currentScene = scenes[sceneIndex];
+  // This function is called when the hacking text animation completes.
+  // It starts the flicker animation on the appropriate ring and, after the flicker,
+  // removes the ring.
+  const handleHackingComplete = () => {
+    // Determine which ring to flicker based on the number of remaining rings.
+    const ringToFlicker = totalRings - remainingRings;
+    setFlickerRingIndex(ringToFlicker);
+
+    // Wait for the flicker animation to complete (600ms) before removing the ring.
+    setTimeout(() => {
+      // Remove one firewall ring.
+      setRemainingRings((prev) => prev - 1);
+      // Clear the flicker flag.
+      setFlickerRingIndex(null);
+      // Reset the input and hacking text.
+      setInputValue("");
+      setHackingText("");
+      // Move to the next question if available.
+      if (questionIndex < questions.length - 1) {
+        setQuestionIndex((prev) => prev + 1);
+      }
+      setIsHacking(false);
+    }, 1600);
+  };
 
   return (
-    <div
-      className="relative w-screen h-screen overflow-hidden"
-      onClick={advanceScene} // Clicking anywhere advances the scene
-    >
-      {/* Render video scenes */}
-      {currentScene.type === "video" && (
-        <video
-          className="w-full h-full object-cover"
-          src={currentScene.src}
-          autoPlay
-          muted
-          playsInline
-          // For the first video, auto-advance on end. For others, loop.
-          {...(sceneIndex === 0
-            ? { onEnded: advanceScene }
-            : { loop: true })}
-        />
-      )}
-
-      {/* Render image scenes */}
-      {currentScene.type === "image" && (
-        <img
-          className="w-full h-full object-cover"
-          src={currentScene.src}
-          alt="Scene background"
-        />
-      )}
-
-      {/* Render dialogue and character overlay if provided */}
-      {(currentScene.dialogue || currentScene.character) && (
-        <div
-          className="absolute bottom-0 left-10 right-10 flex items-center"
-          onClick={(e) => e.stopPropagation()} // Prevents click on dialogue from advancing the scene
-        >
-          {currentScene.character && (
-            <img
-              src={currentScene.character}
-              alt="Character"
-              className="w-48 mr-4"
-            />
-          )}
-          {currentScene.dialogue && (
+    <div className="flex h-screen items-center justify-around">
+      {/* Left container: Firewall rings */}
+      <div className="relative h-[450px] w-[450px] bg-black flex items-center justify-center">
+        <div className="relative h-[300px] w-[300px]">
+          {remainingRings === 3 && (
             <div
-              ref={dialogueRef}
-              className="px-10 py-8 bg-gradient-to-r from-indigo-900 via-purple-800 to-indigo-900 bg-opacity-90 rounded-lg shadow-lg w-4/5 border border-blue-400"
-            >
-              <p className="text-blue-300 text-xl text-left font-mono">
-                {currentScene.dialogue}
-              </p>
-            </div>
+              className={`absolute inset-0 border-2 border-green-600 rounded-full ${
+                flickerRingIndex === 0 ? "animate-flicker" : ""
+              }`}
+            ></div>
+          )}
+          {remainingRings >= 2 && (
+            <div
+              className={`absolute inset-0 m-auto h-[200px] w-[200px] border-2 border-green-600 rounded-full ${
+                flickerRingIndex === 1 ? "animate-flicker" : ""
+              }`}
+            ></div>
+          )}
+          {remainingRings >= 1 && (
+            <div
+              className={`absolute inset-0 m-auto h-[100px] w-[100px] border-2 border-green-600 rounded-full ${
+                flickerRingIndex === 2 ? "animate-flicker" : ""
+              }`}
+            ></div>
           )}
         </div>
-      )}
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="h-[200px] w-[200px] border-2 border-green-600 rounded-full animate-radar"></div>
+        </div>
+      </div>
 
-      {/* Optionally, render any additional overlay elements */}
-      {currentScene.overlay === "redCircle" && (
-        <div
-          className="absolute"
-          style={{
-            width: 100,
-            height: 100,
-            borderRadius: "50%",
-            border: "5px solid red",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-          }}
-        />
-      )}
+      {/* Right container: Question prompt, input, and hacking animation */}
+      <div className="h-[500px] w-[800px] bg-black p-2">
+        {/* If not hacking and no hacking text, display the current question and input */}
+        {!isHacking && hackingText === "" ? (
+          <div>
+            <p className="text-green-400">
+              {">"} {questions[questionIndex]}
+            </p>
+            <div className="flex text-green-400 gap-2 mt-4">
+              <span>{">"}</span>
+              <input
+                type="text"
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                onKeyDown={handleKeyDown}
+                className="bg-transparent outline-none"
+                autoFocus
+              />
+            </div>
+          </div>
+        ) : (
+          // Display the hacking text animation.
+          <div className="mt-4 text-green-400 font-mono whitespace-pre-wrap">
+            <TypeAnimation
+              sequence={[
+                hackingText,
+                () => {
+                  // Once the hacking text finishes, trigger the ring flicker.
+                  handleHackingComplete();
+                },
+              ]}
+              wrapper="div"
+              cursor={true}
+              repeat={0}
+              className="text-green-400"
+            />
+          </div>
+        )}
+
+        {/* Final message after all questions have been answered */}
+        {questionIndex === questions.length && hackingText === "" && (
+          <p className="mt-4 text-green-400">All challenges completed.</p>
+        )}
+      </div>
     </div>
   );
 };
 
-export default CinematicSequence;
+export default Level3;
