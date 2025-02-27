@@ -1,3 +1,21 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@keyframes flickerVigorous {
+    0% { opacity: 1; }
+    10% { opacity: 0.5; }
+    20% { opacity: 1; }
+    30% { opacity: 0.4; }
+    40% { opacity: 1; }
+    50% { opacity: 0.3; }
+    60% { opacity: 1; }
+    70% { opacity: 0.3; }
+    80% { opacity: 1; }
+    90% { opacity: 0.3; }
+    100% { opacity: 0; }
+  }
+  
+  .animate-vigorous-flicker {
+    animation: flickerVigorous 1s forwards;
+  }
+  
