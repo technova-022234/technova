@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { TypeAnimation } from 'react-type-animation';
 
@@ -19,18 +20,27 @@ const Level3 = () => {
     "Loading modules...",
     "Initializing hack...",
     "Extracting data packets...",
-    "System override complete!"
+    "System override complete!",
+    "Scanning for vulnerabilities...",
+    "Injecting malicious code...",
+    "Evading detection systems...",
+    "Intercepting encrypted signals...",
+    "Gaining unauthorized access...",
+    "Decrypting mainframe...",
+    "Overriding security protocols...",
+
   ];
 
   // Initialize state with stored data if available.
   const [questionIndex, setQuestionIndex] = useState(storedData.questionIndex || 0);
+  console.log(questionIndex)
   const [correctAnswersCount, setCorrectAnswersCount] = useState(storedData.correctAnswers || 0);
   const [submissionTimes, setSubmissionTimes] = useState(initialSubmissionTimes);
   const totalRings = 3; // Total number of firewall rings
   const [remainingRings, setRemainingRings] = useState(
     storedData.remainingRings !== undefined ? storedData.remainingRings : totalRings
   );
-  
+
   const userEmail = localStorage.getItem("userEmail"); // Replace with actual user email if needed.
 
   // Other state variables.
@@ -70,26 +80,42 @@ const Level3 = () => {
       const isCorrect = inputValue.trim().toLowerCase() === correctAnswers[questionIndex].toLowerCase();
       setMessage(null);
       setMessageType(null);
-      setHackingText(shuffleArray(hackingStatements).join('\n'));
+
+      const shuffledStatements = shuffleArray(hackingStatements); // Randomize statements
+      setHackingText(''); // Clear previous hacking text
       setIsHacking(true);
+      console.log(isCorrect)
       setPostHackingMessage(isCorrect ? "ACCESS GRANTED" : "ACCESS DENIED");
 
       if (isCorrect) {
-        // Mark which ring should animate (outer, middle, or inner)
         setFlickerRingIndex(totalRings - remainingRings);
-        // Update the correct answers count.
         setCorrectAnswersCount(prevCount => prevCount + 1);
 
-        // Get current IST timestamp.
+        // Get IST timestamp
         const now = new Date();
         const utcTime = now.getTime() + now.getTimezoneOffset() * 60000;
         const istTime = new Date(utcTime + 5.5 * 60 * 60000);
-        // Add the new timestamp.
         setSubmissionTimes(prevTimes => [...prevTimes, istTime]);
       }
+
+      let index = 0;
+      const interval = setInterval(() => {
+        if (index < shuffledStatements.length) {
+          setHackingText(prevText => prevText + shuffledStatements[index] + "\n"); // Add line by line
+          index++;
+        } else {
+          clearInterval(interval);
+          setTimeout(() => {
+            handleHackingComplete(); // Show ACCESS GRANTED / DENIED
+          }, 1000); // Delay before showing result
+        }
+      }, 500); // Adjust timing for line appearance
     }
   };
 
+  useEffect(() => {
+    console.log(postHackingMessage)
+  }, [postHackingMessage])
   // Send submission data to the backend whenever correctAnswersCount or submissionTimes updates.
   useEffect(() => {
     if (correctAnswersCount > 0) {
@@ -156,33 +182,47 @@ const Level3 = () => {
     >
       {/* Left container: Firewall rings */}
       <div className="relative h-[450px] w-[450px] bg-black flex items-center justify-center">
+        {/* Outer rings with glowing effect */}
         <div className="relative h-[300px] w-[300px]">
           {remainingRings === 3 && (
             <div
-              className={`absolute inset-0 border-2 border-[#00ff00] rounded-full ${
-                flickerRingIndex === 0 && message === "ACCESS GRANTED" ? "animate-vigorous-flicker" : ""
-              }`}
+              className={`absolute inset-0 border-2 border-[#00ff00] rounded-full ${flickerRingIndex === 0 && message === "ACCESS GRANTED" ? "animate-vigorous-flicker" : ""
+                }`}
             ></div>
           )}
           {remainingRings >= 2 && (
             <div
-              className={`absolute inset-0 m-auto h-[200px] w-[200px] border-2 border-[#00ff00] rounded-full ${
-                flickerRingIndex === 1 && message === "ACCESS GRANTED" ? "animate-vigorous-flicker" : ""
-              }`}
+              className={`absolute inset-0 m-auto h-[200px] w-[200px] border-2 border-[#00ff00] rounded-full ${flickerRingIndex === 1 && message === "ACCESS GRANTED" ? "animate-vigorous-flicker" : ""
+                }`}
             ></div>
           )}
           {remainingRings >= 1 && (
             <div
-              className={`absolute inset-0 m-auto h-[100px] w-[100px] border-2 border-[#00ff00] rounded-full ${
-                flickerRingIndex === 2 && message === "ACCESS GRANTED" ? "animate-vigorous-flicker" : ""
-              }`}
+              className={`absolute inset-0 m-auto h-[100px] w-[100px] border-2 border-[#00ff00] rounded-full ${flickerRingIndex === 2 && message === "ACCESS GRANTED" ? "animate-vigorous-flicker" : ""
+                }`}
             ></div>
           )}
         </div>
+
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="h-[200px] w-[200px] border-2 border-[#00ff00] rounded-full animate-radar"></div>
         </div>
+        {/* Radar sweeping line */}
+        <div className="absolute h-[150px] w-[2px] bg-[#00ff00] origin-top animate-sweep top-1/2 shadow-[0_0_10px_2px_#00ff00]"></div>
+
+        {/* Random blinking blips */}
+        {[...Array(5)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute w-2 h-2 bg-[#00ff00] rounded-full animate-blip"
+            style={{
+              top: `${Math.random() * 80 + 10}%`,
+              left: `${Math.random() * 80 + 10}%`,
+            }}
+          ></div>
+        ))}
       </div>
+
 
       {/* Right container: Displays question prompt, input, hacking animation, and result message */}
       <div className="h-[500px] w-[800px] border-4 border-[#00ff00] bg-black p-4 relative">
@@ -199,25 +239,19 @@ const Level3 = () => {
           <>
             {message && (
               <div
-                className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 px-6 py-4 border-4 ${
-                  messageType === "success" ? "border-[#00ff00] bg-black text-[#00ff00]" : "border-red-500 bg-red-900 text-red-400"
-                } text-xl font-bold text-center`}
+                className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 px-6 py-4 border-4 ${messageType === "success" ? "border-[#00ff00] bg-black text-[#00ff00]" : "border-red-500 bg-red-900 text-red-400"
+                  } text-xl font-bold text-center`}
               >
                 <p className={messageType === "success" ? "animate-pulse" : "animate-shake"}>{message}</p>
               </div>
             )}
 
             {isHacking ? (
-              <div className="absolute top-[100px] left-1/2 transform -translate-x-1/2 w-[90%] h-[250px] border border-[#00ff00] p-2 overflow-hidden text-[#00ff00] font-mono bg-black">
-                <TypeAnimation
-                  sequence={[hackingText, handleHackingComplete]}
-                  wrapper="div"
-                  cursor={true}
-                  repeat={0}
-                  className="text-[#00ff00] whitespace-pre-line"
-                />
+              <div className="absolute top-[100px] left-1/2 transform -translate-x-1/2 w-[90%] h-[250px] p-2 overflow-hidden text-[#00ff00] font-mono bg-black">
+                <p className="text-[#00ff00] whitespace-pre-line">{hackingText}</p>
               </div>
             ) : (
+
               <div className="relative mt-10">
                 <p className="text-[#00ff00] text-xl mb-4">{"> "}{questions[questionIndex]}</p>
                 <div className="flex text-[#00ff00] gap-2 mt-4">
