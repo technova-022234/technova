@@ -143,7 +143,7 @@ const CinematicSequence = () => {
       )}
 
       {/* Optionally, render any additional overlay elements */}
-      {currentScene.overlay === "redCircle" && (
+      {/* {currentScene.overlay === "redCircle" && (
         <div
           className="absolute"
           style={{
@@ -156,7 +156,7 @@ const CinematicSequence = () => {
             transform: "translate(-50%, -50%)",
           }}
         />
-      )}
+      )} */}
     </div>
   );
 };

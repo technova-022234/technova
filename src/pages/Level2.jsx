@@ -135,7 +135,7 @@ const Puzzle = ({ gridSize = 4, imageUrl = "/images/puzzle.png" }) => {
 
                     setTimeout(() => alert("Puzzle solved!"), 100);
                     dispatch(completeLevel("level2"));
-                    navigate("/level3");
+                    navigate("/level2story");
                 }
             }
         }
