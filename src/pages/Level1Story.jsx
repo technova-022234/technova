@@ -41,7 +41,7 @@ const scenes = [
     },
 ];
 
-const Level2Story = () => {
+const Level1Story = () => {
     const [sceneIndex, setSceneIndex] = useState(0);
     const dialogueRef = useRef(null);
     const navigate = useNavigate();
@@ -79,7 +79,7 @@ const Level2Story = () => {
     return (
         <div
             className="relative w-screen h-screen overflow-hidden"
-            onClick={advanceScene}
+            onClick={advanceScene} 
         >
             {currentScene.type === "video" && (
                 <video
@@ -105,7 +105,7 @@ const Level2Story = () => {
             {(currentScene.dialogue || currentScene.character) && (
                 <div
                     className="absolute bottom-0 left-10 right-10 flex items-center"
-                    onClick={(e) => e.stopPropagation()}
+                    onClick={(e) => e.stopPropagation()} 
                 >
                     {currentScene.character && (
                         <img
@@ -130,4 +130,4 @@ const Level2Story = () => {
     );
 };
 
-export default Level2Story;
+export default Level1Story;

@@ -45,7 +45,6 @@ const SpaceshipConsole = () => {
         const saved = localStorage.getItem("currentQuestionIndex");
         return saved ? JSON.parse(saved) : 0;
     });
-
     const [answer, setAnswer] = useState("");
     const [hintsRevealed, setHintsRevealed] = useState(0);
 
@@ -53,7 +52,6 @@ const SpaceshipConsole = () => {
         const saved = localStorage.getItem("score");
         return saved ? JSON.parse(saved) : 0;
     });
-
     const [feedback, setFeedback] = useState("");
 
     const [userAnswers, setUserAnswers] = useState(() => {
@@ -69,19 +67,26 @@ const SpaceshipConsole = () => {
         return saved ? JSON.parse(saved) : {};
     });
 
-    const [levelComplete, setLevelComplete] = useState(false);
+    // Initialize levelComplete based on localStorage
+    const [levelComplete, setLevelComplete] = useState(() => {
+        const saved = localStorage.getItem("levelComplete");
+        return saved ? JSON.parse(saved) : false;
+    });
 
+    // When all questions are correct and level1 isn’t already completed,
+    // alert, mark level as complete, save the flag, dispatch action, and redirect.
     useEffect(() => {
         const allCorrect = questions.every(
             (_q, index) => submittedQuestions[index] === true
         );
-
         if (allCorrect && !levelComplete) {
             alert("Level complete!");
             setLevelComplete(true);
+            localStorage.setItem("levelComplete", JSON.stringify(true));
             dispatch(completeLevel("level1"));
+            navigate("/level1story");
         }
-    }, [submittedQuestions, levelComplete, dispatch]);
+    }, [submittedQuestions, levelComplete, dispatch, navigate]);
 
     const currentQuestion = questions[currentQuestionIndex];
 
@@ -199,14 +204,18 @@ const SpaceshipConsole = () => {
         }
     };
 
+    // If all questions are correct and level not yet completed, complete and redirect.
     const completeLevelIfAllCorrect = () => {
         const allCorrect = questions.every(
             (_q, index) => submittedQuestions[index] === true
         );
-        if (allCorrect) {
+        if (allCorrect && !levelComplete) {
             alert("Level complete!");
+            setLevelComplete(true);
+            localStorage.setItem("levelComplete", JSON.stringify(true));
             dispatch(completeLevel("level1"));
-        } else {
+            navigate("/level2");
+        } else if (!allCorrect) {
             setFeedback(
                 "Level not complete: please ensure you answer all questions correctly before completing the level."
             );
