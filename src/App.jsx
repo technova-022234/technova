@@ -10,6 +10,7 @@ import TopNavbar from "./components/TopNavbar";
 import Level3 from "./pages/Level3";
 import Level1Story from "./pages/Level1Story";
 import Level2Story from "./pages/Level2Story";
+import Leaderboard from "./pages/Leaderboard_level1";
 
 const App = () => {
     return (
@@ -26,6 +27,7 @@ const App = () => {
                     <Route path="/level2" element={<Puzzle />} />
                     <Route path="/level2story" element={<Level2Story /> } />
                     <Route path="/level3" element={<Level3 />} />
+                    <Route path="/leaderboard_level1" element={<Leaderboard />} />
                 </Routes>
             </Router>
         </div>
