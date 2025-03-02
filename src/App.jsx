@@ -8,6 +8,7 @@ import Loadingpage from "./pages/Loadingpage";
 import NavPage from "./pages/NavPage";
 import TopNavbar from "./components/TopNavbar";
 import Level3 from "./pages/Level3";
+import Leaderboard from "./pages/Leaderboard_level1";
 
 const App = () => {
     return (
@@ -22,6 +23,7 @@ const App = () => {
                     <Route path="/level1" element={<SpaceshipConsole />} />
                     <Route path="/level2" element={<Puzzle />} />
                     <Route path="/level3" element={<Level3 />} />
+                    <Route path="/leaderboard_level1" element={<Leaderboard />} />
                 </Routes>
             </Router>
         </div>
