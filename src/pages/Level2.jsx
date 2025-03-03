@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { completeLevel } from "../redux/progressSlice";
 
 const Puzzle = ({ gridSize = 4, imageUrl = "/images/puzzle.png" }) => {
-    const navigate = useNavigate(); 
+    const navigate = useNavigate();
     const dispatch = useDispatch();
     const totalTiles = gridSize * gridSize;
     const initialBoard = Array.from(
@@ -163,15 +163,15 @@ const Puzzle = ({ gridSize = 4, imageUrl = "/images/puzzle.png" }) => {
                             </span>
                         </div>
                         <div
-                            className="grid gap-1 p-12 rounded-[100px]"
+                            className="grid gap-1 rounded-[100px]"
                             style={{
                                 gridTemplateColumns: `repeat(${gridSize}, 1fr)`,
                                 width: "650px",
                                 height: "650px",
-                                backgroundImage: 'url("images/bg_image.jpeg")',
-                                backgroundSize: "contain",
-                                backgroundRepeat: "no-repeat",
-                                backgroundPosition: "center",
+                                borderImageSource: "linear-gradient(45deg, #FFD700, #FFB800, #DAA520, #00FFFF, #0099FF)", 
+                                borderImageSlice: 1,
+                                borderWidth: "8px",
+                                boxShadow: "0px 0px 20px rgba(255, 215, 0, 0.8), 0px 0px 30px rgba(0, 255, 255, 0.8), 0px 0px 40px rgba(0, 153, 255, 0.6)",
                             }}
                         >
                             {board.map((value, index) => {
