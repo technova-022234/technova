@@ -229,14 +229,14 @@ const SpaceshipConsole = () => {
     const isSubmitted = submittedQuestions[currentQuestionIndex];
 
     return (
-        <div className="min-h-screen bg-cover bg-center bg-[url('/images/image2.jpg')] flex flex-col">
-            <div className="flex justify-center gap-6 pt-6">
+        <div className="min-h-screen bg-cover bg-center bg-[url('/images/image2.jpg')] flex flex-col"> 
+            <div className="flex justify-center gap-6 pt-16">
                 <span className="text-white text-2xl font-bold">
                     Score: {score}
                 </span>
             </div>
 
-            <div className="flex justify-center gap-6 pt-6">
+            <div className="flex justify-center gap-6 pt-10">
                 {questions.map((q, index) => (
                     <button
                         key={index}

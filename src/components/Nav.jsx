@@ -3,7 +3,7 @@ import { gsap } from "gsap";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
-const NavOverlay = ({ isOpen }) => {
+const NavOverlay = ({ isOpen, setIsOpen }) => {
     const leftRef = useRef(null);
     const rightRef = useRef(null);
     const navItemsRef = useRef(null);
@@ -66,12 +66,15 @@ const NavOverlay = ({ isOpen }) => {
                     x: "100%",
                     duration: 0.6,
                     ease: "power2.in",
+                    onComplete: () => {
+                        // Update state after animations complete
+                        setIsOpen(false);
+                    },
                 });
             },
         });
     };
 
-    // Listen for changes in progress and clear GSAP-applied inline styles
     useEffect(() => {
         if (navItemsRef.current) {
             gsap.set(navItemsRef.current.children, { clearProps: "all" });
@@ -86,7 +89,11 @@ const NavOverlay = ({ isOpen }) => {
     ];
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden">
+        <div
+            className={`fixed inset-0 z-50 flex items-center justify-center overflow-hidden transition-all duration-300 ${
+                isOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
+            }`}
+        >
             <div
                 ref={leftRef}
                 className="absolute top-0 left-0 w-1/2 h-full bg-black z-0"
@@ -108,24 +115,20 @@ const NavOverlay = ({ isOpen }) => {
                 }}
             ></div>
             <nav className="relative z-10">
-                <ul
-                    ref={navItemsRef}
-                    className="space-y-4 text-center flex flex-col"
-                >
+                <ul ref={navItemsRef} className="space-y-4 text-center flex flex-col">
                     {items.map((item, index) => {
                         const isUnlocked =
                             item.level === "story" ||
                             item.level === "level1" ||
                             progress[item.level];
 
-                        console.log(progress);
                         return (
                             <li
                                 key={index}
                                 className={`text-2xl uppercase tracking-widest transition-colors cursor-pointer relative inline-block px-8 py-4 ${
                                     isUnlocked
                                         ? "text-teal-400 hover:text-pink-500"
-                                        : "text-gray-500 cursor-not-allowed disabled:opacity-50"
+                                        : "text-gray-500 cursor-not-allowed opacity-50"
                                 }`}
                                 style={{
                                     clipPath:
@@ -134,9 +137,16 @@ const NavOverlay = ({ isOpen }) => {
                                 }}
                                 onClick={() => {
                                     if (isUnlocked) {
-                                        navigate(item.url);
+                                        console.log(`Navigating to: ${item.url}`);
+                                        navigate(item.url, { replace: true });
+                                        closeNavAnimation()
+
+                                        // setTimeout(() => {
+                                        //     document.body.click(); 
+                                        // }, 100);
                                     }
                                 }}
+                                                          
                             >
                                 {item.level}
                             </li>

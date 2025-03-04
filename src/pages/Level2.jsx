@@ -166,44 +166,41 @@ const Puzzle = ({ gridSize = 4, imageUrl = "/images/puzzle.png" }) => {
                             className="grid gap-1 rounded-[100px]"
                             style={{
                                 gridTemplateColumns: `repeat(${gridSize}, 1fr)`,
-                                width: "650px",
-                                height: "650px",
-                                borderImageSource: "linear-gradient(45deg, #FFD700, #FFB800, #DAA520, #00FFFF, #0099FF)", 
+                                width: "550px",
+                                height: "550px",
+                                borderImageSource: "linear-gradient(45deg, #003366, #004080, #336699, #660099, #330066)",
                                 borderImageSlice: 1,
                                 borderWidth: "8px",
-                                boxShadow: "0px 0px 20px rgba(255, 215, 0, 0.8), 0px 0px 30px rgba(0, 255, 255, 0.8), 0px 0px 40px rgba(0, 153, 255, 0.6)",
+                                boxShadow: "0px 0px 20px rgba(0, 51, 102, 0.8),  0px 0px 30px rgba(0, 102, 204, 0.8), 0px 0px 40px rgba(51, 0, 102, 0.6)",
                             }}
                         >
                             {board.map((value, index) => {
                                 const tileStyle =
                                     value !== 0
                                         ? {
-                                              backgroundImage: `url(${imageUrl})`,
-                                              backgroundSize: `${
-                                                  gridSize * 100
-                                              }% ${gridSize * 100}%`,
-                                              backgroundPosition: (() => {
-                                                  const tileIndex = value - 1;
-                                                  const row = Math.floor(
-                                                      tileIndex / gridSize
-                                                  );
-                                                  const col =
-                                                      tileIndex % gridSize;
-                                                  return `-${col * 100}% -${
-                                                      row * 100
-                                                  }%`;
-                                              })(),
-                                          }
+                                            backgroundImage: `url(${imageUrl})`,
+                                            backgroundSize: `${gridSize * 100
+                                                }% ${gridSize * 100}%`,
+                                            backgroundPosition: (() => {
+                                                const tileIndex = value - 1;
+                                                const row = Math.floor(
+                                                    tileIndex / gridSize
+                                                );
+                                                const col =
+                                                    tileIndex % gridSize;
+                                                return `-${col * 100}% -${row * 100
+                                                    }%`;
+                                            })(),
+                                        }
                                         : {};
                                 return (
                                     <div
                                         key={index}
                                         onClick={() => moveTile(index)}
-                                        className={`border ${
-                                            value !== 0
+                                        className={`border ${value !== 0
                                                 ? "cursor-pointer"
                                                 : "bg-gray-200"
-                                        }`}
+                                            }`}
                                         style={{
                                             paddingTop: "100%",
                                             position: "relative",
