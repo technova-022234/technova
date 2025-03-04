@@ -31,7 +31,7 @@ const App = () => {
                         <Routes>
                             <Route path="/level1" element={<SpaceshipConsole />} />
                             <Route path="/level2" element={<Puzzle />} />
-                            <Route path="/level3" element={<Level3 />} />
+                            <Route path="/level3" element={<Level3 />} /> 
                         </Routes>
                     </>
                 }/>
