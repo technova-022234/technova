@@ -79,6 +79,9 @@ const SpaceshipConsole = () => {
         const allCorrect = questions.every(
             (_q, index) => submittedQuestions[index] === true
         );
+        if(allCorrect && levelComplete) {
+            dispatch(completeLevel("level1"));
+        }
         if (allCorrect && !levelComplete) {
             alert("Level complete!");
             setLevelComplete(true);

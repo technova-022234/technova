@@ -137,6 +137,9 @@ const Puzzle = ({ gridSize = 4, imageUrl = "/images/puzzle.png" }) => {
                     dispatch(completeLevel("level2"));
                     navigate("/level2story");
                 }
+                else {
+                    dispatch(completeLevel("level2"));
+                }
             }
         }
     };
