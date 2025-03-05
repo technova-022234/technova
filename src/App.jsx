@@ -12,6 +12,7 @@ import Level1Story from "./pages/Level1Story";
 import Level2Story from "./pages/Level2Story";
 import Leaderboard from "./pages/Leaderboard_level1";
 import GraphComponent from "./pages/GraphComponent";
+import SensorSystem from "./pages/logicgatescomponent";
 
 const App = () => {
     return (
@@ -25,6 +26,7 @@ const App = () => {
                 <Route path="/level2story" element={<Level2Story />} />
                 <Route path="/leaderboard_level1" element={<Leaderboard />} />
                 <Route path="/graph" element={<GraphComponent />} />
+                <Route path="/logicgatescomponent" element={<SensorSystem/>} />
                 {/* ✅ Wrap Levels with Navbar */}
                 <Route path="/*" element={
                     <>
