@@ -6,6 +6,7 @@ import GraphComponent from "./GraphComponent";
 import SensorSystem from "./logicgatescomponent";
 import DragAndDropImages from "./DragImage";
 import Distance from "./Distancecalculation";
+import Sequence from "./Sequence";
 
 const questions = [
     {
@@ -69,6 +70,8 @@ const QuestionLeftPanel = ({ questionIndex }) => {
             return <SensorSystem />;
         case 2:
             return <Distance />;
+        case 3:
+                return <Sequence />;
         case 4:
             return (
                 <div className="w-full h-full">
