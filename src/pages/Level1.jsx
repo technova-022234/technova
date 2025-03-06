@@ -3,6 +3,8 @@ import { useDispatch } from "react-redux";
 import { completeLevel } from "../redux/progressSlice";
 import { useNavigate } from "react-router-dom";
 import GraphComponent from "./GraphComponent";
+import SensorSystem from "./logicgatescomponent";
+import DragAndDropImages from "./DragImage";
 
 const questions = [
     {
@@ -61,21 +63,19 @@ const QuestionLeftPanel = ({ questionIndex }) => {
     // Customize the content based on the question number
     switch (questionIndex) {
         case 0:
-            return (
-                <GraphComponent />
-            );
+            return <GraphComponent />;
         case 1:
-            return (
-                <div className="p-8 text-white">
-                    <h3 className="text-3xl font-bold mb-4">Level 2: Martian Mission</h3>
-                    <p>The Red Planet awaits. Get ready to solve its mysteries!</p>
-                </div>
-            );
+            return <SensorSystem />;
         case 2:
             return (
-                <div className="p-8 text-white">
-                    <h3 className="text-3xl font-bold mb-4">Level 3: Jovian Giant</h3>
-                    <p>Face the giant of our Solar System. Your journey is almost complete!</p>
+                <div className="w-full h-full">
+                    <DragAndDropImages />
+                </div>
+            );
+        case 4:
+            return (
+                <div className="w-full h-full">
+                    <DragAndDropImages />
                 </div>
             );
         default:
@@ -143,7 +143,10 @@ const SpaceshipConsole = () => {
     const currentQuestion = questions[currentQuestionIndex];
 
     useEffect(() => {
-        localStorage.setItem("currentQuestionIndex", JSON.stringify(currentQuestionIndex));
+        localStorage.setItem(
+            "currentQuestionIndex",
+            JSON.stringify(currentQuestionIndex)
+        );
     }, [currentQuestionIndex]);
 
     useEffect(() => {
@@ -155,7 +158,10 @@ const SpaceshipConsole = () => {
     }, [hintsState]);
 
     useEffect(() => {
-        localStorage.setItem("submittedQuestions", JSON.stringify(submittedQuestions));
+        localStorage.setItem(
+            "submittedQuestions",
+            JSON.stringify(submittedQuestions)
+        );
     }, [submittedQuestions]);
 
     useEffect(() => {
@@ -218,17 +224,20 @@ const SpaceshipConsole = () => {
             const istTime = new Date(utcTime + 5.5 * 60 * 60000);
             const email = localStorage.getItem("userEmail");
             try {
-                const response = await fetch("http://localhost:5000/api/level1/submit", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        email: email,
-                        score: newTotalScore,
-                        submissionTime: istTime.toISOString(),
-                    }),
-                });
+                const response = await fetch(
+                    "http://localhost:5000/api/level1/submit",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            email: email,
+                            score: newTotalScore,
+                            submissionTime: istTime.toISOString(),
+                        }),
+                    }
+                );
                 const data = await response.json();
                 console.log("Level1 update:", data);
             } catch (error) {
@@ -324,17 +333,26 @@ const SpaceshipConsole = () => {
                                 </p>
                                 <span
                                     title="Request Satellite Data"
-                                    onClick={!isSubmitted ? handleHintReveal : undefined}
+                                    onClick={
+                                        !isSubmitted
+                                            ? handleHintReveal
+                                            : undefined
+                                    }
                                     className={`relative ml-3 cursor-pointer ${
                                         isSubmitted ||
-                                        hintsRevealed === currentQuestion.hints.length
+                                        hintsRevealed ===
+                                            currentQuestion.hints.length
                                             ? "text-gray-400 cursor-not-allowed"
                                             : "text-yellow-300 hover:text-yellow-500"
                                     }`}
                                     style={
                                         isSubmitted ||
-                                        hintsRevealed === currentQuestion.hints.length
-                                            ? { pointerEvents: "none", opacity: 0.5 }
+                                        hintsRevealed ===
+                                            currentQuestion.hints.length
+                                            ? {
+                                                  pointerEvents: "none",
+                                                  opacity: 0.5,
+                                              }
                                             : {}
                                     }
                                 >
@@ -357,7 +375,8 @@ const SpaceshipConsole = () => {
                                         <path d="M9 21a6 6 0 0 0-6-6" />
                                     </svg>
                                     <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold px-1 py-0.3 rounded-full text-[10px]">
-                                        {currentQuestion.hints.length - hintsRevealed}
+                                        {currentQuestion.hints.length -
+                                            hintsRevealed}
                                     </span>
                                 </span>
                             </div>
@@ -374,12 +393,14 @@ const SpaceshipConsole = () => {
                                                     key={index}
                                                     className="text-lg text-blue-200 animate-pulse mb-2"
                                                 >
-                                                    [Satellite Signal {index + 1}] - {hint}
+                                                    [Satellite Signal{" "}
+                                                    {index + 1}] - {hint}
                                                 </p>
                                             ))}
                                     </div>
                                     <p className="mt-4 text-red-400 italic text-sm">
-                                        Warning: Using hints will decrease your score!
+                                        Warning: Using hints will decrease your
+                                        score!
                                     </p>
                                 </div>
                             )}
@@ -399,7 +420,9 @@ const SpaceshipConsole = () => {
                                 {currentQuestionIndex > 0 && (
                                     <button
                                         onClick={() =>
-                                            setCurrentQuestionIndex(currentQuestionIndex - 1)
+                                            setCurrentQuestionIndex(
+                                                currentQuestionIndex - 1
+                                            )
                                         }
                                         className="px-6 py-3 bg-blue-500 hover:bg-blue-600 rounded text-xl font-bold shadow-lg"
                                     >
@@ -416,10 +439,13 @@ const SpaceshipConsole = () => {
                                             : "bg-green-500 hover:bg-green-600"
                                     }`}
                                 >
-                                    {isSubmitted ? "Submitted" : "Submit Answer"}
+                                    {isSubmitted
+                                        ? "Submitted"
+                                        : "Submit Answer"}
                                 </button>
 
-                                {currentQuestionIndex < questions.length - 1 && (
+                                {currentQuestionIndex <
+                                    questions.length - 1 && (
                                     <button
                                         onClick={handleNextQuestion}
                                         className="px-6 py-3 bg-blue-500 hover:bg-blue-600 rounded text-xl font-bold shadow-lg"

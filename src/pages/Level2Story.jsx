@@ -70,7 +70,7 @@ const Level2Story = () => {
         if (sceneIndex < scenes.length - 1) {
             setSceneIndex(sceneIndex + 1);
         } else {
-            navigate("/level2");
+            navigate("/level3");
         }
     };
 
