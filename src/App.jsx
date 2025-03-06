@@ -15,6 +15,7 @@ import GraphComponent from "./pages/GraphComponent";
 import SensorSystem from "./pages/logicgatescomponent";
 import SpaceshipControlPanel from "./pages/SpaceshipControlPanel";
 import DragAndDropImages from "./pages/DragImage";
+import Distance from "./pages/Distancecalculation";
 
 const App = () => {
     return (
@@ -30,6 +31,7 @@ const App = () => {
                 <Route path="/graph" element={<GraphComponent />} />
                 <Route path="/logicgatescomponent" element={<SensorSystem/>} />
                 <Route path="/spaceshipconsole" element={<SpaceshipControlPanel />} />
+                <Route path="/distancecal" element={<Distance/>} />
                 {/* ✅ Wrap Levels with Navbar */}
                 <Route path="/drag" element={<DragAndDropImages />} />
                 <Route path="/*" element={
