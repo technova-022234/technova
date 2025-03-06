@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import GraphComponent from "./GraphComponent";
 import SensorSystem from "./logicgatescomponent";
 import DragAndDropImages from "./DragImage";
+import Sequence from "./Sequence";
 
 const questions = [
     {
@@ -72,6 +73,8 @@ const QuestionLeftPanel = ({ questionIndex }) => {
                     <DragAndDropImages />
                 </div>
             );
+        case 3:
+                return <Sequence />;
         case 4:
             return (
                 <div className="w-full h-full">

@@ -16,6 +16,8 @@ import SensorSystem from "./pages/logicgatescomponent";
 import SpaceshipControlPanel from "./pages/SpaceshipControlPanel";
 import DragAndDropImages from "./pages/DragImage";
 import Distance from "./pages/Distancecalculation";
+import Sequence from "./pages/Sequence";
+import Level2Leaderboard from "./pages/Leaderboard_level2";
 
 const App = () => {
     return (
@@ -28,10 +30,12 @@ const App = () => {
                 <Route path="/level1story" element={<Level1Story />} />
                 <Route path="/level2story" element={<Level2Story />} />
                 <Route path="/leaderboard_level1" element={<Leaderboard />} />
+                <Route path="/leaderboard_level2" element={<Level2Leaderboard />} />
                 <Route path="/graph" element={<GraphComponent />} />
                 <Route path="/logicgatescomponent" element={<SensorSystem/>} />
                 <Route path="/spaceshipconsole" element={<SpaceshipControlPanel />} />
                 <Route path="/distancecal" element={<Distance/>} />
+                <Route path="/sequence" element={<Sequence />} />
                 {/* ✅ Wrap Levels with Navbar */}
                 <Route path="/drag" element={<DragAndDropImages />} />
                 <Route path="/*" element={
