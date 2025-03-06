@@ -94,7 +94,7 @@ function Distance() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center p-4">
+    <div className="h-[320px] bg-black flex items-center justify-center p-4">
       <RadarDisplay asteroids={asteroids} closestAsteroid={closestAsteroid} />
     </div>
   );

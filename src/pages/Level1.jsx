@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import GraphComponent from "./GraphComponent";
 import SensorSystem from "./logicgatescomponent";
 import DragAndDropImages from "./DragImage";
+import Distance from "./Distancecalculation";
 
 const questions = [
     {
@@ -67,11 +68,7 @@ const QuestionLeftPanel = ({ questionIndex }) => {
         case 1:
             return <SensorSystem />;
         case 2:
-            return (
-                <div className="w-full h-full">
-                    <DragAndDropImages />
-                </div>
-            );
+            return <Distance />;
         case 4:
             return (
                 <div className="w-full h-full">
