@@ -13,6 +13,7 @@ import Level2Story from "./pages/Level2Story";
 import Leaderboard from "./pages/Leaderboard_level1";
 import GraphComponent from "./pages/GraphComponent";
 import SensorSystem from "./pages/logicgatescomponent";
+import Distance from "./pages/Distancecalculation";
 
 const App = () => {
     return (
@@ -27,6 +28,7 @@ const App = () => {
                 <Route path="/leaderboard_level1" element={<Leaderboard />} />
                 <Route path="/graph" element={<GraphComponent />} />
                 <Route path="/logicgatescomponent" element={<SensorSystem/>} />
+                <Route path="/distancecal" element={<Distance/>} />
                 {/* ✅ Wrap Levels with Navbar */}
                 <Route path="/*" element={
                     <>
