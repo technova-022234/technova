@@ -8,9 +8,9 @@ const Radar = () => {
     // Fixed points with labels but randomized positions
     const points = useMemo(() => {
         const fixedPoints = [
-            { label: "A", x: 50, y: 30, x_label: 0, y_label: -3.2},
-            { label: "B", x: -40, y: 60, x_label: 3.5, y_label: 2},
-            { label: "C", x: 20, y: -70, x_label: -4.5, y_label: 4},
+            { label: "A", x: 50, y: 30, x_label: 0, y_label: -3.2 },
+            { label: "B", x: -40, y: 60, x_label: 3.5, y_label: 2 },
+            { label: "C", x: 20, y: -70, x_label: -4.5, y_label: 4 },
         ];
 
         return fixedPoints.map((point) => {
