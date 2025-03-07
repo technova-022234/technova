@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import Draggable from "react-draggable";
 
-const DraggableImage = ({ src, alt, position, onStop, index, imageSize }) => {
+const DraggableImage = ({ src, label, position, onStop, index, imageSize }) => {
     const [isDragging, setIsDragging] = useState(false);
 
     return (
@@ -35,7 +35,7 @@ const DraggableImage = ({ src, alt, position, onStop, index, imageSize }) => {
                 }}
             >
                 <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 text-white">
-                    Hello
+                    {label}
                 </div>
             </div>
 
@@ -144,11 +144,26 @@ const DragAndDropImages = () => {
 
     const imageSize = containerSize.width < 640 ? 80 : 120;
     const imageSources = [
-        "images/navigationpanel_lvl1.jpg",
-        "images/communicationspanel_lvl1.jpg",
-        "images/Weaponspanel_lvl1.jpg",
-        "images/shieldpanel_lvl1.jpg",
-        "images/enginepanel_lvl1.jpg",
+        {
+            img: "images/navigationpanel_lvl1.jpg",
+            label: "Navigation Panel",
+        },
+        {
+            img: "images/communicationspanel_lvl1.jpg",
+            label: "Communications Panel",
+        },
+        {
+            img: "images/Weaponspanel_lvl1.jpg",
+            label: "Weapons Panel",
+        },
+        {
+            img: "images/shieldpanel_lvl1.jpg",
+            label: "Shield Panel",
+        },
+        {
+            img: "images/enginepanel_lvl1.jpg",
+            label: "Engine Panel",
+        }
     ];
 
     return (
@@ -188,8 +203,8 @@ const DragAndDropImages = () => {
                 <DraggableImage
                     key={i}
                     index={i}
-                    src={imageSources[i]}
-                    alt={`Image ${i + 1}`}
+                    src={imageSources[i].img}
+                    label={imageSources[i].label}
                     position={pos}
                     onStop={handleStop}
                     imageSize={imageSize}
