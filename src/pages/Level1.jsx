@@ -8,61 +8,78 @@ import DragAndDropImages from "./DragImage";
 import Distance from "./Distancecalculation";
 import Sequence from "./Sequence";
 
+// Updated questions with a more immersive narrative while keeping the correct answers the same.
 const questions = [
     {
-        question: "What is the distance from Earth to the Moon?",
-        correctAnswer: "384,400 km",
+        question: `Navigation Protocol:
+Our ship’s advanced navigation system has intercepted encrypted coordinates for critical energy nodes. To safely traverse this hazardous region, deploy the minimum spanning tree algorithm to establish the most energy‐efficient network. What is the total weight of this optimized route? (Answer in word form.)`,
+        correctAnswer: "Six",
         hints: [
-            "Approximately 384,000 km",
-            "About 240,000 miles",
-            "It varies slightly over time",
-            "Less than 500,000 km",
+            "Focus on connecting nodes with minimal weights.",
+            "Remember: the goal is to minimize the total energy consumption.",
+            "Visualize linking all nodes without cycles.",
+            "Optimal connections yield the lowest sum."
         ],
     },
     {
-        question: "Which planet is known as the Red Planet?",
-        correctAnswer: "Mars",
+        question: `Sensor Array Analysis:
+Our spacecraft’s sensor suite is evaluating three critical signals. The protocol is: if at least two sensors register a positive reading, the system initiates hyperspace—issuing a "Pass" signal; otherwise, it holds with a "Fail". What output does the sensor array deliver?`,
+        correctAnswer: "Pass",
         hints: [
-            "It is the fourth planet from the Sun",
-            "Associated with the Roman god of war",
-            "It has two small moons",
-            "Its surface is rich in iron oxide",
+            "At least two active signals are needed.",
+            "Binary sensor logic is in effect.",
+            "Majority rule applies.",
+            "Check that two or more inputs are on."
         ],
     },
     {
-        question: "What is the largest planet in our Solar System?",
-        correctAnswer: "Jupiter",
+        question: `Asteroid Proximity Alert:
+Radar has locked onto three asteroids in our flight path. To prioritize evasion measures, identify which asteroid is closest to our vessel. Which asteroid is our primary threat?`,
+        correctAnswer: "Alpha",
         hints: [
-            "A gas giant",
-            "Has a prominent red spot",
-            "Over 10 times the diameter of Earth",
-            "Has dozens of moons",
+            "Analyze the strength of the radar signals.",
+            "The nearest object will return the strongest echo.",
+            "Triangulation points to the first detected target.",
+            "Alpha usually signifies the primary threat."
         ],
     },
     {
-        question: "What is the largest planet in our Solar System?",
-        correctAnswer: "Jupiter",
+        question: `Temporal Anomaly Sequence:
+Deep within the control room, an antique clock malfunctions, cycling through five cryptic words. A faded note reads:
+"When the first hour becomes the last and the last echoes the first, the guardian of paradoxes unveils the secret. Choose the word that defies time."
+Which word unlocks the hidden sequence?`,
+        correctAnswer: "Chaos",
         hints: [
-            "A gas giant",
-            "Has a prominent red spot",
-            "Over 10 times the diameter of Earth",
-            "Has dozens of moons",
+            "Time can be unpredictable.",
+            "Expect the unexpected in this anomaly.",
+            "Not sequential but disruptive.",
+            "Disorder reveals the truth."
         ],
     },
     {
-        question: "What is the largest planet in our Solar System?",
-        correctAnswer: "Jupiter",
+        question: `Control Panel Conundrum:
+Our vessel boasts five control panels aligned across the cockpit, each dedicated to a unique system: Navigation, Communications, Weapons, Shields, and Engines.
+Clues:
+• The Navigation panel is immediately to the left of the Engines panel.
+• The Communications panel is not adjacent to the Weapons panel.
+• The Shields panel is located somewhere to the left of the Communications panel.
+• The Engines panel is not in position 3.
+• The Weapons panel is immediately to the right of the Shields panel.
+• The panel in position 1 is not the Navigation panel.
+Determine which function is assigned to the panel in the 4th position.
+`,
+        correctAnswer: "Engine",
         hints: [
-            "A gas giant",
-            "Has a prominent red spot",
-            "Over 10 times the diameter of Earth",
-            "Has dozens of moons",
+            "Map out the positions logically.",
+            "Remember: panels have fixed relative positions.",
+            "Clues are key—use process of elimination.",
+            "Focus on the sequence from left to right."
         ],
     },
 ];
 
 const QuestionLeftPanel = ({ questionIndex }) => {
-    // Customize the content based on the question number
+    // Unchanged left panel logic
     switch (questionIndex) {
         case 0:
             return <GraphComponent />;
@@ -71,7 +88,7 @@ const QuestionLeftPanel = ({ questionIndex }) => {
         case 2:
             return <Distance />;
         case 3:
-                return <Sequence />;
+            return <Sequence />;
         case 4:
             return (
                 <div className="w-full h-full">
@@ -123,7 +140,7 @@ const SpaceshipConsole = () => {
         return saved ? JSON.parse(saved) : false;
     });
 
-    // Level completion check
+    // Check level completion
     useEffect(() => {
         const allCorrect = questions.every(
             (_q, index) => submittedQuestions[index] === true
@@ -280,131 +297,111 @@ const SpaceshipConsole = () => {
     const isSubmitted = submittedQuestions[currentQuestionIndex];
 
     return (
-        <div className="min-h-screen bg-cover bg-center bg-[url('/images/image2.jpg')] flex ">
-            {/* Left Half */}
+        <div className="min-h-screen bg-cover bg-center bg-[url('/images/image2.jpg')] flex">
+            {/* Left Half remains the same */}
             <div className="w-[50vw] bg-transparent flex items-center justify-center">
                 <QuestionLeftPanel questionIndex={currentQuestionIndex} />
             </div>
 
-            {/* Right Half */}
+            {/* Right Half redesigned as a futuristic ship command console */}
             <div className="w-1/2 flex flex-col pr-10">
-                <div className="flex justify-center gap-6 pt-16">
-                    <span className="text-white text-2xl font-bold">
-                        Score: {score}
-                    </span>
-                </div>
-
-                <div className="flex justify-center gap-6 pt-10">
-                    {questions.map((q, index) => (
-                        <button
-                            key={index}
-                            onClick={() => handleQuestionNavigation(index)}
-                            className={`relative w-16 h-16 flex items-center justify-center text-2xl font-bold ${
-                                currentQuestionIndex === index
-                                    ? "text-yellow-300"
-                                    : "text-gray-500 hover:text-yellow-300"
-                            }`}
-                        >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="w-10 h-10"
-                                fill="currentColor"
-                                viewBox="0 0 24 24"
+                {/* Header with score and question navigation in a spaceship style */}
+                <div className="flex justify-between items-center pt-16 px-8">
+                    <div className="text-green-400 text-2xl font-bold tracking-wider drop-shadow-lg">
+                        SCORE: {score}
+                    </div>
+                    <div className="flex gap-4">
+                        {questions.map((q, index) => (
+                            <button
+                                key={index}
+                                onClick={() => handleQuestionNavigation(index)}
+                                className={`relative w-12 h-12 flex items-center justify-center text-lg font-bold rounded-full border-2 border-green-600 transition-all duration-200 ${
+                                    currentQuestionIndex === index
+                                        ? "bg-green-600 text-black"
+                                        : "bg-transparent text-green-300 hover:bg-green-700"
+                                }`}
                             >
-                                <path d="M12 .587l3.668 7.431L24 9.587l-6 5.845L19.335 24 12 19.897 4.665 24 6 15.432 0 9.587l8.332-1.569L12 .587z" />
-                            </svg>
-                            <span className="absolute inset-0 flex items-center justify-center text-sm font-semibold text-white">
                                 {index + 1}
-                            </span>
-                        </button>
-                    ))}
+                            </button>
+                        ))}
+                    </div>
                 </div>
 
+                {/* Main Console Display */}
                 <div className="flex-grow flex flex-col items-center justify-center px-4">
-                    <div className="bg-transparent backdrop-blur-md bg-opacity-80 p-8 rounded-lg shadow-2xl border border-gray-600 w-full max-w-3xl">
-                        {/* Screen area with question and hint request */}
+                    <div className="bg-gradient-to-br from-gray-800 to-black p-8 rounded-lg border border-green-700 shadow-2xl w-full max-w-3xl">
+                        <h2 className="text-4xl font-extrabold text-center mb-6 text-green-400 tracking-widest">
+                            SHIP COMMAND CONSOLE
+                        </h2>
                         <div className="mb-6">
-                            <h2 className="text-4xl font-extrabold text-center mb-6 text-pink-400 tracking-wider uppercase">
-                                Spaceship Console
-                            </h2>
-                            <div className="mb-6 flex items-center justify-center">
-                                <p className="text-2xl text-center text-white">
-                                    {currentQuestion.question}
-                                </p>
-                                <span
-                                    title="Request Satellite Data"
-                                    onClick={
-                                        !isSubmitted
-                                            ? handleHintReveal
-                                            : undefined
-                                    }
-                                    className={`relative ml-3 cursor-pointer ${
-                                        isSubmitted ||
-                                        hintsRevealed ===
-                                            currentQuestion.hints.length
-                                            ? "text-gray-400 cursor-not-allowed"
-                                            : "text-yellow-300 hover:text-yellow-500"
-                                    }`}
-                                    style={
-                                        isSubmitted ||
-                                        hintsRevealed ===
-                                            currentQuestion.hints.length
-                                            ? {
-                                                  pointerEvents: "none",
-                                                  opacity: 0.5,
-                                              }
-                                            : {}
-                                    }
+                            <p className="text-md text-green-300 whitespace-pre-line">
+                                {currentQuestion.question}
+                            </p>
+                            <span
+                                title="Request Satellite Data"
+                                onClick={
+                                    !isSubmitted
+                                        ? handleHintReveal
+                                        : undefined
+                                }
+                                className={`relative ml-3 cursor-pointer ${
+                                    isSubmitted ||
+                                    hintsRevealed === currentQuestion.hints.length
+                                        ? "text-gray-500 cursor-not-allowed"
+                                        : "text-green-400 hover:text-green-600"
+                                }`}
+                                style={
+                                    isSubmitted ||
+                                    hintsRevealed === currentQuestion.hints.length
+                                        ? { pointerEvents: "none", opacity: 0.5 }
+                                        : {}
+                                }
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="32"
+                                    height="32"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    className="lucide lucide-satellite"
                                 >
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        width="32"
-                                        height="32"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        strokeWidth="2"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        className="lucide lucide-satellite"
-                                    >
-                                        <path d="M13 7 9 3 5 7l4 4" />
-                                        <path d="m17 11 4 4-4 4-4-4" />
-                                        <path d="m8 12 4 4 6-6-4-4Z" />
-                                        <path d="m16 8 3-3" />
-                                        <path d="M9 21a6 6 0 0 0-6-6" />
-                                    </svg>
-                                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold px-1 py-0.3 rounded-full text-[10px]">
-                                        {currentQuestion.hints.length -
-                                            hintsRevealed}
-                                    </span>
+                                    <path d="M13 7 9 3 5 7l4 4" />
+                                    <path d="m17 11 4 4-4 4-4-4" />
+                                    <path d="m8 12 4 4 6-6-4-4Z" />
+                                    <path d="m16 8 3-3" />
+                                    <path d="M9 21a6 6 0 0 0-6-6" />
+                                </svg>
+                                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold px-1 rounded-full">
+                                    {currentQuestion.hints.length - hintsRevealed}
                                 </span>
-                            </div>
-                            {hintsRevealed > 0 && (
-                                <div className="mt-6 p-4 bg-gray-900 bg-opacity-75 rounded border border-blue-400 shadow-lg animate-fade-in">
-                                    <h3 className="text-xl font-bold mb-2 text-blue-300">
-                                        Incoming Transmission:
-                                    </h3>
-                                    <div className="bg-blue-900 p-4 rounded-lg border border-blue-600 shadow-md">
-                                        {currentQuestion.hints
-                                            .slice(0, hintsRevealed)
-                                            .map((hint, index) => (
-                                                <p
-                                                    key={index}
-                                                    className="text-lg text-blue-200 animate-pulse mb-2"
-                                                >
-                                                    [Satellite Signal{" "}
-                                                    {index + 1}] - {hint}
-                                                </p>
-                                            ))}
-                                    </div>
-                                    <p className="mt-4 text-red-400 italic text-sm">
-                                        Warning: Using hints will decrease your
-                                        score!
-                                    </p>
-                                </div>
-                            )}
+                            </span>
                         </div>
+                        {hintsRevealed > 0 && (
+                            <div className="mt-6 p-4 bg-gray-900 bg-opacity-80 rounded border border-green-600 shadow-lg animate-fade-in">
+                                <h3 className="text-xl font-bold mb-2 text-green-300">
+                                    Incoming Transmission:
+                                </h3>
+                                <div className="bg-green-900 p-4 rounded-lg border border-green-700 shadow-md">
+                                    {currentQuestion.hints
+                                        .slice(0, hintsRevealed)
+                                        .map((hint, index) => (
+                                            <p
+                                                key={index}
+                                                className="text-lg text-green-200 mb-2"
+                                            >
+                                                [Signal {index + 1}]: {hint}
+                                            </p>
+                                        ))}
+                                </div>
+                                <p className="mt-4 text-red-400 italic text-sm">
+                                    Warning: Revealing hints reduces your score!
+                                </p>
+                            </div>
+                        )}
 
                         {/* Answer Input & Navigation */}
                         <div className="mt-6 flex flex-col items-center">
@@ -412,9 +409,9 @@ const SpaceshipConsole = () => {
                                 type="text"
                                 value={answer}
                                 onChange={handleAnswerChange}
-                                placeholder="Enter your answer..."
+                                placeholder="Enter your command..."
                                 disabled={!!isSubmitted}
-                                className="w-full max-w-md p-3 text-xl bg-transparent border-b-2 border-purple-400 text-white rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="w-full max-w-md p-3 text-xl bg-transparent border-b-2 border-green-500 text-green-100 rounded focus:outline-none focus:ring-2 focus:ring-green-600"
                             />
                             <div className="flex mt-4 space-x-4">
                                 {currentQuestionIndex > 0 && (
@@ -424,12 +421,11 @@ const SpaceshipConsole = () => {
                                                 currentQuestionIndex - 1
                                             )
                                         }
-                                        className="px-6 py-3 bg-blue-500 hover:bg-blue-600 rounded text-xl font-bold shadow-lg"
+                                        className="px-6 py-3 bg-green-700 hover:bg-green-800 rounded text-xl font-bold shadow-lg"
                                     >
-                                        Previous Question
+                                        Previous
                                     </button>
                                 )}
-
                                 <button
                                     onClick={handleSubmitAnswer}
                                     disabled={!!isSubmitted}
@@ -439,24 +435,21 @@ const SpaceshipConsole = () => {
                                             : "bg-green-500 hover:bg-green-600"
                                     }`}
                                 >
-                                    {isSubmitted
-                                        ? "Submitted"
-                                        : "Submit Answer"}
+                                    {isSubmitted ? "Submitted" : "Execute"}
                                 </button>
-
                                 {currentQuestionIndex <
                                     questions.length - 1 && (
                                     <button
                                         onClick={handleNextQuestion}
-                                        className="px-6 py-3 bg-blue-500 hover:bg-blue-600 rounded text-xl font-bold shadow-lg"
+                                        className="px-6 py-3 bg-green-700 hover:bg-green-800 rounded text-xl font-bold shadow-lg"
                                     >
-                                        Next Question
+                                        Next
                                     </button>
                                 )}
                             </div>
                         </div>
                         {feedback && (
-                            <div className="mt-4 text-xl font-semibold text-center text-yellow-500">
+                            <div className="mt-4 text-xl font-semibold text-center text-green-400">
                                 {feedback}
                             </div>
                         )}
