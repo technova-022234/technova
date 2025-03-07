@@ -322,7 +322,7 @@ const SpaceshipConsole = () => {
                 {/* Header */}
                 <div className="flex justify-between items-center pt-16 px-8">
                     {/* Score Display */}
-                    <div className="text-cyan-400 text-2xl font-bold tracking-wider drop-shadow-lg">
+                    <div className="text-[#b53bca]  text-2xl font-bold tracking-wider drop-shadow-lg">
                         SCORE: {score}
                     </div>
                     {/* Question Navigation */}
@@ -331,10 +331,10 @@ const SpaceshipConsole = () => {
                             <button
                                 key={index}
                                 onClick={() => handleQuestionNavigation(index)}
-                                className={`relative w-12 h-12 flex items-center justify-center text-lg font-bold rounded-full border-2 border-cyan-600 transition-all duration-200 ${
+                                className={`relative w-12 h-12 flex items-center justify-center text-lg font-bold rounded-full border-2 border-[#b53bca]  transition-all duration-200 ${
                                     currentQuestionIndex === index
-                                        ? "bg-cyan-600 text-black"
-                                        : "bg-transparent text-cyan-300 hover:bg-cyan-700"
+                                        ? "bg-[#b53bca]  text-[#efb0fa]"
+                                        : "bg-transparent text-[#efb0fa]  hover:bg-[#b53bca] "
                                 }`}
                             >
                                 {index + 1}
@@ -349,7 +349,7 @@ const SpaceshipConsole = () => {
                             isSubmitted ||
                             hintsRevealed === currentQuestion.hints.length
                                 ? "text-gray-500 cursor-not-allowed"
-                                : "text-cyan-400 hover:text-cyan-600"
+                                : "text-[#b53bca]  hover:text-[#b53bca] "
                         }`}
                         style={
                             isSubmitted ||
@@ -384,12 +384,12 @@ const SpaceshipConsole = () => {
 
                 {/* Main Console Display */}
                 <div className="mt-8 flex flex-col items-center justify-center px-4">
-                    <div className="bg-gradient-to-br from-gray-800 to-black p-8 rounded-lg border border-cyan-700 shadow-2xl w-full max-w-3xl">
-                        <h2 className="text-4xl font-extrabold text-center mb-6 text-cyan-400 tracking-widest">
+                    <div className="bg-gradient-to-br from-gray-800 to-black p-8 rounded-lg border border-[#b53bca]  shadow-2xl w-full max-w-3xl">
+                        <h2 className="text-4xl font-extrabold text-center mb-6 text-[#b53bca]  tracking-widest">
                             SHIP COMMAND CONSOLE
                         </h2>
                         <div className="mb-6">
-                            <p className="text-md text-cyan-200 whitespace-pre-line">
+                            <p className="text-md text-[#efb0fa]  whitespace-pre-line">
                                 {currentQuestion.question}
                             </p>
                         </div>
@@ -402,7 +402,7 @@ const SpaceshipConsole = () => {
                                 onChange={handleAnswerChange}
                                 placeholder="Enter your command..."
                                 disabled={!!isSubmitted}
-                                className="w-full max-w-md p-3 text-xl bg-transparent border-b-2 border-cyan-500 text-cyan-100 rounded focus:outline-none focus:ring-2 focus:ring-cyan-600"
+                                className="w-full max-w-md p-3 text-xl bg-transparent border-b-2 border-[#b53bca]  text-[#efb0fa]  rounded focus:outline-none focus:ring-2 focus:ring-[#b53bca] -600"
                             />
                             <div className="flex mt-4 space-x-4">
                                 {currentQuestionIndex > 0 && (
@@ -412,7 +412,7 @@ const SpaceshipConsole = () => {
                                                 currentQuestionIndex - 1
                                             )
                                         }
-                                        className="px-6 py-3 bg-cyan-700 hover:bg-cyan-800 rounded text-xl font-bold shadow-lg"
+                                        className="px-6 py-3 bg-[#b53bca]  hover:bg-[#b53bca]  rounded text-xl font-bold shadow-lg"
                                     >
                                         Previous
                                     </button>
@@ -423,7 +423,7 @@ const SpaceshipConsole = () => {
                                     className={`px-6 py-3 rounded text-xl font-bold shadow-lg ${
                                         isSubmitted
                                             ? "bg-gray-500 cursor-not-allowed"
-                                            : "bg-cyan-500 hover:bg-cyan-600"
+                                            : "bg-[#b53bca]  hover:bg-[#b53bca] "
                                     }`}
                                 >
                                     {isSubmitted ? "Submitted" : "Execute"}
@@ -432,7 +432,7 @@ const SpaceshipConsole = () => {
                                     questions.length - 1 && (
                                     <button
                                         onClick={handleNextQuestion}
-                                        className="px-6 py-3 bg-cyan-700 hover:bg-cyan-800 rounded text-xl font-bold shadow-lg"
+                                        className="px-6 py-3 bg-[#b53bca]  hover:bg-[#b53bca]  rounded text-xl font-bold shadow-lg"
                                     >
                                         Next
                                     </button>
@@ -440,7 +440,7 @@ const SpaceshipConsole = () => {
                             </div>
                         </div>
                         {feedback && (
-                            <div className="mt-4 text-xl font-semibold text-center text-cyan-400">
+                            <div className="mt-4 text-xl font-semibold text-center text-[#b53bca] ">
                                 {feedback}
                             </div>
                         )}
@@ -451,23 +451,23 @@ const SpaceshipConsole = () => {
             {/* Modal Popup for Hints */}
             {showHintsModal && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-                    <div className="bg-gray-900 p-6 rounded-lg border border-cyan-600 shadow-lg relative max-w-lg w-full mx-4">
+                    <div className="bg-gray-900 p-6 rounded-lg border border-[#b53bca]  shadow-lg relative max-w-lg w-full mx-4">
                         <button
                             onClick={closeHintsModal}
-                            className="absolute top-2 right-2 text-cyan-400 hover:text-cyan-600 text-2xl font-bold"
+                            className="absolute top-2 right-2 text-[#efb0fa]  hover:text-[#7d258d]  text-2xl font-bold"
                         >
                             &times;
                         </button>
-                        <h3 className="text-xl font-bold mb-2 text-cyan-300">
+                        <h3 className="text-xl font-bold mb-2 text-[#ca47e1] ">
                             Incoming Transmission:
                         </h3>
-                        <div className="bg-cyan-900 p-4 rounded-lg border border-cyan-700 shadow-md max-h-80 overflow-y-auto">
+                        <div className="bg-[#7d258d]  p-4 rounded-lg border border-[#b53bca] shadow-md max-h-80 overflow-y-auto">
                             {currentQuestion.hints
                                 .slice(0, hintsRevealed)
                                 .map((hint, index) => (
                                     <p
                                         key={index}
-                                        className="text-lg text-cyan-100 mb-2"
+                                        className="text-lg text-[#efb0fa] -100 mb-2"
                                     >
                                         [Signal {index + 1}]: {hint}
                                     </p>
