@@ -89,6 +89,8 @@ const Puzzle = ({ gridSize = 4, imageUrl = "/images/puzzle.png" }) => {
     }, [gridSize, totalTiles]);
 
     const moveTile = (index) => {
+        if (localStorage.getItem("puzzleSolved")) return;
+        
         const blankIndex = board.indexOf(0);
         if (isAdjacent(index, blankIndex)) {
             const newBoard = [...board];

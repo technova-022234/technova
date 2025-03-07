@@ -8,6 +8,7 @@ import DragAndDropImages from "./DragImage";
 import Distance from "./Distancecalculation";
 import Sequence from "./Sequence";
 import AntiqueClock from "./AntiqueClock";
+import Radar from "./Radar";
 
 // Updated questions with a more immersive narrative while keeping the correct answers the same.
 const questions = [
@@ -87,7 +88,7 @@ const QuestionLeftPanel = ({ questionIndex }) => {
         case 1:
             return <SensorSystem />;
         case 2:
-            return <Distance />;
+            return <Radar />;
         case 3:
             return <AntiqueClock />;
         case 4:
