@@ -7,6 +7,7 @@ import SensorSystem from "./logicgatescomponent";
 import DragAndDropImages from "./DragImage";
 import Distance from "./Distancecalculation";
 import Sequence from "./Sequence";
+import AntiqueClock from "./AntiqueClock";
 
 // Updated questions with a more immersive narrative while keeping the correct answers the same.
 const questions = [
@@ -88,7 +89,7 @@ const QuestionLeftPanel = ({ questionIndex }) => {
         case 2:
             return <Distance />;
         case 3:
-            return <Sequence />;
+            return <AntiqueClock />;
         case 4:
             return (
                 <div className="w-full h-full">
