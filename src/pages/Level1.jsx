@@ -18,7 +18,7 @@ Our ship’s advanced navigation system has intercepted encrypted coordinates fo
             "Focus on connecting nodes with minimal weights.",
             "Remember: the goal is to minimize the total energy consumption.",
             "Visualize linking all nodes without cycles.",
-            "Optimal connections yield the lowest sum."
+            "Optimal connections yield the lowest sum.",
         ],
     },
     {
@@ -29,7 +29,7 @@ Our spacecraft’s sensor suite is evaluating three critical signals. The protoc
             "At least two active signals are needed.",
             "Binary sensor logic is in effect.",
             "Majority rule applies.",
-            "Check that two or more inputs are on."
+            "Check that two or more inputs are on.",
         ],
     },
     {
@@ -40,7 +40,7 @@ Radar has locked onto three asteroids in our flight path. To prioritize evasion 
             "Analyze the strength of the radar signals.",
             "The nearest object will return the strongest echo.",
             "Triangulation points to the first detected target.",
-            "Alpha usually signifies the primary threat."
+            "Alpha usually signifies the primary threat.",
         ],
     },
     {
@@ -53,7 +53,7 @@ Which word unlocks the hidden sequence?`,
             "Time can be unpredictable.",
             "Expect the unexpected in this anomaly.",
             "Not sequential but disruptive.",
-            "Disorder reveals the truth."
+            "Disorder reveals the truth.",
         ],
     },
     {
@@ -73,7 +73,7 @@ Determine which function is assigned to the panel in the 4th position.
             "Map out the positions logically.",
             "Remember: panels have fixed relative positions.",
             "Clues are key—use process of elimination.",
-            "Focus on the sequence from left to right."
+            "Focus on the sequence from left to right.",
         ],
     },
 ];
@@ -115,13 +115,11 @@ const SpaceshipConsole = () => {
     });
     const [answer, setAnswer] = useState("");
     const [hintsRevealed, setHintsRevealed] = useState(0);
-
     const [score, setScore] = useState(() => {
         const saved = localStorage.getItem("score");
         return saved ? JSON.parse(saved) : 0;
     });
     const [feedback, setFeedback] = useState("");
-
     const [userAnswers, setUserAnswers] = useState(() => {
         const saved = localStorage.getItem("userAnswers");
         return saved ? JSON.parse(saved) : {};
@@ -134,11 +132,12 @@ const SpaceshipConsole = () => {
         const saved = localStorage.getItem("submittedQuestions");
         return saved ? JSON.parse(saved) : {};
     });
-
     const [levelComplete, setLevelComplete] = useState(() => {
         const saved = localStorage.getItem("levelComplete");
         return saved ? JSON.parse(saved) : false;
     });
+    // New state to manage the modal popup
+    const [showHintsModal, setShowHintsModal] = useState(false);
 
     // Check level completion
     useEffect(() => {
@@ -204,6 +203,21 @@ const SpaceshipConsole = () => {
             ...prev,
             [currentQuestionIndex]: newHintsRevealed,
         }));
+    };
+
+    // Function to open the modal and reveal a new hint if available.
+    const openHintsModal = () => {
+        if (
+            !submittedQuestions[currentQuestionIndex] &&
+            hintsRevealed < currentQuestion.hints.length
+        ) {
+            handleHintReveal();
+        }
+        setShowHintsModal(true);
+    };
+
+    const closeHintsModal = () => {
+        setShowHintsModal(false);
     };
 
     const handleAnswerChange = (e) => {
@@ -298,110 +312,87 @@ const SpaceshipConsole = () => {
 
     return (
         <div className="min-h-screen bg-cover bg-center bg-[url('/images/image2.jpg')] flex">
-            {/* Left Half remains the same */}
+            {/* Left Panel */}
             <div className="w-[50vw] bg-transparent flex items-center justify-center">
                 <QuestionLeftPanel questionIndex={currentQuestionIndex} />
             </div>
 
-            {/* Right Half redesigned as a futuristic ship command console */}
+            {/* Right Panel: Futuristic Ship Command Console */}
             <div className="w-1/2 flex flex-col pr-10">
-                {/* Header with score and question navigation in a spaceship style */}
+                {/* Header */}
                 <div className="flex justify-between items-center pt-16 px-8">
-                    <div className="text-green-400 text-2xl font-bold tracking-wider drop-shadow-lg">
+                    {/* Score Display */}
+                    <div className="text-cyan-400 text-2xl font-bold tracking-wider drop-shadow-lg">
                         SCORE: {score}
                     </div>
+                    {/* Question Navigation */}
                     <div className="flex gap-4">
                         {questions.map((q, index) => (
                             <button
                                 key={index}
                                 onClick={() => handleQuestionNavigation(index)}
-                                className={`relative w-12 h-12 flex items-center justify-center text-lg font-bold rounded-full border-2 border-green-600 transition-all duration-200 ${
+                                className={`relative w-12 h-12 flex items-center justify-center text-lg font-bold rounded-full border-2 border-cyan-600 transition-all duration-200 ${
                                     currentQuestionIndex === index
-                                        ? "bg-green-600 text-black"
-                                        : "bg-transparent text-green-300 hover:bg-green-700"
+                                        ? "bg-cyan-600 text-black"
+                                        : "bg-transparent text-cyan-300 hover:bg-cyan-700"
                                 }`}
                             >
                                 {index + 1}
                             </button>
                         ))}
                     </div>
+                    {/* Hints Icon */}
+                    <span
+                        title="Request Satellite Data"
+                        onClick={!isSubmitted ? openHintsModal : undefined}
+                        className={`relative ml-3 cursor-pointer ${
+                            isSubmitted ||
+                            hintsRevealed === currentQuestion.hints.length
+                                ? "text-gray-500 cursor-not-allowed"
+                                : "text-cyan-400 hover:text-cyan-600"
+                        }`}
+                        style={
+                            isSubmitted ||
+                            hintsRevealed === currentQuestion.hints.length
+                                ? { pointerEvents: "none", opacity: 0.5 }
+                                : {}
+                        }
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="32"
+                            height="32"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="lucide lucide-satellite"
+                        >
+                            <path d="M13 7 9 3 5 7l4 4" />
+                            <path d="m17 11 4 4-4 4-4-4" />
+                            <path d="m8 12 4 4 6-6-4-4Z" />
+                            <path d="m16 8 3-3" />
+                            <path d="M9 21a6 6 0 0 0-6-6" />
+                        </svg>
+                        <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold px-1 rounded-full">
+                            {currentQuestion.hints.length - hintsRevealed}
+                        </span>
+                    </span>
                 </div>
 
                 {/* Main Console Display */}
-                <div className="flex-grow flex flex-col items-center justify-center px-4">
-                    <div className="bg-gradient-to-br from-gray-800 to-black p-8 rounded-lg border border-green-700 shadow-2xl w-full max-w-3xl">
-                        <h2 className="text-4xl font-extrabold text-center mb-6 text-green-400 tracking-widest">
+                <div className="mt-8 flex flex-col items-center justify-center px-4">
+                    <div className="bg-gradient-to-br from-gray-800 to-black p-8 rounded-lg border border-cyan-700 shadow-2xl w-full max-w-3xl">
+                        <h2 className="text-4xl font-extrabold text-center mb-6 text-cyan-400 tracking-widest">
                             SHIP COMMAND CONSOLE
                         </h2>
                         <div className="mb-6">
-                            <p className="text-md text-green-300 whitespace-pre-line">
+                            <p className="text-md text-cyan-200 whitespace-pre-line">
                                 {currentQuestion.question}
                             </p>
-                            <span
-                                title="Request Satellite Data"
-                                onClick={
-                                    !isSubmitted
-                                        ? handleHintReveal
-                                        : undefined
-                                }
-                                className={`relative ml-3 cursor-pointer ${
-                                    isSubmitted ||
-                                    hintsRevealed === currentQuestion.hints.length
-                                        ? "text-gray-500 cursor-not-allowed"
-                                        : "text-green-400 hover:text-green-600"
-                                }`}
-                                style={
-                                    isSubmitted ||
-                                    hintsRevealed === currentQuestion.hints.length
-                                        ? { pointerEvents: "none", opacity: 0.5 }
-                                        : {}
-                                }
-                            >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="32"
-                                    height="32"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    className="lucide lucide-satellite"
-                                >
-                                    <path d="M13 7 9 3 5 7l4 4" />
-                                    <path d="m17 11 4 4-4 4-4-4" />
-                                    <path d="m8 12 4 4 6-6-4-4Z" />
-                                    <path d="m16 8 3-3" />
-                                    <path d="M9 21a6 6 0 0 0-6-6" />
-                                </svg>
-                                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold px-1 rounded-full">
-                                    {currentQuestion.hints.length - hintsRevealed}
-                                </span>
-                            </span>
                         </div>
-                        {hintsRevealed > 0 && (
-                            <div className="mt-6 p-4 bg-gray-900 bg-opacity-80 rounded border border-green-600 shadow-lg animate-fade-in">
-                                <h3 className="text-xl font-bold mb-2 text-green-300">
-                                    Incoming Transmission:
-                                </h3>
-                                <div className="bg-green-900 p-4 rounded-lg border border-green-700 shadow-md">
-                                    {currentQuestion.hints
-                                        .slice(0, hintsRevealed)
-                                        .map((hint, index) => (
-                                            <p
-                                                key={index}
-                                                className="text-lg text-green-200 mb-2"
-                                            >
-                                                [Signal {index + 1}]: {hint}
-                                            </p>
-                                        ))}
-                                </div>
-                                <p className="mt-4 text-red-400 italic text-sm">
-                                    Warning: Revealing hints reduces your score!
-                                </p>
-                            </div>
-                        )}
 
                         {/* Answer Input & Navigation */}
                         <div className="mt-6 flex flex-col items-center">
@@ -411,7 +402,7 @@ const SpaceshipConsole = () => {
                                 onChange={handleAnswerChange}
                                 placeholder="Enter your command..."
                                 disabled={!!isSubmitted}
-                                className="w-full max-w-md p-3 text-xl bg-transparent border-b-2 border-green-500 text-green-100 rounded focus:outline-none focus:ring-2 focus:ring-green-600"
+                                className="w-full max-w-md p-3 text-xl bg-transparent border-b-2 border-cyan-500 text-cyan-100 rounded focus:outline-none focus:ring-2 focus:ring-cyan-600"
                             />
                             <div className="flex mt-4 space-x-4">
                                 {currentQuestionIndex > 0 && (
@@ -421,7 +412,7 @@ const SpaceshipConsole = () => {
                                                 currentQuestionIndex - 1
                                             )
                                         }
-                                        className="px-6 py-3 bg-green-700 hover:bg-green-800 rounded text-xl font-bold shadow-lg"
+                                        className="px-6 py-3 bg-cyan-700 hover:bg-cyan-800 rounded text-xl font-bold shadow-lg"
                                     >
                                         Previous
                                     </button>
@@ -432,7 +423,7 @@ const SpaceshipConsole = () => {
                                     className={`px-6 py-3 rounded text-xl font-bold shadow-lg ${
                                         isSubmitted
                                             ? "bg-gray-500 cursor-not-allowed"
-                                            : "bg-green-500 hover:bg-green-600"
+                                            : "bg-cyan-500 hover:bg-cyan-600"
                                     }`}
                                 >
                                     {isSubmitted ? "Submitted" : "Execute"}
@@ -441,7 +432,7 @@ const SpaceshipConsole = () => {
                                     questions.length - 1 && (
                                     <button
                                         onClick={handleNextQuestion}
-                                        className="px-6 py-3 bg-green-700 hover:bg-green-800 rounded text-xl font-bold shadow-lg"
+                                        className="px-6 py-3 bg-cyan-700 hover:bg-cyan-800 rounded text-xl font-bold shadow-lg"
                                     >
                                         Next
                                     </button>
@@ -449,15 +440,46 @@ const SpaceshipConsole = () => {
                             </div>
                         </div>
                         {feedback && (
-                            <div className="mt-4 text-xl font-semibold text-center text-green-400">
+                            <div className="mt-4 text-xl font-semibold text-center text-cyan-400">
                                 {feedback}
                             </div>
                         )}
                     </div>
                 </div>
             </div>
+
+            {/* Modal Popup for Hints */}
+            {showHintsModal && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                    <div className="bg-gray-900 p-6 rounded-lg border border-cyan-600 shadow-lg relative max-w-lg w-full mx-4">
+                        <button
+                            onClick={closeHintsModal}
+                            className="absolute top-2 right-2 text-cyan-400 hover:text-cyan-600 text-2xl font-bold"
+                        >
+                            &times;
+                        </button>
+                        <h3 className="text-xl font-bold mb-2 text-cyan-300">
+                            Incoming Transmission:
+                        </h3>
+                        <div className="bg-cyan-900 p-4 rounded-lg border border-cyan-700 shadow-md max-h-80 overflow-y-auto">
+                            {currentQuestion.hints
+                                .slice(0, hintsRevealed)
+                                .map((hint, index) => (
+                                    <p
+                                        key={index}
+                                        className="text-lg text-cyan-100 mb-2"
+                                    >
+                                        [Signal {index + 1}]: {hint}
+                                    </p>
+                                ))}
+                        </div>
+                        <p className="mt-4 text-red-400 italic text-sm">
+                            Warning: Revealing hints reduces your score!
+                        </p>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
-
 export default SpaceshipConsole;
