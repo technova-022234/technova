@@ -5,12 +5,9 @@ import { useNavigate } from "react-router-dom";
 import GraphComponent from "./GraphComponent";
 import SensorSystem from "./logicgatescomponent";
 import DragAndDropImages from "./DragImage";
-import Distance from "./Distancecalculation";
-import Sequence from "./Sequence";
-import AntiqueClock from "./AntiqueClock";
 import Radar from "./Radar";
+import AntiqueClock from "./AntiqueClock";
 
-// Updated questions with a more immersive narrative while keeping the correct answers the same.
 const questions = [
     {
         question: `Navigation Protocol:
@@ -115,12 +112,13 @@ const SpaceshipConsole = () => {
         const saved = localStorage.getItem("currentQuestionIndex");
         return saved ? JSON.parse(saved) : 0;
     });
-    const [answer, setAnswer] = useState("");
-    const [hintsRevealed, setHintsRevealed] = useState(0);
+    // Set a fixed starting score (e.g., 100 points)
     const [score, setScore] = useState(() => {
         const saved = localStorage.getItem("score");
-        return saved ? JSON.parse(saved) : 0;
+        return saved ? JSON.parse(saved) : 100;
     });
+    const [answer, setAnswer] = useState("");
+    const [hintsRevealed, setHintsRevealed] = useState(0);
     const [feedback, setFeedback] = useState("");
     const [userAnswers, setUserAnswers] = useState(() => {
         const saved = localStorage.getItem("userAnswers");
@@ -138,7 +136,6 @@ const SpaceshipConsole = () => {
         const saved = localStorage.getItem("levelComplete");
         return saved ? JSON.parse(saved) : false;
     });
-    // New state to manage the modal popup
     const [showHintsModal, setShowHintsModal] = useState(false);
 
     // Check level completion
@@ -192,12 +189,16 @@ const SpaceshipConsole = () => {
         setFeedback("");
     }, [currentQuestionIndex, userAnswers, hintsState]);
 
+    // Update: Deduct score when a hint is revealed.
     const handleHintReveal = () => {
         if (
             submittedQuestions[currentQuestionIndex] ||
             hintsRevealed >= currentQuestion.hints.length
         )
             return;
+
+        const hintPenalty = 1; // Deduct 1 point per hint reveal.
+        setScore((prevScore) => prevScore - hintPenalty);
 
         const newHintsRevealed = hintsRevealed + 1;
         setHintsRevealed(newHintsRevealed);
@@ -207,7 +208,6 @@ const SpaceshipConsole = () => {
         }));
     };
 
-    // Function to open the modal and reveal a new hint if available.
     const openHintsModal = () => {
         if (
             !submittedQuestions[currentQuestionIndex] &&
@@ -236,9 +236,10 @@ const SpaceshipConsole = () => {
 
         const normalizedAnswer = answer.trim().toLowerCase();
         const normalizedCorrect = currentQuestion.correctAnswer.toLowerCase();
-        const questionScore = Math.max(5 - hintsRevealed, 0);
 
         if (normalizedAnswer === normalizedCorrect) {
+            // Calculate reward based on hints already revealed.
+            const questionScore = Math.max(5, 0);
             const newTotalScore = score + questionScore;
             setScore(newTotalScore);
             setFeedback(`Correct! You earned ${questionScore} marks.`);
@@ -252,6 +253,8 @@ const SpaceshipConsole = () => {
                 [currentQuestionIndex]: finalAnswer,
             }));
             setAnswer(finalAnswer);
+
+            // Log the submission time and update on the backend.
             const now = new Date();
             const utcTime = now.getTime() + now.getTimezoneOffset() * 60000;
             const istTime = new Date(utcTime + 5.5 * 60 * 60000);
@@ -277,7 +280,13 @@ const SpaceshipConsole = () => {
                 console.error("Error updating level1 score:", error);
             }
         } else {
-            setFeedback("Incorrect. Keep trying, space explorer!");
+            // Deduct a fixed penalty for a wrong answer.
+            const penalty = 2;
+            const newTotalScore = score - penalty;
+            setScore(newTotalScore);
+            setFeedback(
+                `Incorrect. ${penalty} marks deducted. Keep trying, space explorer!`
+            );
         }
     };
 
@@ -320,7 +329,7 @@ const SpaceshipConsole = () => {
             </div>
 
             {/* Right Panel: Futuristic Ship Command Console */}
-            <div className="w-1/2 flex flex-col pr-10">
+            <div className="w-1/2 flex flex-col pr-10 z-10">
                 {/* Header */}
                 <div className="flex justify-between items-center pt-16 px-8">
                     {/* Score Display */}
@@ -333,10 +342,10 @@ const SpaceshipConsole = () => {
                             <button
                                 key={index}
                                 onClick={() => handleQuestionNavigation(index)}
-                                className={`relative w-12 h-12 flex items-center justify-center text-lg font-bold rounded-full border-2 border-[#b53bca]  transition-all duration-200 ${
+                                className={`relative w-12 h-12 flex items-center justify-center text-lg font-bold rounded-full border-2 border-[#b53bca] transition-all duration-200 ${
                                     currentQuestionIndex === index
-                                        ? "bg-[#b53bca]  text-[#efb0fa]"
-                                        : "bg-transparent text-[#efb0fa]  hover:bg-[#b53bca] "
+                                        ? "bg-[#b53bca] text-[#efb0fa]"
+                                        : "bg-transparent text-[#efb0fa] hover:bg-[#b53bca]"
                                 }`}
                             >
                                 {index + 1}
@@ -351,7 +360,7 @@ const SpaceshipConsole = () => {
                             isSubmitted ||
                             hintsRevealed === currentQuestion.hints.length
                                 ? "text-gray-500 cursor-not-allowed"
-                                : "text-[#b53bca]  hover:text-[#b53bca] "
+                                : "text-[#b53bca] hover:text-[#b53bca]"
                         }`}
                         style={
                             isSubmitted ||
@@ -386,12 +395,12 @@ const SpaceshipConsole = () => {
 
                 {/* Main Console Display */}
                 <div className="mt-8 flex flex-col items-center justify-center px-4">
-                    <div className="bg-gradient-to-br from-gray-800 to-black p-8 rounded-lg border border-[#b53bca]  shadow-2xl w-full max-w-3xl">
-                        <h2 className="text-4xl font-extrabold text-center mb-6 text-[#b53bca]  tracking-widest">
+                    <div className="bg-gradient-to-br from-gray-800 to-black p-8 rounded-lg border border-[#b53bca] shadow-2xl w-full max-w-3xl">
+                        <h2 className="text-4xl font-extrabold text-center mb-6 text-[#b53bca] tracking-widest">
                             SHIP COMMAND CONSOLE
                         </h2>
                         <div className="mb-6">
-                            <p className="text-md text-[#efb0fa]  whitespace-pre-line">
+                            <p className="text-md text-[#efb0fa] whitespace-pre-line">
                                 {currentQuestion.question}
                             </p>
                         </div>
@@ -404,7 +413,7 @@ const SpaceshipConsole = () => {
                                 onChange={handleAnswerChange}
                                 placeholder="Enter your command..."
                                 disabled={!!isSubmitted}
-                                className="w-full max-w-md p-3 text-xl bg-transparent border-b-2 border-[#b53bca]  text-[#efb0fa]  rounded focus:outline-none focus:ring-2 focus:ring-[#b53bca] -600"
+                                className="w-full max-w-md p-3 text-xl bg-transparent border-b-2 border-[#b53bca] text-[#efb0fa] rounded focus:outline-none focus:ring-2 focus:ring-[#b53bca]"
                             />
                             <div className="flex mt-4 space-x-4">
                                 {currentQuestionIndex > 0 && (
@@ -414,7 +423,7 @@ const SpaceshipConsole = () => {
                                                 currentQuestionIndex - 1
                                             )
                                         }
-                                        className="px-6 py-3 bg-[#b53bca]  hover:bg-[#b53bca]  rounded text-xl font-bold shadow-lg"
+                                        className="px-6 py-3 bg-[#b53bca] hover:bg-[#b53bca] rounded text-xl font-bold shadow-lg"
                                     >
                                         Previous
                                     </button>
@@ -425,7 +434,7 @@ const SpaceshipConsole = () => {
                                     className={`px-6 py-3 rounded text-xl font-bold shadow-lg ${
                                         isSubmitted
                                             ? "bg-gray-500 cursor-not-allowed"
-                                            : "bg-[#b53bca]  hover:bg-[#b53bca] "
+                                            : "bg-[#b53bca] hover:bg-[#b53bca]"
                                     }`}
                                 >
                                     {isSubmitted ? "Submitted" : "Execute"}
@@ -434,7 +443,7 @@ const SpaceshipConsole = () => {
                                     questions.length - 1 && (
                                     <button
                                         onClick={handleNextQuestion}
-                                        className="px-6 py-3 bg-[#b53bca]  hover:bg-[#b53bca]  rounded text-xl font-bold shadow-lg"
+                                        className="px-6 py-3 bg-[#b53bca] hover:bg-[#b53bca] rounded text-xl font-bold shadow-lg"
                                     >
                                         Next
                                     </button>
@@ -442,7 +451,7 @@ const SpaceshipConsole = () => {
                             </div>
                         </div>
                         {feedback && (
-                            <div className="mt-4 text-xl font-semibold text-center text-[#b53bca] ">
+                            <div className="mt-4 text-xl font-semibold text-center text-[#b53bca]">
                                 {feedback}
                             </div>
                         )}
@@ -453,23 +462,23 @@ const SpaceshipConsole = () => {
             {/* Modal Popup for Hints */}
             {showHintsModal && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-                    <div className="bg-gray-900 p-6 rounded-lg border border-[#b53bca]  shadow-lg relative max-w-lg w-full mx-4">
+                    <div className="bg-gray-900 p-6 rounded-lg border border-[#b53bca] shadow-lg relative max-w-lg w-full mx-4">
                         <button
                             onClick={closeHintsModal}
-                            className="absolute top-2 right-2 text-[#efb0fa]  hover:text-[#7d258d]  text-2xl font-bold"
+                            className="absolute top-2 right-2 text-[#efb0fa] hover:text-[#7d258d] text-2xl font-bold"
                         >
                             &times;
                         </button>
-                        <h3 className="text-xl font-bold mb-2 text-[#ca47e1] ">
+                        <h3 className="text-xl font-bold mb-2 text-[#ca47e1]">
                             Incoming Transmission:
                         </h3>
-                        <div className="bg-[#7d258d]  p-4 rounded-lg border border-[#b53bca] shadow-md max-h-80 overflow-y-auto">
+                        <div className="bg-[#7d258d] p-4 rounded-lg border border-[#b53bca] shadow-md max-h-80 overflow-y-auto">
                             {currentQuestion.hints
                                 .slice(0, hintsRevealed)
                                 .map((hint, index) => (
                                     <p
                                         key={index}
-                                        className="text-lg text-[#efb0fa] -100 mb-2"
+                                        className="text-lg text-[#efb0fa] mb-2"
                                     >
                                         [Signal {index + 1}]: {hint}
                                     </p>
@@ -484,4 +493,5 @@ const SpaceshipConsole = () => {
         </div>
     );
 };
+
 export default SpaceshipConsole;
