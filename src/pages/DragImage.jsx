@@ -14,7 +14,7 @@ const DraggableImage = ({ src, alt, position, onStop, index, imageSize }) => {
                 onStop(e, data, index);
             }}
         >
-            <img
+            {/* <img
                 src={src}
                 alt={alt}
                 style={{
@@ -24,7 +24,23 @@ const DraggableImage = ({ src, alt, position, onStop, index, imageSize }) => {
                     cursor: isDragging ? "grabbing" : "grab",
                 }}
                 className="shadow-lg rounded absolute"
-            />
+            /> */}
+            <div
+                className="shadow-lg rounded absolute bg-cover bg-center"
+                style={{
+                    backgroundImage: `url("${src}")`,
+                    width: imageSize,
+                    height: imageSize,
+                    cursor: isDragging ? "grabbing" : "grab",
+                }}
+            >
+                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 text-white">
+                    Hello
+                </div>
+            </div>
+
+
+
         </Draggable>
     );
 };
@@ -128,11 +144,11 @@ const DragAndDropImages = () => {
 
     const imageSize = containerSize.width < 640 ? 80 : 120;
     const imageSources = [
-        "/images/image1.jpg",
-        "/images/image1.jpg",
-        "/images/image1.jpg",
-        "/images/image1.jpg",
-        "/images/image1.jpg",
+        "images/navigationpanel_lvl1.jpg",
+        "images/communicationspanel_lvl1.jpg",
+        "images/Weaponspanel_lvl1.jpg",
+        "images/shieldpanel_lvl1.jpg",
+        "images/enginepanel_lvl1.jpg",
     ];
 
     return (
