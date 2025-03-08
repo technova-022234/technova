@@ -12,7 +12,6 @@ const Puzzle = ({ gridSize = 4, imageUrl = "/images/puzzle.png" }) => {
         (_, i) => (i + 1) % totalTiles
     );
 
-    // Check if puzzle is solved by explicitly comparing with "true"
     const alreadySolved = localStorage.getItem("puzzleSolved") === "true";
     if (alreadySolved) {
         dispatch(completeLevel("level2"));
@@ -68,13 +67,11 @@ const Puzzle = ({ gridSize = 4, imageUrl = "/images/puzzle.png" }) => {
         return savedMoveCount ? JSON.parse(savedMoveCount) : 0;
     });
 
-    // Update localStorage and sync with backend using async/await.
     useEffect(() => {
         localStorage.setItem("puzzleBoard", JSON.stringify(board));
         localStorage.setItem("puzzleMoveCount", JSON.stringify(moveCount));
 
         const syncPuzzleData = async () => {
-            // Use explicit check: if not set, default to "false"
             const puzzleSolvedValue =
                 localStorage.getItem("puzzleSolved") || "false";
             console.log("puzzleSolvedValue:", puzzleSolvedValue);
@@ -105,7 +102,6 @@ const Puzzle = ({ gridSize = 4, imageUrl = "/images/puzzle.png" }) => {
         syncPuzzleData();
     }, [board, moveCount]);
 
-    // Reset board if saved board is invalid.
     useEffect(() => {
         const savedBoard = localStorage.getItem("puzzleBoard");
         let shouldReset = false;
@@ -124,7 +120,6 @@ const Puzzle = ({ gridSize = 4, imageUrl = "/images/puzzle.png" }) => {
     }, [gridSize, totalTiles]);
 
     const moveTile = async (index) => {
-        // Check explicitly if puzzleSolved equals "true"
         if (localStorage.getItem("puzzleSolved") === "true") return;
 
         console.log("Board:", board);
