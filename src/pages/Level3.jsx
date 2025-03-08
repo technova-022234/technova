@@ -2,12 +2,10 @@ import React, { useState, useEffect } from "react";
 import { TypeAnimation } from "react-type-animation";
 
 const Level3 = () => {
-    // Load stored data from localStorage if it exists.
+    // Load stored level3 data from localStorage if it exists.
     const storedData = JSON.parse(localStorage.getItem("submissionData")) || {};
-    // Convert submissionTimes strings back into Date objects (if any).
-    const initialSubmissionTimes = storedData.submissionTimes
-        ? storedData.submissionTimes.map((time) => new Date(time))
-        : [];
+    // If submissionTimes exist, assume they are already ISO strings.
+    const initialSubmissionTimes = storedData.submissionTimes || [];
 
     const questions = [
         "who are you",
@@ -50,7 +48,7 @@ const Level3 = () => {
             : totalRings
     );
 
-    const userEmail = localStorage.getItem("userEmail"); // Replace with actual user email if needed.
+    const userEmail = localStorage.getItem("userEmail");
 
     // Other state variables.
     const [inputValue, setInputValue] = useState("");
@@ -61,7 +59,95 @@ const Level3 = () => {
     const [messageType, setMessageType] = useState(null);
     const [firewallsBroken, setFirewallsBroken] = useState(false);
 
-    // Fisher-Yates shuffle to randomize the hacking statements.
+    // Persist Level3 state to localStorage in the desired format.
+    useEffect(() => {
+        const submissionData = {
+            questionIndex,
+            correctAnswers: correctAnswersCount,
+            submissionTimes: submissionTimes.map((time) =>
+                typeof time === "string" ? time : time.toISOString()
+            ),
+            remainingRings,
+        };
+        localStorage.setItem("submissionData", JSON.stringify(submissionData));
+    }, [questionIndex, correctAnswersCount, submissionTimes, remainingRings]);
+
+    // Sync Level3 data with backend whenever submissionData changes.
+    useEffect(() => {
+        const syncLevel3Data = async () => {
+            if (!userEmail) return;
+            const submissionData = {
+                questionIndex,
+                correctAnswers: correctAnswersCount,
+                submissionTimes: submissionTimes.map((time) =>
+                    typeof time === "string" ? time : time.toISOString()
+                ),
+                remainingRings,
+            };
+            try {
+                const response = await fetch(
+                    "http://localhost:5000/api/update-storage",
+                    {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            email: userEmail,
+                            submissionData,
+                        }),
+                    }
+                );
+                const data = await response.json();
+                console.log("Level3 storage updated to backend:", data);
+            } catch (error) {
+                console.error("Error updating level3 storage:", error);
+            }
+        };
+
+        syncLevel3Data();
+    }, [
+        questionIndex,
+        correctAnswersCount,
+        submissionTimes,
+        remainingRings,
+        userEmail,
+    ]);
+
+    // Additionally, send submission data to the backend when correctAnswersCount or submissionTimes updates.
+    useEffect(() => {
+        const syncSubmission = async () => {
+            if (correctAnswersCount > 0 && userEmail) {
+                const submissionData = {
+                    email: userEmail,
+                    correctAnswers: correctAnswersCount,
+                    remainingRings: remainingRings,
+                    submissionTimes: submissionTimes.map((time) =>
+                        typeof time === "string" ? time : time.toISOString()
+                    ),
+                };
+                try {
+                    const response = await fetch(
+                        "http://localhost:5000/api/level3/submit",
+                        {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(submissionData),
+                        }
+                    );
+                    const data = await response.json();
+                    console.log(
+                        "Level3 submission data sent successfully:",
+                        data
+                    );
+                } catch (error) {
+                    console.error("Error submitting level3 data:", error);
+                }
+            }
+        };
+
+        syncSubmission();
+    }, [correctAnswersCount, submissionTimes, userEmail, remainingRings]);
+
+    // Fisher-Yates shuffle for hacking statements.
     const shuffleArray = (array) => {
         const arr = [...array];
         for (let i = arr.length - 1; i > 0; i--) {
@@ -71,46 +157,7 @@ const Level3 = () => {
         return arr;
     };
 
-    // Persist state changes to localStorage.
-    useEffect(() => {
-        const submissionData = {
-            questionIndex,
-            correctAnswers: correctAnswersCount,
-            submissionTimes,
-            remainingRings,
-        };
-        localStorage.setItem("submissionData", JSON.stringify(submissionData));
-    }, [questionIndex, correctAnswersCount, submissionTimes, remainingRings]);
-
-    // Send submission data to the backend whenever correctAnswersCount or submissionTimes updates.
-    useEffect(() => {
-        if (correctAnswersCount > 0) {
-            const submissionData = {
-                email: userEmail,
-                correctAnswers: correctAnswersCount,
-                submissionTimes: submissionTimes,
-            };
-
-            console.log(submissionData);
-
-            fetch("http://localhost:5000/api/level3/submit", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(submissionData),
-            })
-                .then((response) => response.json())
-                .then((data) =>
-                    console.log("Data submitted successfully:", data)
-                )
-                .catch((error) =>
-                    console.error("Error submitting data:", error)
-                );
-        }
-    }, [correctAnswersCount, submissionTimes, userEmail]);
-
-    // When the user presses Enter (and input is not empty), trigger the hacking sequence.
+    // When user presses Enter, trigger the hacking sequence.
     const handleKeyDown = (e) => {
         if (e.key === "Enter" && inputValue.trim() !== "" && !isHacking) {
             const isCorrect =
@@ -129,12 +176,14 @@ const Level3 = () => {
             if (isCorrect) {
                 setFlickerRingIndex(totalRings - remainingRings);
                 setCorrectAnswersCount((prevCount) => prevCount + 1);
-
-                // Get IST timestamp
+                // Get IST timestamp and store as ISO string.
                 const now = new Date();
                 const utcTime = now.getTime() + now.getTimezoneOffset() * 60000;
                 const istTime = new Date(utcTime + 5.5 * 60 * 60000);
-                setSubmissionTimes((prevTimes) => [...prevTimes, istTime]);
+                setSubmissionTimes((prevTimes) => [
+                    ...prevTimes,
+                    istTime.toISOString(),
+                ]);
             }
 
             let index = 0;
@@ -143,16 +192,15 @@ const Level3 = () => {
                     setHackingText(
                         (prevText) =>
                             prevText + shuffledStatements[index] + "\n"
-                    ); // Add line by line
+                    );
                     index++;
                 } else {
                     clearInterval(interval);
                     setTimeout(() => {
-                        // Pass the result message directly.
                         handleHackingComplete(resultMessage);
-                    }, 1000); // Delay before showing result
+                    }, 1000);
                 }
-            }, 500); // Adjust timing for line appearance
+            }, 500);
         }
     };
 
@@ -191,7 +239,6 @@ const Level3 = () => {
         >
             {/* Left container: Firewall rings */}
             <div className="relative h-[450px] w-[450px] bg-black flex items-center justify-center">
-                {/* Outer rings with glowing effect */}
                 <div className="relative h-[300px] w-[300px]">
                     {remainingRings === 3 && (
                         <div
@@ -228,10 +275,7 @@ const Level3 = () => {
                 <div className="absolute inset-0 flex items-center justify-center">
                     <div className="h-[200px] w-[200px] border-2 border-[#00ff00] rounded-full animate-radar"></div>
                 </div>
-                {/* Radar sweeping line */}
                 <div className="absolute h-[150px] w-[2px] bg-[#00ff00] origin-top animate-sweep top-1/2 shadow-[0_0_10px_2px_#00ff00]"></div>
-
-                {/* Random blinking blips */}
                 {[...Array(5)].map((_, i) => (
                     <div
                         key={i}
@@ -244,9 +288,8 @@ const Level3 = () => {
                 ))}
             </div>
 
-            {/* Right container: Displays question prompt, input, hacking animation, and result message */}
+            {/* Right container: Security Console */}
             <div className="h-[500px] w-[800px] border-4 border-[#00ff00] bg-black p-4 relative">
-                {/* Security Console Header */}
                 <div className="absolute top-0 left-0 w-full h-[40px] bg-[#00ff00] flex items-center justify-center">
                     <p className="text-black font-bold tracking-widest text-lg">
                         SECURITY CONSOLE

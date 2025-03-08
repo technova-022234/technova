@@ -78,7 +78,6 @@ Determine which function is assigned to the panel in the 4th position.
 ];
 
 const QuestionLeftPanel = ({ questionIndex }) => {
-    // Unchanged left panel logic
     switch (questionIndex) {
         case 0:
             return <GraphComponent />;
@@ -112,7 +111,6 @@ const SpaceshipConsole = () => {
         const saved = localStorage.getItem("currentQuestionIndex");
         return saved ? JSON.parse(saved) : 0;
     });
-    // Set a fixed starting score (e.g., 100 points)
     const [score, setScore] = useState(() => {
         const saved = localStorage.getItem("score");
         return saved ? JSON.parse(saved) : 100;
@@ -157,6 +155,7 @@ const SpaceshipConsole = () => {
 
     const currentQuestion = questions[currentQuestionIndex];
 
+    // Individual localStorage updates
     useEffect(() => {
         localStorage.setItem(
             "currentQuestionIndex",
@@ -189,17 +188,54 @@ const SpaceshipConsole = () => {
         setFeedback("");
     }, [currentQuestionIndex, userAnswers, hintsState]);
 
-    // Update: Deduct score when a hint is revealed.
+    // New Effect: Consolidate and sync state with backend
+    useEffect(() => {
+        const email = localStorage.getItem("userEmail");
+        if (!email) return;
+        const appState = {
+            email,
+            currentQuestionIndex,
+            score,
+            userAnswers,
+            hintsState,
+            submittedQuestions,
+            levelComplete,
+        };
+
+        // Optionally, store the consolidated state in local storage
+        localStorage.setItem("appState", JSON.stringify(appState));
+
+        // Update the backend with the consolidated state
+        fetch("http://localhost:5000/api/update-storage", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(appState),
+        })
+            .then((response) => response.json())
+            .then((data) => console.log("Backend storage updated:", data))
+            .catch((error) =>
+                console.error("Error updating backend storage:", error)
+            );
+    }, [
+        currentQuestionIndex,
+        score,
+        userAnswers,
+        hintsState,
+        submittedQuestions,
+        levelComplete,
+    ]);
+
+    // Deduct score when a hint is revealed.
     const handleHintReveal = () => {
         if (
             submittedQuestions[currentQuestionIndex] ||
             hintsRevealed >= currentQuestion.hints.length
         )
             return;
-
         const hintPenalty = 1; // Deduct 1 point per hint reveal.
         setScore((prevScore) => prevScore - hintPenalty);
-
         const newHintsRevealed = hintsRevealed + 1;
         setHintsRevealed(newHintsRevealed);
         setHintsState((prev) => ({
@@ -233,7 +269,6 @@ const SpaceshipConsole = () => {
 
     const handleSubmitAnswer = async () => {
         if (submittedQuestions[currentQuestionIndex]) return;
-
         const normalizedAnswer = answer.trim().toLowerCase();
         const normalizedCorrect = currentQuestion.correctAnswer.toLowerCase();
 
@@ -333,7 +368,7 @@ const SpaceshipConsole = () => {
                 {/* Header */}
                 <div className="flex justify-between items-center pt-16 px-8">
                     {/* Score Display */}
-                    <div className="text-[#b53bca]  text-2xl font-bold tracking-wider drop-shadow-lg">
+                    <div className="text-[#b53bca] text-2xl font-bold tracking-wider drop-shadow-lg">
                         SCORE: {score}
                     </div>
                     {/* Question Navigation */}

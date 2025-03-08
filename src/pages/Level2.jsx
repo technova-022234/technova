@@ -12,10 +12,12 @@ const Puzzle = ({ gridSize = 4, imageUrl = "/images/puzzle.png" }) => {
         (_, i) => (i + 1) % totalTiles
     );
 
-    const alreadySolved = localStorage.getItem("puzzleSolved");
-    if(alreadySolved) {
+    // Check if puzzle is solved by explicitly comparing with "true"
+    const alreadySolved = localStorage.getItem("puzzleSolved") === "true";
+    if (alreadySolved) {
         dispatch(completeLevel("level2"));
     }
+
     const isSolvable = (arr) => {
         let inversions = 0;
         for (let i = 0; i < arr.length; i++) {
@@ -66,11 +68,44 @@ const Puzzle = ({ gridSize = 4, imageUrl = "/images/puzzle.png" }) => {
         return savedMoveCount ? JSON.parse(savedMoveCount) : 0;
     });
 
+    // Update localStorage and sync with backend using async/await.
     useEffect(() => {
         localStorage.setItem("puzzleBoard", JSON.stringify(board));
         localStorage.setItem("puzzleMoveCount", JSON.stringify(moveCount));
+
+        const syncPuzzleData = async () => {
+            // Use explicit check: if not set, default to "false"
+            const puzzleSolvedValue =
+                localStorage.getItem("puzzleSolved") || "false";
+            console.log("puzzleSolvedValue:", puzzleSolvedValue);
+            const email = localStorage.getItem("userEmail");
+            if (email) {
+                const puzzleData = {
+                    puzzleBoard: board,
+                    puzzleMoveCount: moveCount,
+                    puzzleSolved: puzzleSolvedValue,
+                };
+                try {
+                    const response = await fetch(
+                        "http://localhost:5000/api/update-storage",
+                        {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ email, ...puzzleData }),
+                        }
+                    );
+                    const data = await response.json();
+                    console.log("Puzzle storage updated to backend:", data);
+                } catch (err) {
+                    console.error("Error updating puzzle storage:", err);
+                }
+            }
+        };
+
+        syncPuzzleData();
     }, [board, moveCount]);
 
+    // Reset board if saved board is invalid.
     useEffect(() => {
         const savedBoard = localStorage.getItem("puzzleBoard");
         let shouldReset = false;
@@ -88,9 +123,12 @@ const Puzzle = ({ gridSize = 4, imageUrl = "/images/puzzle.png" }) => {
         }
     }, [gridSize, totalTiles]);
 
-    const moveTile = (index) => {
-        if (localStorage.getItem("puzzleSolved")) return;
-        
+    const moveTile = async (index) => {
+        // Check explicitly if puzzleSolved equals "true"
+        if (localStorage.getItem("puzzleSolved") === "true") return;
+
+        console.log("Board:", board);
+        console.log("Moving tile at index:", index);
         const blankIndex = board.indexOf(0);
         if (isAdjacent(index, blankIndex)) {
             const newBoard = [...board];
@@ -100,9 +138,9 @@ const Puzzle = ({ gridSize = 4, imageUrl = "/images/puzzle.png" }) => {
             ];
             setBoard(newBoard);
             setMoveCount((prev) => prev + 1);
+
             if (isSolved(newBoard)) {
                 if (!alreadySolved) {
-                    console.log("here")
                     localStorage.setItem("puzzleSolved", "true");
                     const email = localStorage.getItem("userEmail");
                     if (!email) {
@@ -114,30 +152,30 @@ const Puzzle = ({ gridSize = 4, imageUrl = "/images/puzzle.png" }) => {
                         now.getTime() + now.getTimezoneOffset() * 60000;
                     const istTime = new Date(utcTime + 5.5 * 60 * 60000);
 
-                    fetch("http://localhost:5000/api/level2/submit", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({
-                            email: email,
-                            moves: moveCount + 1,
-                            submissionTime: istTime.toISOString(),
-                        }),
-                    })
-                        .then((response) => {
-                            if (!response.ok) {
-                                throw new Error("Network response was not ok");
+                    try {
+                        const response = await fetch(
+                            "http://localhost:5000/api/level2/submit",
+                            {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify({
+                                    email: email,
+                                    moves: moveCount + 1,
+                                    submissionTime: istTime.toISOString(),
+                                }),
                             }
-                            return response.json();
-                        })
-                        .then((data) => {
-                            console.log("Puzzle solved data sent:", data);
-                        })
-                        .catch((error) => {
-                            console.error(
-                                "Error sending puzzle solved data:",
-                                error
-                            );
-                        });
+                        );
+                        if (!response.ok) {
+                            throw new Error("Network response was not ok");
+                        }
+                        const data = await response.json();
+                        console.log("Puzzle solved data sent:", data);
+                    } catch (error) {
+                        console.error(
+                            "Error sending puzzle solved data:",
+                            error
+                        );
+                    }
 
                     setTimeout(() => alert("Puzzle solved!"), 100);
                     dispatch(completeLevel("level2"));
@@ -174,39 +212,44 @@ const Puzzle = ({ gridSize = 4, imageUrl = "/images/puzzle.png" }) => {
                                 gridTemplateColumns: `repeat(${gridSize}, 1fr)`,
                                 width: "550px",
                                 height: "550px",
-                                borderImageSource: "linear-gradient(45deg, #003366, #004080, #336699, #660099, #330066)",
+                                borderImageSource:
+                                    "linear-gradient(45deg, #003366, #004080, #336699, #660099, #330066)",
                                 borderImageSlice: 1,
                                 borderWidth: "8px",
-                                boxShadow: "0px 0px 20px rgba(0, 51, 102, 0.8),  0px 0px 30px rgba(0, 102, 204, 0.8), 0px 0px 40px rgba(51, 0, 102, 0.6)",
+                                boxShadow:
+                                    "0px 0px 20px rgba(0, 51, 102, 0.8), 0px 0px 30px rgba(0, 102, 204, 0.8), 0px 0px 40px rgba(51, 0, 102, 0.6)",
                             }}
                         >
                             {board.map((value, index) => {
                                 const tileStyle =
                                     value !== 0
                                         ? {
-                                            backgroundImage: `url(${imageUrl})`,
-                                            backgroundSize: `${gridSize * 100
-                                                }% ${gridSize * 100}%`,
-                                            backgroundPosition: (() => {
-                                                const tileIndex = value - 1;
-                                                const row = Math.floor(
-                                                    tileIndex / gridSize
-                                                );
-                                                const col =
-                                                    tileIndex % gridSize;
-                                                return `-${col * 100}% -${row * 100
-                                                    }%`;
-                                            })(),
-                                        }
+                                              backgroundImage: `url(${imageUrl})`,
+                                              backgroundSize: `${
+                                                  gridSize * 100
+                                              }% ${gridSize * 100}%`,
+                                              backgroundPosition: (() => {
+                                                  const tileIndex = value - 1;
+                                                  const row = Math.floor(
+                                                      tileIndex / gridSize
+                                                  );
+                                                  const col =
+                                                      tileIndex % gridSize;
+                                                  return `-${col * 100}% -${
+                                                      row * 100
+                                                  }%`;
+                                              })(),
+                                          }
                                         : {};
                                 return (
                                     <div
                                         key={index}
                                         onClick={() => moveTile(index)}
-                                        className={`border ${value !== 0
+                                        className={`border ${
+                                            value !== 0
                                                 ? "cursor-pointer"
                                                 : "bg-gray-200"
-                                            }`}
+                                        }`}
                                         style={{
                                             paddingTop: "100%",
                                             position: "relative",
