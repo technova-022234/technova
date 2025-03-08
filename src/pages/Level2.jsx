@@ -202,7 +202,7 @@ const Puzzle = ({ gridSize = 4, imageUrl = "/images/puzzle.png" }) => {
                             </span>
                         </div>
                         <div
-                            className="grid gap-1 rounded-[100px]"
+                            className="grid gap-1 rounded-[100px] bg-black"
                             style={{
                                 gridTemplateColumns: `repeat(${gridSize}, 1fr)`,
                                 width: "550px",
