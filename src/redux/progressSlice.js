@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     story: true,
-    level1: true,
+    level1: false,
     level2: false,
     level3: false,
 };

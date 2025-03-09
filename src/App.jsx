@@ -1,11 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
+import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import Loginpage from "./pages/Loginpage";
-import {
-    BrowserRouter as Router,
-    Route,
-    Routes,
-    useNavigate,
-} from "react-router-dom";
 import SpaceshipConsole from "./pages/Level1";
 import Puzzle from "./pages/Level2";
 import CinematicSequence from "./pages/TalkingCharacterPage";
@@ -16,55 +11,75 @@ import Level3 from "./pages/Level3";
 import Level1Story from "./pages/Level1Story";
 import Level2Story from "./pages/Level2Story";
 import Leaderboard from "./pages/Leaderboard_level1";
-import GraphComponent from "./pages/GraphComponent";
-import SensorSystem from "./pages/logicgatescomponent";
-import SpaceshipControlPanel from "./pages/SpaceshipControlPanel";
-import DragAndDropImages from "./pages/DragImage";
-import Distance from "./pages/Distancecalculation";
-import Sequence from "./pages/Sequence";
 import Level2Leaderboard from "./pages/Leaderboard_level2";
 import Level3Leaderboard from "./pages/Leaderboard_level3";
 import Level2StoryContinued from "./pages/Level2storycontinued";
+import { useSelector } from "react-redux";
+import InstructionsPageLevel2 from "./pages/InstructionsPageLevel2";
+import InstructionsPageLevel1 from "./pages/InstructionsLevel1";
+import InstructionsPageLevel3 from "./pages/InstructionsLevel3";
 
 const App = () => {
+    // Initialize user state from localStorage
+    const [user, setUser] = useState(localStorage.getItem("userEmail"));
+
+    // Redux selectors for progress
+    const level1Completed = useSelector((state) => state.progress.level2);
+    const level2Completed = useSelector((state) => state.progress.level3);
+    console.log(level1Completed);
+    console.log(level2Completed);
+    console.log(user);
+
     return (
         <Router>
             <Routes>
+                <Route path="/instructions" element={<InstructionsPageLevel1 />} />
+                <Route path="/level2instructions" element={<InstructionsPageLevel2 />} />
+                <Route path="/level3instructions" element={<InstructionsPageLevel3 />} />
                 <Route path="/" element={<Loadingpage />} />
-                <Route path="/login" element={<Loginpage />} />
+                <Route
+                    path="/login"
+                    // Pass setUser to your Loginpage component so it can update the state after a successful login
+                    element={!user ? <Loginpage setUser={setUser} /> : <Navigate to="/nav" />}
+                />
                 <Route path="/nav" element={<NavPage />} />
-                <Route path="/story" element={<CinematicSequence />} />
-                <Route path="/level1story" element={<Level1Story />} />
-                <Route path="/level2story" element={<Level2Story />} />
-                <Route path="/level2storycontinued" element={<Level2StoryContinued />} />
+                <Route
+                    path="/story"
+                    element={user ? <CinematicSequence /> : <Navigate to="/login" />}
+                />
+                <Route
+                    path="/level1story"
+                    element={level1Completed ? <Level1Story /> : <Navigate to="/level1" />}
+                />
+                <Route
+                    path="/level2story"
+                    element={level1Completed ? <Level2Story /> : <Navigate to="/level2" />}
+                />
+                <Route
+                    path="/level2storycontinued"
+                    element={level2Completed ? <Level2StoryContinued /> : <Navigate to="/level2" />}
+                />
                 <Route path="/leaderboard_level1" element={<Leaderboard />} />
-                <Route
-                    path="/leaderboard_level2"
-                    element={<Level2Leaderboard />}
-                />
-                <Route path="/graph" element={<GraphComponent />} />
-                <Route path="/logicgatescomponent" element={<SensorSystem />} />
-                <Route
-                    path="/spaceshipconsole"
-                    element={<SpaceshipControlPanel />}
-                />
-                <Route path="/distancecal" element={<Distance />} />
-                <Route path="/sequence" element={<Sequence />} />
+                <Route path="/leaderboard_level2" element={<Level2Leaderboard />} />
                 <Route path="/leaderboard_level3" element={<Level3Leaderboard />} />
-                {/* ✅ Wrap Levels with Navbar */}
-                <Route path="/drag" element={<DragAndDropImages />} />
                 <Route
                     path="/*"
                     element={
                         <>
-                            <TopNavbar /> {/* Ensures navbar is rendered */}
+                            <TopNavbar />
                             <Routes>
                                 <Route
                                     path="/level1"
-                                    element={<SpaceshipConsole />}
+                                    element={user ? <SpaceshipConsole /> : <Navigate to="/login" />}
                                 />
-                                <Route path="/level2" element={<Puzzle />} />
-                                <Route path="/level3" element={<Level3 />} />
+                                <Route
+                                    path="/level2"
+                                    element={level1Completed ? <Puzzle /> : <Navigate to="/level1" />}
+                                />
+                                <Route
+                                    path="/level3"
+                                    element={level2Completed ? <Level3 /> : <Navigate to="/level2" />}
+                                />
                             </Routes>
                         </>
                     }

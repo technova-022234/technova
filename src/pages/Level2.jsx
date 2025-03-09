@@ -120,7 +120,7 @@ const Puzzle = ({ gridSize = 4, imageUrl = "/images/puzzle.png" }) => {
     }, [gridSize, totalTiles]);
 
     const moveTile = async (index) => {
-        if (localStorage.getItem("puzzleSolved") === "true") return;
+        if (alreadySolved) return;
 
         console.log("Board:", board);
         console.log("Moving tile at index:", index);
@@ -172,9 +172,11 @@ const Puzzle = ({ gridSize = 4, imageUrl = "/images/puzzle.png" }) => {
                         );
                     }
 
-                    setTimeout(() => alert("Puzzle solved!"), 100);
+                    // setTimeout(() => alert("Puzzle solved!"), 100);
                     dispatch(completeLevel("level2"));
+                    console.log("nav")
                     navigate("/level2story");
+                    console.log("meow")
                 }
             }
         }

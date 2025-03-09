@@ -4,27 +4,46 @@ import { Navigation2 } from "lucide-react";
 const Radar = () => {
     const radarSize = 288;
     const center = radarSize / 2;
+    const minDistance = 40; // minimum distance in pixels between points
 
-    // Fixed points with labels but randomized positions
+    // Fixed points with labels and coordinate values.
+    // Alpha's coordinate (7.2, 7.2) is the closest to (7,7) compared to beta and Gamma.
     const points = useMemo(() => {
         const fixedPoints = [
-            { label: "A", x: 50, y: 30, x_label: 0, y_label: -3.2 },
-            { label: "B", x: -40, y: 60, x_label: 3.5, y_label: 2 },
-            { label: "C", x: 20, y: -70, x_label: -4.5, y_label: 4 },
+            { label: "Alpha", x_label: 7.2, y_label: 7.2 },
+            { label: "beta", x_label: 10, y_label: 10 },
+            { label: "Gamma", x_label: 12, y_label: 12 },
         ];
 
-        return fixedPoints.map((point) => {
-            const angle = Math.random() * 2 * Math.PI;
-            const radius = Math.random() * (center - 10); // Keep within radar bounds
-            const offsetX = Math.round(radius * Math.cos(angle));
-            const offsetY = Math.round(radius * Math.sin(angle));
-            return {
+        const generatedPoints = [];
+
+        fixedPoints.forEach((point) => {
+            let offsetX, offsetY;
+            let attempts = 0;
+            do {
+                const angle = Math.random() * 2 * Math.PI;
+                const radius = Math.random() * (center - 10); // ensure within radar bounds
+                offsetX = Math.round(radius * Math.cos(angle));
+                offsetY = Math.round(radius * Math.sin(angle));
+                attempts++;
+                if (attempts > 50) break;
+            } while (
+                generatedPoints.some(
+                    (p) =>
+                        Math.hypot(p.offsetX - offsetX, p.offsetY - offsetY) <
+                        minDistance
+                )
+            );
+
+            generatedPoints.push({
                 ...point,
                 offsetX,
                 offsetY,
                 label: `${point.label} (${point.x_label}, ${point.y_label})`,
-            };
+            });
         });
+
+        return generatedPoints;
     }, [center]);
 
     return (
@@ -67,7 +86,7 @@ const Radar = () => {
                 {/* Central navigation icon */}
                 <Navigation2 className="text-white absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
 
-                {/* Render randomized fixed points with labels */}
+                {/* Render points with labels */}
                 {points.map((point, index) => (
                     <div
                         key={index}

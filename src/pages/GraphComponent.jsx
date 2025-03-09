@@ -1,39 +1,28 @@
 import React, { useRef, useEffect } from "react";
 import ForceGraph2D from "react-force-graph-2d";
 
-// Define nodes with associated images
+// Define 6 nodes with associated images
 const nodes = [
-    { id: "A", img: "/images/astronaut.png" },
-    { id: "B", img: "/images/astronaut.png" },
-    { id: "C", img: "/images/astronaut.png" },
-    { id: "D", img: "/images/astronaut.png" },
-    { id: "E", img: "/images/astronaut.png" },
-    { id: "F", img: "/images/astronaut.png" },
-    { id: "G", img: "/images/astronaut.png" },
-    { id: "H", img: "/images/astronaut.png" },
-    { id: "I", img: "/images/astronaut.png" },
-    { id: "J", img: "/images/astronaut.png" },
+    { id: "A", img: "/images/rocket.png" },
+    { id: "B", img: "/images/asteroid1.png" },
+    { id: "C", img: "/images/asteroid2.png" },
+    { id: "D", img: "/images/asteroid1.png" },
+    { id: "E", img: "/images/asteroid2.png" },
+    { id: "F", img: "/images/asteroid1.png" },
 ];
 
-// Define links with weights
+// Define links with weights and mark some as part of the MST
 const links = [
-    { source: "A", target: "B", weight: 4 },
-    { source: "A", target: "C", weight: 3 },
-    { source: "A", target: "D", weight: 6 },
-    { source: "B", target: "C", weight: 2 },
-    { source: "B", target: "E", weight: 7 },
-    { source: "C", target: "D", weight: 1 },
-    { source: "C", target: "F", weight: 5 },
-    { source: "D", target: "F", weight: 8 },
-    { source: "D", target: "G", weight: 9 },
+    { source: "A", target: "B", weight: 2 },
+    { source: "B", target: "C", weight: 3 },
+    { source: "C", target: "D", weight: 3 },
+    { source: "D", target: "E", weight: 4 },
     { source: "E", target: "F", weight: 4 },
-    { source: "E", target: "H", weight: 3 },
-    { source: "F", target: "I", weight: 6 },
-    { source: "G", target: "I", weight: 2 },
-    { source: "G", target: "J", weight: 7 },
-    { source: "H", target: "I", weight: 4 },
-    { source: "I", target: "J", weight: 3 },
-];
+    { source: "A", target: "D", weight: 5 },
+    { source: "B", target: "D", weight: 6 },
+    { source: "C", target: "E", weight: 7 },
+    { source: "D", target: "F", weight: 8 },
+  ];
 
 const data = { nodes, links };
 
@@ -53,7 +42,7 @@ const GraphComponent = () => {
     // Set default zoom level after the graph is mounted
     useEffect(() => {
         if (graphRef.current) {
-            // Adjust the zoom factor (e.g., 0.8) and transition duration (0 for immediate)
+            // Adjust the zoom factor (e.g., 4 for a closer view) and transition duration (0 for immediate)
             graphRef.current.zoom(4, 0);
         }
     }, []);
@@ -71,7 +60,9 @@ const GraphComponent = () => {
                     d3AlphaDecay={0}
                     linkDistance={1000}
                     linkLabel={(link) =>
-                        `Weight: ${link.weight}${link.isMST ? " (MST)" : ""}`
+                        `Weight: ${
+                            link.weight
+                        }`
                     }
                     linkWidth={(link) => (link.isMST ? 4 : 2)}
                     linkColor={(link) => (link.isMST ? "red" : "#888")}

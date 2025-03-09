@@ -6,48 +6,36 @@ import Level2Story from "./Level2Story";
 const scenes = [
     {
         type: "image",
-        src: "/images/LabCommunication.webp",
+        src: "/images/Reached.jpg",
         autoAdvance: true,
         dialogue:
-            "Communication link to the rocket established. Finally… but why does it feel like someone’s listening?",
-        character: "/images/CommsAssistant.png",
-    },
-    {
-        type: "image",
-        src: "/images/HighFive.webp",
-        dialogue:
-            "The first message is in—'1101'. That’s 13 in decimal. A code? A signal? Or a warning…?",
-        character: "/images/astronaut.png",
-    },
-    {
-        type: "image",
-        src: "/images/ReadyToSpaceWarp.jpg",
-        dialogue:
-            "Navigation—Check. Communication—Check. Power—Check. Systems are green. We’re clear for warp.",
-        character: "/images/astronaut.png",
-    },
-    {
-        type: "image",
-        src: "/images/ReadyToSpaceWarp.jpg",
-        dialogue:
-            "Strap in. We're warping to the next location. No turning back now.",
+            "Finally...We've reached the next location. But what's that? A firewall? A ring? Or something?",
         character: "/images/astronaut.png",
     },
     {
         type: "video",
-        src: "/videos/SpaceWarp.mp4",
+        src: "/videos/Spaceship.mp4",
         autoAdvance: true,
         dialogue:
-            "We’ll reach the next location by 12:00 PM IST. Stay sharp—something tells me this is just the beginning.",
+            "Look...An abondoned space station. Let's explore it. Maybe we can find some clues.",
         character: "/images/astronaut.png",
-        // onComplete: "navigate",
+    },
+    {
+        type: "image",
+        src: "/images/level32.jpg",
+        dialogue:
+            "We have entered the space station successfully, look around for clues.",
+        character: "/images/astronaut.png",
     },
 ];
 
-const  Level2StoryContinued = () => {
+const Level2StoryContinued = () => {
     const [sceneIndex, setSceneIndex] = useState(0);
     const dialogueRef = useRef(null);
     const navigate = useNavigate();
+
+    const player1Name = localStorage.getItem("player1") || "Player 1";
+    const player2Name = localStorage.getItem("player2") || "Player 2";
 
     useEffect(() => {
         if (dialogueRef.current) {
@@ -73,11 +61,19 @@ const  Level2StoryContinued = () => {
         if (sceneIndex < scenes.length - 1) {
             setSceneIndex(sceneIndex + 1);
         } else {
-            navigate("/level3");
+            navigate("/level3instructions");
         }
     };
 
     const currentScene = scenes[sceneIndex];
+
+    const getDisplayName = () => {
+        // Assuming scenes 1 and 2 use player1, and scenes 3 and 4 use player2.
+        if (sceneIndex % 2 === 0) {
+            return player1Name;
+        }
+        return player2Name;
+    };
 
     return (
         <div
@@ -107,7 +103,9 @@ const  Level2StoryContinued = () => {
 
             {(currentScene.dialogue || currentScene.character) && (
                 <div
-                    className="absolute bottom-0 left-10 right-10 flex items-center"
+                    className={`absolute bottom-0 left-10 right-10 flex items-center ${
+                        sceneIndex % 2 === 1 ? "flex-row-reverse" : ""
+                    }`}
                     onClick={(e) => e.stopPropagation()}
                 >
                     {currentScene.character && (
@@ -122,7 +120,12 @@ const  Level2StoryContinued = () => {
                             ref={dialogueRef}
                             className="px-10 py-8 bg-gradient-to-r from-indigo-900 via-purple-800 to-indigo-900 bg-opacity-90 rounded-lg shadow-lg w-4/5 border border-blue-400"
                         >
-                            <p className="text-blue-300 text-xl text-left font-mono">
+                            {currentScene.character && (
+                                <div className="absolute top-0 left-8 mt-2 ml-2 text-blue-300 text-xl font-bold ">
+                                    {getDisplayName()}
+                                </div>
+                            )}
+                            <p className="text-blue-300 text-xl text-left font-mono pt-2">
                                 {currentScene.dialogue}
                             </p>
                         </div>
@@ -133,4 +136,4 @@ const  Level2StoryContinued = () => {
     );
 };
 
-export default  Level2StoryContinued;
+export default Level2StoryContinued;

@@ -9,10 +9,10 @@ const Level3 = () => {
 
     const questions = [
         "Decode the enigmatic string by applying a shift halfway through the alphabet to reveal the concealed password?  \n Enigmatic string : 'O1A4EL'",
-        "Recall the early whispers from space , a secret word from that time might help realign this scrambled message.   \n Scrambled message : 'K3CT3X'",
-        "At times, viewing things in reverse can expose hidden order—try flipping your perspective.\n Encrypted message:'X0MGI0O'",
+        "At times, viewing things in reverse can expose hidden order—try flipping your perspective.\n Encrypted message:'X0MGI0O'\n",
+        "Recall the early whispers from space , a secret word from that time might help realign this scrambled message.   \n Scrambled message : 'K3RR3V'",
     ];
-    const correctAnswers = ["B1N4RY", "S3CR3T", "C0NTR0L"]; // Replace with your correct answers
+    const correctAnswers = ["B1N4RY", "C0NTR0L", "S3CR3T"]; // Replace with your correct answers
 
     const hackingStatements = [
         "Accessing system files...",
@@ -31,6 +31,7 @@ const Level3 = () => {
         "Overriding security protocols...",
     ];
 
+    // Hint: Write the key repeatedly above the encrypted message, then for each pair of letters, move the ciphertext letter backwards in the alphabet by the number of steps that the key letter represents, wrapping around from A to Z if needed, to reveal the original message.
     // Initialize state with stored data if available.
     const [questionIndex, setQuestionIndex] = useState(
         storedData.questionIndex || 0
@@ -242,29 +243,32 @@ const Level3 = () => {
                 <div className="relative h-[300px] w-[300px]">
                     {remainingRings === 3 && (
                         <div
-                            className={`absolute inset-0 border-2 border-[#00ff00] rounded-full ${flickerRingIndex === 0 &&
-                                    message === "ACCESS GRANTED"
+                            className={`absolute inset-0 border-2 border-[#00ff00] rounded-full ${
+                                flickerRingIndex === 0 &&
+                                message === "ACCESS GRANTED"
                                     ? "animate-vigorous-flicker"
                                     : ""
-                                }`}
+                            }`}
                         ></div>
                     )}
                     {remainingRings >= 2 && (
                         <div
-                            className={`absolute inset-0 m-auto h-[200px] w-[200px] border-2 border-[#00ff00] rounded-full ${flickerRingIndex === 1 &&
-                                    message === "ACCESS GRANTED"
+                            className={`absolute inset-0 m-auto h-[200px] w-[200px] border-2 border-[#00ff00] rounded-full ${
+                                flickerRingIndex === 1 &&
+                                message === "ACCESS GRANTED"
                                     ? "animate-vigorous-flicker"
                                     : ""
-                                }`}
+                            }`}
                         ></div>
                     )}
                     {remainingRings >= 1 && (
                         <div
-                            className={`absolute inset-0 m-auto h-[100px] w-[100px] border-2 border-[#00ff00] rounded-full ${flickerRingIndex === 2 &&
-                                    message === "ACCESS GRANTED"
+                            className={`absolute inset-0 m-auto h-[100px] w-[100px] border-2 border-[#00ff00] rounded-full ${
+                                flickerRingIndex === 2 &&
+                                message === "ACCESS GRANTED"
                                     ? "animate-vigorous-flicker"
                                     : ""
-                                }`}
+                            }`}
                         ></div>
                     )}
                 </div>
@@ -303,10 +307,11 @@ const Level3 = () => {
                     <>
                         {message && (
                             <div
-                                className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 px-6 py-4 border-4 ${messageType === "success"
+                                className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 px-6 py-4 border-4 ${
+                                    messageType === "success"
                                         ? "border-[#00ff00] bg-black text-[#00ff00]"
                                         : "border-red-500 bg-red-900 text-red-400"
-                                    } text-xl font-bold text-center`}
+                                } text-xl font-bold text-center`}
                             >
                                 <p
                                     className={
@@ -329,11 +334,16 @@ const Level3 = () => {
                         ) : (
                             <div className="relative mt-10">
                                 {questions[questionIndex].includes("\n") ? (
-                                    questions[questionIndex].split("\n").map((line, index) => (
-                                        <p key={index} className="text-[#00ff00] text-xl mb-2">
-                                            {"> "} {line}
-                                        </p>
-                                    ))
+                                    questions[questionIndex]
+                                        .split("\n")
+                                        .map((line, index) => (
+                                            <p
+                                                key={index}
+                                                className="text-[#00ff00] text-xl mb-2"
+                                            >
+                                                {"> "} {line}
+                                            </p>
+                                        ))
                                 ) : (
                                     <p className="text-[#00ff00] text-xl mb-4">
                                         {"> "} {questions[questionIndex]}

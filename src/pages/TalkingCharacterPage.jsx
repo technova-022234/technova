@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import gsap from "gsap";
 import { TypeAnimation } from "react-type-animation";
+import { useDispatch } from "react-redux";
+import { completeLevel } from "../redux/progressSlice";
 
 const scenes = [
     // Scene 0: Intro video playing full screen (non-looping)
@@ -54,6 +56,11 @@ const CinematicSequence = () => {
     const [sceneIndex, setSceneIndex] = useState(0);
     const dialogueRef = useRef(null);
     const navigate = useNavigate();
+    const dispatch = useDispatch()
+
+    // Retrieve player names from localStorage
+    const player1Name = localStorage.getItem("player1") || "Player 1";
+    const player2Name = localStorage.getItem("player2") || "Player 2";
 
     // Animate dialogue appearance on scene change
     useEffect(() => {
@@ -82,12 +89,29 @@ const CinematicSequence = () => {
         if (sceneIndex < scenes.length - 1) {
             setSceneIndex(sceneIndex + 1);
         } else {
+            dispatch(completeLevel("story"))
+            console.log("HI")
             // On the last scene, navigate to level1
-            navigate("/level1");
+            navigate("/instructions");
         }
     };
 
     const currentScene = scenes[sceneIndex];
+
+    // Determine the display name based on the character image source
+    const getDisplayName = () => {
+        // Assuming scenes 1 and 2 use player1, and scenes 3 and 4 use player2.
+        if (sceneIndex === 1) {
+            return "Scientist";
+        } else if (sceneIndex === 2) {
+            return "Space Head";
+        } else if (sceneIndex === 3) {
+            return player1Name;
+        } else if (sceneIndex === 4) {
+            return player2Name;
+        }
+        return "";
+    };
 
     return (
         <div
@@ -135,7 +159,9 @@ const CinematicSequence = () => {
             {/* Render dialogue and character overlay if provided */}
             {(currentScene.dialogue || currentScene.character) && (
                 <div
-                    className="absolute bottom-0 left-10 right-10 flex items-center"
+                    className={`absolute bottom-0 left-10 right-10 flex items-center ${
+                        sceneIndex === 4 ? "flex-row-reverse" : ""
+                    }`}
                     onClick={(e) => e.stopPropagation()} // Prevents click on dialogue from advancing the scene
                 >
                     {currentScene.character && (
@@ -148,9 +174,14 @@ const CinematicSequence = () => {
                     {currentScene.dialogue && (
                         <div
                             ref={dialogueRef}
-                            className="px-10 py-8 bg-gradient-to-r from-indigo-900 via-purple-800 to-indigo-900 bg-opacity-90 rounded-lg shadow-lg w-4/5 border border-blue-400"
+                            className="relative px-10 py-8 bg-gradient-to-r from-indigo-900 via-purple-800 to-indigo-900 bg-opacity-90 rounded-lg shadow-lg w-4/5 border border-blue-400"
                         >
-                            <p className="text-blue-300 text-xl text-left font-mono">
+                            {currentScene.character && (
+                                <div className="absolute top-0 left-8 mt-2 ml-2 text-blue-300 text-xl font-bold ">
+                                    {getDisplayName()}
+                                </div>
+                            )}
+                            <p className="text-blue-300 text-xl text-left font-mono pt-2">
                                 {currentScene.dialogue}
                             </p>
                         </div>
@@ -160,19 +191,19 @@ const CinematicSequence = () => {
 
             {/* Optionally, render any additional overlay elements */}
             {/* {currentScene.overlay === "redCircle" && (
-        <div
-          className="absolute"
-          style={{
-            width: 100,
-            height: 100,
-            borderRadius: "50%",
-            border: "5px solid red",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-          }}
-        />
-      )} */}
+                <div
+                    className="absolute"
+                    style={{
+                        width: 100,
+                        height: 100,
+                        borderRadius: "50%",
+                        border: "5px solid red",
+                        top: "50%",
+                        left: "50%",
+                        transform: "translate(-50%, -50%)",
+                    }}
+                />
+            )} */}
         </div>
     );
 };

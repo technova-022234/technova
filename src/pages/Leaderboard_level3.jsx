@@ -70,7 +70,7 @@ const Level3Leaderboard = () => {
                                     {player.email}
                                 </td>
                                 <td className="p-3 border border-indigo-700 font-bold">
-                                    {player.level3.questionsSubmitted}
+                                    {player.level3.correctAnswers}
                                 </td>
                                 <td className="p-3 border border-indigo-700">
                                     {isNaN(

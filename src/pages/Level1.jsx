@@ -11,7 +11,7 @@ import AntiqueClock from "./AntiqueClock";
 const questions = [
     {
         question: `Navigation Protocol:
-Our ship’s advanced navigation system has intercepted encrypted coordinates for critical energy nodes. To safely traverse this hazardous region, deploy the minimum spanning tree algorithm to establish the most energy‐efficient network. What is the total weight of this optimized route? (Answer in word form.)`,
+Our ship’s advanced navigation system has intercepted encrypted coordinates for critical energy nodes. To plot the most energy‐efficient route connecting all nodes with the least distance possible and safely traverse by covering all points, What is the total weight of this optimized route? (Hover on Edges to get the distance, Answer in word form.)`,
         correctAnswer: "Six",
         hints: [
             "Focus on connecting nodes with minimal weights.",
@@ -22,7 +22,7 @@ Our ship’s advanced navigation system has intercepted encrypted coordinates fo
     },
     {
         question: `Sensor Array Analysis:
-Our spacecraft’s sensor suite is evaluating three critical signals. The protocol is: if at least two sensors register a positive reading, the system initiates hyperspace—issuing a "Pass" signal; otherwise, it holds with a "Fail". What output does the sensor array deliver?`,
+Our spacecraft’s sensor suite is evaluating three critical signals. If the circuit gives the positive reading at the end, the system initiates a "Pass" signal; otherwise, it holds with a "Fail". What output does the sensor array deliver?(Pass or Fail)`,
         correctAnswer: "Pass",
         hints: [
             "At least two active signals are needed.",
@@ -33,7 +33,7 @@ Our spacecraft’s sensor suite is evaluating three critical signals. The protoc
     },
     {
         question: `Asteroid Proximity Alert:
-Radar has locked onto three asteroids in our flight path. To prioritize evasion measures, identify which asteroid is closest to our vessel. Which asteroid is our primary threat?`,
+Radar has locked onto three asteroids in our flight path. To prioritize evasion measures, identify which asteroid is closest to our rocket(7, 7). Which asteroid is our primary threat?`,
         correctAnswer: "Alpha",
         hints: [
             "Analyze the strength of the radar signals.",
@@ -45,7 +45,7 @@ Radar has locked onto three asteroids in our flight path. To prioritize evasion 
     {
         question: `Temporal Anomaly Sequence:
 Deep within the control room, an antique clock malfunctions, cycling through five cryptic words. A faded note reads:
-"When the first hour becomes the last and the last echoes the first, the guardian of paradoxes unveils the secret. Choose the word that defies time."
+"When the first hour becomes the last and the last echoes the first, the guardian of paradoxes reveals the path. Choose the word that defies expectation and embraces the unpredictable nature of time."
 Which word unlocks the hidden sequence?`,
         correctAnswer: "Chaos",
         hints: [

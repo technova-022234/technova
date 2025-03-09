@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const Loginpage = () => {
+const Loginpage = ({setUser}) => {
     const [formData, setFormData] = useState({ email: "", password: "" });
     const [error, setError] = useState("");
     const navigate = useNavigate();
@@ -41,8 +41,12 @@ const Loginpage = () => {
             const data = await response.json();
             console.log("User logged in:", data.user);
 
+            setUser(data.user.email)
             // Set the user's email in localStorage
             localStorage.setItem("userEmail", data.user.email);
+            localStorage.setItem("teamName", data.user.teamName);
+            localStorage.setItem("player1", data.user.player1);
+            localStorage.setItem("player2", data.user.player2);
 
             // Update or retrieve the backend storage record for this email.
             // This ensures that any existing state for the user is present on the backend.
