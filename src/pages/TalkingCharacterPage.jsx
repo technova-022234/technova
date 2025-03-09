@@ -25,7 +25,7 @@ const scenes = [
         type: "image",
         src: "/images/laboratory2.webp",
         dialogue:
-            "A space mission has been initiated to solve the mystery – and you will be joining the journey.",
+            "A space mission has started. Your help is needed to explore these coordinates and learn more.",
         character: "/images/Scientist.png",
     },
     // Scene 3: Spaceship launching video with overlay dialogue (looping)
@@ -33,7 +33,7 @@ const scenes = [
         type: "video",
         src: "/videos/spaceship-launch.mp4",
         autoAdvance: true,
-        dialogue: "We have successfully launched and are on our mission.",
+        dialogue: "The spaceship has launched and is heading to the target. This begins our work.",
         character: "/images/astronaut.png",
     },
     // Scene 4: Asteroid approaching video with dialogue (looping).
@@ -42,8 +42,7 @@ const scenes = [
         type: "video",
         src: "/videos/asteroids.mp4",
         autoAdvance: true,
-        dialogue:
-            "We have entered the asteroid belt—we need to change our navigation to get out of this situation.",
+        dialogue:"we have reached the asteroid belt. We need to navigate through it to get out of this situation.",
         character: "/images/astronaut.png",
         onComplete: "navigate",
     },

@@ -4,40 +4,42 @@ import gsap from "gsap";
 
 const scenes = [
     {
-        type: "video",
-        src: "/videos/asteroid_falling.mp4",
+        type: "image",
+        src: "/images/LabCommunication.webp",
         autoAdvance: true,
+        dialogue:
+            "Communication link to the rocket established. Finally… but why does it feel like someone’s listening?",
+        character: "/images/CommsAssistant.png",
     },
     {
         type: "image",
-        src: "/images/laboratory.webp",
+        src: "/images/HighFive.webp",
         dialogue:
-            "The coordinates of the zenithium have been uncovered. Look—the red circle indicates a firewall that may reveal the truth of alien life. We need to uncover the mystery.",
-        character: "/images/Scientist.png",
-        overlay: "redCircle",
+            "The first message is in—'1101'. That’s 13 in decimal. A code? A signal? Or a warning…?",
+        character: "/images/astronaut.png",
     },
     {
         type: "image",
-        src: "/images/laboratory2.webp",
+        src: "/images/ReadyToSpaceWarp.jpg",
         dialogue:
-            "A space mission has been initiated to solve the mystery – and you will be joining the journey.",
-        character: "/images/Scientist.png",
+            "Navigation—Check. Communication—Check. Power—Check. Systems are green. We’re clear for warp.",
+        character: "/images/astronaut.png",
     },
     {
-        type: "video",
-        src: "/videos/spaceship-launch.mp4",
-        autoAdvance: true,
-        dialogue: "We have successfully launched and are on our mission.",
+        type: "image",
+        src: "/images/ReadyToSpaceWarp.jpg",
+        dialogue:
+            "Strap in. We're warping to the next location. No turning back now.",
         character: "/images/astronaut.png",
     },
     {
         type: "video",
-        src: "/videos/asteroids.mp4",
+        src: "/videos/SpaceWarp.mp4",
         autoAdvance: true,
         dialogue:
-            "We have entered the asteroid belt—we need to change our navigation to get out of this situation.",
+            "We’ll reach the next location by 12:00 PM IST. Stay sharp—something tells me this is just the beginning.",
         character: "/images/astronaut.png",
-        onComplete: "navigate",
+        // onComplete: "navigate",
     },
 ];
 

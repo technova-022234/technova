@@ -4,40 +4,36 @@ import gsap from "gsap";
 
 const scenes = [
     {
-        type: "video",
-        src: "/videos/asteroid_falling.mp4",
-        autoAdvance: true,
-    },
-    {
         type: "image",
-        src: "/images/laboratory.webp",
-        dialogue:
-            "The coordinates of the zenithium have been uncovered. Look—the red circle indicates a firewall that may reveal the truth of alien life. We need to uncover the mystery.",
-        character: "/images/Scientist.png",
-        overlay: "redCircle",
-    },
-    {
-        type: "image",
-        src: "/images/laboratory2.webp",
-        dialogue:
-            "A space mission has been initiated to solve the mystery – and you will be joining the journey.",
-        character: "/images/Scientist.png",
-    },
-    {
-        type: "video",
-        src: "/videos/spaceship-launch.mp4",
+        src: "/images/EscapingBelt.jpg",
         autoAdvance: true,
-        dialogue: "We have successfully launched and are on our mission.",
+        dialogue:
+            "The answers... Six, Pass, Alpha, Chaos, and Engine... Their initials spell 'SPACE'. Could this be more than just coincidence? Feels like a key to something hidden.",
         character: "/images/astronaut.png",
     },
     {
-        type: "video",
-        src: "/videos/asteroids.mp4",
+        type: "image",
+        src: "/images/EscapingBelt.jpg",
         autoAdvance: true,
         dialogue:
-            "We have entered the asteroid belt—we need to change our navigation to get out of this situation.",
+            "Let's not dwell on it now. We’ve barely made it through the asteroid belt in one piece. Focus—we’ve got bigger mysteries ahead.",
         character: "/images/astronaut.png",
-        onComplete: "navigate",
+    },
+    {
+        type: "image",
+        src: "/images/Communication.jpg",
+        autoAdvance: true,
+        dialogue:
+            "Warning! The communication link is down. Running diagnostics… Let’s hope it’s not sabotage.",
+        character: "/images/astronaut.png",
+    },
+    {
+        type: "image",
+        src: "/images/scrambled.png",
+        autoAdvance: true,
+        dialogue:
+            "Diagnostics complete. The code’s scrambled—badly. Someone… or something… doesn’t want us to reconnect. We need to piece this together, fast.",
+        character: "/images/astronaut.png",
     },
 ];
 
@@ -79,7 +75,7 @@ const Level1Story = () => {
     return (
         <div
             className="relative w-screen h-screen overflow-hidden"
-            onClick={advanceScene} 
+            onClick={advanceScene}
         >
             {currentScene.type === "video" && (
                 <video
@@ -105,7 +101,7 @@ const Level1Story = () => {
             {(currentScene.dialogue || currentScene.character) && (
                 <div
                     className="absolute bottom-0 left-10 right-10 flex items-center"
-                    onClick={(e) => e.stopPropagation()} 
+                    onClick={(e) => e.stopPropagation()}
                 >
                     {currentScene.character && (
                         <img
