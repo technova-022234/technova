@@ -84,7 +84,7 @@ const Puzzle = ({ gridSize = 4, imageUrl = "/images/puzzle.png" }) => {
                 };
                 try {
                     const response = await fetch(
-                        "http://localhost:5000/api/update-storage",
+                        "https://technova-sgyr.onrender.com/api/update-storage",
                         {
                             method: "POST",
                             headers: { "Content-Type": "application/json" },
@@ -149,7 +149,7 @@ const Puzzle = ({ gridSize = 4, imageUrl = "/images/puzzle.png" }) => {
 
                     try {
                         const response = await fetch(
-                            "http://localhost:5000/api/level2/submit",
+                            "https://technova-sgyr.onrender.com/api/level2/submit",
                             {
                                 method: "POST",
                                 headers: { "Content-Type": "application/json" },

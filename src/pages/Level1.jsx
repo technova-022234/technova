@@ -206,7 +206,7 @@ const SpaceshipConsole = () => {
         localStorage.setItem("appState", JSON.stringify(appState));
 
         // Update the backend with the consolidated state
-        fetch("http://localhost:5000/api/update-storage", {
+        fetch("https://technova-sgyr.onrender.com/api/update-storage", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -296,7 +296,7 @@ const SpaceshipConsole = () => {
             const email = localStorage.getItem("userEmail");
             try {
                 const response = await fetch(
-                    "http://localhost:5000/api/level1/submit",
+                    "https://technova-sgyr.onrender.com/api/level1/submit",
                     {
                         method: "POST",
                         headers: {

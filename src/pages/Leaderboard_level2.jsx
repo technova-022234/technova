@@ -11,7 +11,7 @@ const Level2Leaderboard = () => {
             try {
                 // Assuming your API endpoint for level2 leaderboard is /api/leaderboard/level2
                 const response = await axios.get(
-                    "http://localhost:5000/api/leaderboard/level2"
+                    "https://technova-sgyr.onrender.com/api/leaderboard/level2"
                 );
                 setLeaderboard(response.data.leaderboard);
             } catch (error) {

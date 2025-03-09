@@ -10,7 +10,7 @@ const Leaderboard = () => {
         const fetchLeaderboard = async () => {
             try {
                 const response = await axios.get(
-                    "http://localhost:5000/api/leaderboard/level1"
+                    "https://technova-sgyr.onrender.com/api/leaderboard/level1"
                 );
                 setLeaderboard(response.data.leaderboard);
             } catch (error) {

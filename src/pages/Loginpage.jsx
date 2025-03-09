@@ -26,7 +26,7 @@ const Loginpage = ({setUser}) => {
         try {
             // Log in the user
             const response = await fetch(
-                "http://localhost:5000/api/users/login",
+                "https://technova-sgyr.onrender.com/api/users/login",
                 {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
@@ -51,7 +51,7 @@ const Loginpage = ({setUser}) => {
             // Update or retrieve the backend storage record for this email.
             // This ensures that any existing state for the user is present on the backend.
             const storageResponse = await fetch(
-                "http://localhost:5000/api/update-storage",
+                "https://technova-sgyr.onrender.com/api/update-storage",
                 {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },

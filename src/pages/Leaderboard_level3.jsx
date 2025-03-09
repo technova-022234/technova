@@ -10,7 +10,7 @@ const Level3Leaderboard = () => {
         const fetchLeaderboard = async () => {
             try {
                 const response = await axios.get(
-                    "http://localhost:5000/api/leaderboard/level3"
+                    "https://technova-sgyr.onrender.com/api/leaderboard/level3"
                 );
                 setLeaderboard(response.data.leaderboard);
             } catch (error) {
