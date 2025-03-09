@@ -23,6 +23,7 @@ import DragAndDropImages from "./pages/DragImage";
 import Distance from "./pages/Distancecalculation";
 import Sequence from "./pages/Sequence";
 import Level2Leaderboard from "./pages/Leaderboard_level2";
+import Level3Leaderboard from "./pages/Leaderboard_level3";
 
 const App = () => {
     return (
@@ -47,6 +48,7 @@ const App = () => {
                 />
                 <Route path="/distancecal" element={<Distance />} />
                 <Route path="/sequence" element={<Sequence />} />
+                <Route path="/leaderboard_level3" element={<Level3Leaderboard/>} />
                 {/* ✅ Wrap Levels with Navbar */}
                 <Route path="/drag" element={<DragAndDropImages />} />
                 <Route
