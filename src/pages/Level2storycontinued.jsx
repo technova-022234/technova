@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import gsap from "gsap";
+import Level2Story from "./Level2Story";
 
 const scenes = [
     {
@@ -43,7 +44,7 @@ const scenes = [
     },
 ];
 
-const Level2Story = () => {
+const  Level2StoryContinued = () => {
     const [sceneIndex, setSceneIndex] = useState(0);
     const dialogueRef = useRef(null);
     const navigate = useNavigate();
@@ -72,7 +73,7 @@ const Level2Story = () => {
         if (sceneIndex < scenes.length - 1) {
             setSceneIndex(sceneIndex + 1);
         } else {
-            navigate("/level2storycontinued");
+            navigate("/level3");
         }
     };
 
@@ -132,4 +133,4 @@ const Level2Story = () => {
     );
 };
 
-export default Level2Story;
+export default  Level2StoryContinued;

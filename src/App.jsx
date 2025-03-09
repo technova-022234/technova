@@ -24,6 +24,7 @@ import Distance from "./pages/Distancecalculation";
 import Sequence from "./pages/Sequence";
 import Level2Leaderboard from "./pages/Leaderboard_level2";
 import Level3Leaderboard from "./pages/Leaderboard_level3";
+import Level2StoryContinued from "./pages/Level2storycontinued";
 
 const App = () => {
     return (
@@ -35,6 +36,7 @@ const App = () => {
                 <Route path="/story" element={<CinematicSequence />} />
                 <Route path="/level1story" element={<Level1Story />} />
                 <Route path="/level2story" element={<Level2Story />} />
+                <Route path="/level2storycontinued" element={<Level2StoryContinued />} />
                 <Route path="/leaderboard_level1" element={<Leaderboard />} />
                 <Route
                     path="/leaderboard_level2"
@@ -48,7 +50,7 @@ const App = () => {
                 />
                 <Route path="/distancecal" element={<Distance />} />
                 <Route path="/sequence" element={<Sequence />} />
-                <Route path="/leaderboard_level3" element={<Level3Leaderboard/>} />
+                <Route path="/leaderboard_level3" element={<Level3Leaderboard />} />
                 {/* ✅ Wrap Levels with Navbar */}
                 <Route path="/drag" element={<DragAndDropImages />} />
                 <Route
