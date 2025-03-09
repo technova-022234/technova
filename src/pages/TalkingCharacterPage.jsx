@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import gsap from "gsap";
-import { TypeAnimation} from "react-type-animation";
+import { TypeAnimation } from "react-type-animation";
 
 const scenes = [
     // Scene 0: Intro video playing full screen (non-looping)
@@ -16,7 +16,7 @@ const scenes = [
         type: "image",
         src: "/images/laboratory.webp",
         dialogue:
-            "The coordinates of the zenithium have been uncovered. Look—the red circle indicates a firewall that may reveal the truth of alien life. We need to uncover the mystery.",
+            "We’ve uncovered the coordinates of the Zenithium. See that red circle? It’s a firewall—possibly guarding the truth about alien life. We have to break through it… somehow.",
         character: "/images/Scientist.png",
         overlay: "redCircle",
     },
@@ -25,7 +25,7 @@ const scenes = [
         type: "image",
         src: "/images/laboratory2.webp",
         dialogue:
-            "A space mission has started. Your help is needed to explore these coordinates and learn more.",
+            "The space mission has begun. Your expertise is crucial—we need to explore these coordinates and uncover the hidden truth.",
         character: "/images/Scientist.png",
     },
     // Scene 3: Spaceship launching video with overlay dialogue (looping)
@@ -33,7 +33,8 @@ const scenes = [
         type: "video",
         src: "/videos/spaceship-launch.mp4",
         autoAdvance: true,
-        dialogue: "The spaceship has launched and is heading to the target. This begins our work.",
+        dialogue:
+            "The spaceship has launched. All systems are go. Our journey into the unknown begins now.",
         character: "/images/astronaut.png",
     },
     // Scene 4: Asteroid approaching video with dialogue (looping).
@@ -42,7 +43,8 @@ const scenes = [
         type: "video",
         src: "/videos/asteroids.mp4",
         autoAdvance: true,
-        dialogue:"we have reached the asteroid belt. We need to navigate through it to get out of this situation.",
+        dialogue:
+            "We've entered the asteroid belt. The path ahead is treacherous—we’ll need precision and nerve to make it through.",
         character: "/images/astronaut.png",
         onComplete: "navigate",
     },
