@@ -3,7 +3,22 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { completeLevel } from "../redux/progressSlice";
 
-const Puzzle = ({ gridSize = 4, imageUrl = "/images/puzzle.png" }) => {
+const targetHour = 20; // Example: 12:00 PM IST for level2
+const targetMinute = 15;
+
+const checkISTTime = (hour, minute) => {
+    const now = new Date();
+    // Convert current time to IST using Asia/Kolkata timezone
+    const istString = now.toLocaleString("en-US", { timeZone: "Asia/Kolkata" });
+    const istDate = new Date(istString);
+    const currentHour = istDate.getHours();
+    const currentMinute = istDate.getMinutes();
+    return (
+        currentHour > hour || (currentHour === hour && currentMinute >= minute)
+    );
+};
+
+const Puzzle = ({ gridSize = 4, imageUrl = "/images/puzzle.png", timeLimit = 300 }) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const totalTiles = gridSize * gridSize;
@@ -67,6 +82,38 @@ const Puzzle = ({ gridSize = 4, imageUrl = "/images/puzzle.png" }) => {
         return savedMoveCount ? JSON.parse(savedMoveCount) : 0;
     });
 
+    const [timeLeft, setTimeLeft] = useState(timeLimit);
+
+    // Decrement timer every second.
+    useEffect(() => {
+        const timerId = setInterval(() => {
+            setTimeLeft((prevTime) => prevTime - 1);
+        }, 1000);
+        return () => clearInterval(timerId);
+    }, []);
+
+    // Check IST time thresholds and redirect accordingly.
+    useEffect(() => {
+        const checkTimeAndRedirect = () => {
+            const puzzleSolved =
+                localStorage.getItem("puzzleSolved") === "true";
+
+            // If level2 deadline reached and puzzle is not solved, redirect to elimination.
+            if (!puzzleSolved && checkISTTime(targetHour, targetMinute)) {
+                navigate("/eliminationpage");
+            }
+            // If puzzle is solved and level3 target time is reached, redirect to level3 instructions.
+            // else if (
+            //     puzzleSolved
+            // ) {
+            //     navigate("/level2story");
+            // }
+        };
+
+        const intervalId = setInterval(checkTimeAndRedirect, 1000);
+        return () => clearInterval(intervalId);
+    }, [navigate]);
+
     useEffect(() => {
         localStorage.setItem("puzzleBoard", JSON.stringify(board));
         localStorage.setItem("puzzleMoveCount", JSON.stringify(moveCount));
@@ -122,8 +169,8 @@ const Puzzle = ({ gridSize = 4, imageUrl = "/images/puzzle.png" }) => {
     const moveTile = async (index) => {
         if (alreadySolved) return;
 
-        console.log("Board:", board);
-        console.log("Moving tile at index:", index);
+        // console.log("Board:", board);
+        // console.log("Moving tile at index:", index);
         const blankIndex = board.indexOf(0);
         if (isAdjacent(index, blankIndex)) {
             const newBoard = [...board];
@@ -174,9 +221,7 @@ const Puzzle = ({ gridSize = 4, imageUrl = "/images/puzzle.png" }) => {
 
                     // setTimeout(() => alert("Puzzle solved!"), 100);
                     dispatch(completeLevel("level2"));
-                    console.log("nav")
                     navigate("/level2story");
-                    console.log("meow")
                 }
             }
         }

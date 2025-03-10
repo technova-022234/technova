@@ -39,9 +39,29 @@ const scenes = [
         dialogue:
             "We’ll reach the next location by 12:00 PM IST. Stay sharp—something tells me this is just the beginning.",
         character: "/images/astronaut.png",
-        // onComplete: "navigate",
     },
 ];
+
+// Helper function: Calculate the time left (in milliseconds) until 12:00 PM IST today.
+const getWarpTimeLeft = () => {
+    const now = new Date();
+    // Convert current time to IST using Asia/Kolkata timezone.
+    const istString = now.toLocaleString("en-US", { timeZone: "Asia/Kolkata" });
+    const istNow = new Date(istString);
+    // Create a target date set to today at 12:00 PM IST.
+    const target = new Date(istNow);
+    target.setHours(21, 45, 0, 0);
+    const diff = target - istNow;
+    return diff > 0 ? diff : 0;
+};
+
+// Helper function to format milliseconds as "mm:ss"
+const formatTime = (milliseconds) => {
+    const totalSeconds = Math.floor(milliseconds / 1000);
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+};
 
 const Level2Story = () => {
     const [sceneIndex, setSceneIndex] = useState(0);
@@ -51,6 +71,10 @@ const Level2Story = () => {
     const player1Name = localStorage.getItem("player1") || "Player 1";
     const player2Name = localStorage.getItem("player2") || "Player 2";
 
+    // State for warp countdown (in milliseconds)
+    const [warpTimeLeft, setWarpTimeLeft] = useState(getWarpTimeLeft());
+
+    // Animate dialogue on scene change.
     useEffect(() => {
         if (dialogueRef.current) {
             gsap.fromTo(
@@ -61,6 +85,7 @@ const Level2Story = () => {
         }
     }, [sceneIndex]);
 
+    // Listen for Enter key to advance scenes.
     useEffect(() => {
         const handleKeyPress = (e) => {
             if (e.key === "Enter") {
@@ -69,13 +94,32 @@ const Level2Story = () => {
         };
         document.addEventListener("keydown", handleKeyPress);
         return () => document.removeEventListener("keydown", handleKeyPress);
-    }, [sceneIndex]);
+    }, [sceneIndex, warpTimeLeft]);
 
+    // Timer effect: If on the final scene, update the countdown every second.
+    useEffect(() => {
+        if (sceneIndex === scenes.length - 1) {
+            const timer = setInterval(() => {
+                const left = getWarpTimeLeft();
+                setWarpTimeLeft(left);
+                if (left <= 0) {
+                    clearInterval(timer);
+                    navigate("/level2storycontinued");
+                }
+            }, 1000);
+            return () => clearInterval(timer);
+        }
+    }, [sceneIndex, navigate]);
+
+    // Advance scene function. If on last scene, do not advance until the countdown is over.
     const advanceScene = () => {
         if (sceneIndex < scenes.length - 1) {
             setSceneIndex(sceneIndex + 1);
         } else {
-            navigate("/level2storycontinued");
+            // On the last scene, only navigate if countdown is finished.
+            if (warpTimeLeft <= 0) {
+                navigate("/level2storycontinued");
+            }
         }
     };
 
@@ -101,9 +145,10 @@ const Level2Story = () => {
                     autoPlay
                     muted
                     playsInline
-                    {...(sceneIndex === 0
-                        ? { onEnded: advanceScene }
-                        : { loop: true })}
+                    {...(sceneIndex === scenes.length - 1
+                        ? {}
+                        : { onEnded: advanceScene })}
+                    {...{ loop: true }}
                 />
             )}
 
@@ -132,7 +177,7 @@ const Level2Story = () => {
                     {currentScene.dialogue && (
                         <div
                             ref={dialogueRef}
-                            className="px-10 py-8 bg-gradient-to-r from-indigo-900 via-purple-800 to-indigo-900 bg-opacity-90 rounded-lg shadow-lg w-4/5 border border-blue-400"
+                            className="relative px-10 py-8 bg-gradient-to-r from-indigo-900 via-purple-800 to-indigo-900 bg-opacity-90 rounded-lg shadow-lg w-4/5 border border-blue-400"
                         >
                             {currentScene.character && (
                                 <div className="absolute top-0 left-8 mt-2 ml-2 text-blue-300 text-xl font-bold ">
@@ -142,6 +187,13 @@ const Level2Story = () => {
                             <p className="text-blue-300 text-xl text-left font-mono pt-2">
                                 {currentScene.dialogue}
                             </p>
+                            {/* Show warp countdown only on the last scene */}
+                            {sceneIndex === scenes.length - 1 && (
+                                <div className="mt-4 text-blue-100 text-lg">
+                                    Warping will be completed in:{" "}
+                                    {formatTime(warpTimeLeft)}
+                                </div>
+                            )}
                         </div>
                     )}
                 </div>
