@@ -18,6 +18,8 @@ import { useSelector } from "react-redux";
 import InstructionsPageLevel2 from "./pages/InstructionsPageLevel2";
 import InstructionsPageLevel1 from "./pages/InstructionsLevel1";
 import InstructionsPageLevel3 from "./pages/InstructionsLevel3";
+import Completedpage from "./pages/Completedpage";
+import EliminationPage from "./pages/Eliminationpage";
 
 const App = () => {
     // Initialize user state from localStorage
@@ -62,6 +64,9 @@ const App = () => {
                 <Route path="/leaderboard_level1" element={<Leaderboard />} />
                 <Route path="/leaderboard_level2" element={<Level2Leaderboard />} />
                 <Route path="/leaderboard_level3" element={<Level3Leaderboard />} />
+                <Route path="/completedpage" element={<Completedpage />} />
+                <Route path="/eliminationpage" element={<EliminationPage />} />
+
                 <Route
                     path="/*"
                     element={
