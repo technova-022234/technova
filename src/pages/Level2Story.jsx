@@ -96,6 +96,51 @@ const Level2Story = () => {
         return () => document.removeEventListener("keydown", handleKeyPress);
     }, [sceneIndex, warpTimeLeft]);
 
+    const checkLeaderboardQualification = async () => {
+        try {
+            const response = await fetch(
+                "https://technova-sgyr.onrender.com/api/leaderboard/level2"
+            );
+            const data = await response.json();
+            const leaderboard = data.leaderboard;
+            const top10 = leaderboard.slice(0, 10);
+            const email = localStorage.getItem("email");
+            if (email && top10.some((item) => item.email === email)) {
+                localStorage.setItem("level3Qualified", "true");
+                try {
+                    await fetch(
+                        "https://technova-sgyr.onrender.com/api/update-storage",
+                        {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({
+                                email,
+                                level3Qualified: true,
+                            }),
+                        }
+                    );
+                } catch (updateError) {
+                    console.error(
+                        "Error updating backend storage:",
+                        updateError
+                    );
+                }
+            }
+        } catch (error) {
+            console.error("Error fetching leaderboard:", error);
+        }
+    };
+
+    const handleFinalNavigation = async () => {
+        await checkLeaderboardQualification();
+        const qualified = localStorage.getItem("level3Qualified");
+        if (qualified === "true") {
+            navigate("/level2storycontinued");
+        } else {
+            navigate("/eliminationpage");
+        }
+    };
+
     // Timer effect: If on the final scene, update the countdown every second.
     useEffect(() => {
         if (sceneIndex === scenes.length - 1) {
@@ -104,7 +149,7 @@ const Level2Story = () => {
                 setWarpTimeLeft(left);
                 if (left <= 0) {
                     clearInterval(timer);
-                    navigate("/level2storycontinued");
+                    handleFinalNavigation();
                 }
             }, 1000);
             return () => clearInterval(timer);
@@ -118,7 +163,7 @@ const Level2Story = () => {
         } else {
             // On the last scene, only navigate if countdown is finished.
             if (warpTimeLeft <= 0) {
-                navigate("/level2storycontinued");
+                handleFinalNavigation();
             }
         }
     };

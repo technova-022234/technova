@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import gsap from "gsap";
-import Level2Story from "./Level2Story";
 
 const scenes = [
     {
