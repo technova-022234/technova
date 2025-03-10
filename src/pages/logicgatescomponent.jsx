@@ -27,7 +27,7 @@ const AndGateNode = () => {
             <svg
                 width="120"
                 height="90"
-                viewBox="0 0 100 80"
+                viewBox="0 0 60 80"
                 className="drop-shadow-lg"
             >
                 <defs>
@@ -42,35 +42,31 @@ const AndGateNode = () => {
                         <stop offset="100%" stopColor="#22c55e" />
                     </linearGradient>
                 </defs>
-                <rect
-                    x="0"
-                    y="20"
-                    width="50"
-                    height="50"
-                    fill="none"
-                    stroke="url(#andGradient)"
-                    strokeWidth="3"
-                    rx="5"
-                    ry="5"
-                />
                 <path
-                    d="M50 20 A40 40 0 0 1 50 70"
-                    fill="none"
+                    d="M10 10 L40 10 A30 30 0 0 1 40 70 L10 70 Z"
                     stroke="url(#andGradient)"
+                    fill="none"
                     strokeWidth="3"
                 />
             </svg>
+            <div
+                className="absolute text-white text-sm font-semibold"
+                style={{ left: "calc(50% + 10px)", top: "50%", transform: "translate(-50%, -50%)" }}
+            >
+                AND
+            </div>
+            {/* Adjusted target handles to be closer to the gate shape */}
             <Handle
                 type="target"
                 position="left"
                 id="top"
-                style={{ top: "25%", background: "#00BFFF" }}
+                style={{ left: "30px", top: "25%", background: "#00BFFF" }}
             />
             <Handle
                 type="target"
                 position="left"
                 id="bottom"
-                style={{ top: "75%", background: "#00BFFF" }}
+                style={{ left: "30px", top: "75%", background: "#00BFFF" }}
             />
             <Handle
                 type="source"
@@ -81,6 +77,7 @@ const AndGateNode = () => {
         </div>
     );
 };
+
 
 const ORGateNode = () => {
     return (
@@ -104,6 +101,7 @@ const ORGateNode = () => {
                     strokeWidth="3"
                 />
             </svg>
+            <div className="absolute text-white text-sm font-semibold">OR</div>
             <Handle
                 type="target"
                 position="top"
