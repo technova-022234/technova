@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
     BrowserRouter as Router,
     Route,
@@ -24,6 +24,46 @@ import InstructionsPageLevel2 from "./pages/InstructionsPageLevel2";
 import InstructionsPageLevel1 from "./pages/InstructionsLevel1";
 import InstructionsPageLevel3 from "./pages/InstructionsLevel3";
 
+// General ProtectedRoute for routes available only after the overall event time is reached
+const ProtectedRoute = ({ children, isTimeReached }) => {
+    if (!isTimeReached) {
+        return <Navigate to="/" replace />;
+    }
+    return children;
+};
+
+// ProtectedRouteLevel3 for routes that should be accessible only after the level3 time is reached.
+// If the level3 time hasn't been reached, redirect to the level2 story page.
+const ProtectedRouteLevel3 = ({ children, isLevel3TimeReached }) => {
+    if (!isLevel3TimeReached) {
+        return <Navigate to="/level2story" replace />;
+    }
+    return children;
+};
+
+// Target times are defined outside the component so they can be used for both initialization and periodic checking.
+// Overall event target (for example, for login and level1/level2 pages)
+// Adjust these values as needed.
+const targetHour = 12; // Example: 12:00 PM IST
+const targetMinute = 0;
+
+// Level3 target time (for level2story continued, level3 instructions, and level3)
+const targetHourLevel3 = 12; // Example: 3:00 PM IST
+const targetMinuteLevel3 = 0;
+
+// Function to check the current IST time against a target time.
+const checkISTTime = (hour, minute) => {
+    const now = new Date();
+    // Convert current time to IST using Asia/Kolkata timezone
+    const istString = now.toLocaleString("en-US", { timeZone: "Asia/Kolkata" });
+    const istDate = new Date(istString);
+    const currentHour = istDate.getHours();
+    const currentMinute = istDate.getMinutes();
+    return (
+        currentHour > hour || (currentHour === hour && currentMinute >= minute)
+    );
+};
+
 const App = () => {
     // Initialize user state from localStorage
     const [user, setUser] = useState(localStorage.getItem("userEmail"));
@@ -36,121 +76,198 @@ const App = () => {
         useSelector((state) => state.progress.level3) ||
         localStorage.getItem("puzzleSolved") === "true";
 
-    console.log(level1Completed);
-    console.log(level2Completed);
-    console.log(user);
+    // Initialize state for overall event time and level3 time using synchronous check.
+    const [isTimeReached, setIsTimeReached] = useState(() =>
+        checkISTTime(targetHour, targetMinute)
+    );
+    const [isLevel3TimeReached, setIsLevel3TimeReached] = useState(() =>
+        checkISTTime(targetHourLevel3, targetMinuteLevel3)
+    );
+
+    // Update the overall event time every second.
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setIsTimeReached(checkISTTime(targetHour, targetMinute));
+        }, 1000);
+        return () => clearInterval(timer);
+    }, []);
+
+    // Update the level3 time every second.
+    useEffect(() => {
+        const timerLevel3 = setInterval(() => {
+            setIsLevel3TimeReached(
+                checkISTTime(targetHourLevel3, targetMinuteLevel3)
+            );
+        }, 1000);
+        return () => clearInterval(timerLevel3);
+    }, []);
 
     return (
         <Router>
             <Routes>
+                <Route path="/" element={<Loadingpage />} />
                 <Route
                     path="/instructions"
-                    element={<InstructionsPageLevel1 />}
+                    element={
+                        <ProtectedRoute isTimeReached={isTimeReached}>
+                            <InstructionsPageLevel1 />
+                        </ProtectedRoute>
+                    }
                 />
                 <Route
                     path="/level2instructions"
-                    element={<InstructionsPageLevel2 />}
+                    element={
+                        <ProtectedRoute isTimeReached={isTimeReached}>
+                            <InstructionsPageLevel2 />
+                        </ProtectedRoute>
+                    }
                 />
                 <Route
                     path="/level3instructions"
-                    element={<InstructionsPageLevel3 />}
-                />
-                <Route path="/" element={<Loadingpage />} />
-                <Route
-                    path="/login"
-                    // Pass setUser to your Loginpage component so it can update the state after a successful login
                     element={
-                        !user ? (
-                            <Loginpage setUser={setUser} />
-                        ) : (
-                            <Navigate to="/nav" />
-                        )
+                        <ProtectedRouteLevel3
+                            isLevel3TimeReached={isLevel3TimeReached}
+                        >
+                            <InstructionsPageLevel3 />
+                        </ProtectedRouteLevel3>
                     }
                 />
-                <Route path="/nav" element={<NavPage />} />
+                <Route
+                    path="/login"
+                    element={
+                        <ProtectedRoute isTimeReached={isTimeReached}>
+                            {!user ? (
+                                <Loginpage setUser={setUser} />
+                            ) : (
+                                <Navigate to="/nav" />
+                            )}
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/nav"
+                    element={
+                        <ProtectedRoute isTimeReached={isTimeReached}>
+                            <NavPage />
+                        </ProtectedRoute>
+                    }
+                />
                 <Route
                     path="/story"
                     element={
-                        user ? <CinematicSequence /> : <Navigate to="/login" />
+                        <ProtectedRoute isTimeReached={isTimeReached}>
+                            {user ? (
+                                <CinematicSequence />
+                            ) : (
+                                <Navigate to="/login" />
+                            )}
+                        </ProtectedRoute>
                     }
                 />
                 <Route
                     path="/level1story"
                     element={
-                        level1Completed ? (
-                            <Level1Story />
-                        ) : (
-                            <Navigate to="/level1" />
-                        )
+                        <ProtectedRoute isTimeReached={isTimeReached}>
+                            {level1Completed ? (
+                                <Level1Story />
+                            ) : (
+                                <Navigate to="/level1" />
+                            )}
+                        </ProtectedRoute>
                     }
                 />
                 <Route
                     path="/level2story"
                     element={
-                        level2Completed ? (
+                        <ProtectedRoute isTimeReached={isTimeReached}>
                             <Level2Story />
-                        ) : (
-                            <Navigate to="/level2" />
-                        )
+                        </ProtectedRoute>
                     }
                 />
                 <Route
                     path="/level2storycontinued"
                     element={
-                        level2Completed ? (
-                            <Level2StoryContinued />
-                        ) : (
-                            <Navigate to="/level2" />
-                        )
+                        <ProtectedRouteLevel3
+                            isLevel3TimeReached={isLevel3TimeReached}
+                        >
+                            {level2Completed ? (
+                                <Level2StoryContinued />
+                            ) : (
+                                <Navigate to="/level2" />
+                            )}
+                        </ProtectedRouteLevel3>
                     }
                 />
-                <Route path="/leaderboard_level1" element={<Leaderboard />} />
+                <Route
+                    path="/leaderboard_level1"
+                    element={
+                        <ProtectedRoute isTimeReached={isTimeReached}>
+                            <Leaderboard />
+                        </ProtectedRoute>
+                    }
+                />
                 <Route
                     path="/leaderboard_level2"
-                    element={<Level2Leaderboard />}
+                    element={
+                        <ProtectedRoute isTimeReached={isTimeReached}>
+                            <Level2Leaderboard />
+                        </ProtectedRoute>
+                    }
                 />
                 <Route
                     path="/leaderboard_level3"
-                    element={<Level3Leaderboard />}
+                    element={
+                        <ProtectedRoute isTimeReached={isTimeReached}>
+                            <Level3Leaderboard />
+                        </ProtectedRoute>
+                    }
                 />
                 <Route
                     path="/*"
                     element={
-                        <>
-                            <TopNavbar />
-                            <Routes>
-                                <Route
-                                    path="/level1"
-                                    element={
-                                        user ? (
-                                            <SpaceshipConsole />
-                                        ) : (
-                                            <Navigate to="/login" />
-                                        )
-                                    }
-                                />
-                                <Route
-                                    path="/level2"
-                                    element={
-                                        level1Completed ? (
-                                            <Puzzle />
-                                        ) : (
-                                            <Navigate to="/level1" />
-                                        )
-                                    }
-                                />
-                                <Route
-                                    path="/level3"
-                                    element={
-                                        level2Completed ? (
-                                            <Level3 />
-                                        ) : (
-                                            <Navigate to="/level2" />
-                                        )
-                                    }
-                                />
-                            </Routes>
-                        </>
+                        <ProtectedRoute isTimeReached={isTimeReached}>
+                            <>
+                                <TopNavbar />
+                                <Routes>
+                                    <Route
+                                        path="/level1"
+                                        element={
+                                            user ? (
+                                                <SpaceshipConsole />
+                                            ) : (
+                                                <Navigate to="/login" />
+                                            )
+                                        }
+                                    />
+                                    <Route
+                                        path="/level2"
+                                        element={
+                                            level1Completed ? (
+                                                <Puzzle />
+                                            ) : (
+                                                <Navigate to="/level1" />
+                                            )
+                                        }
+                                    />
+                                    <Route
+                                        path="/level3"
+                                        element={
+                                            <ProtectedRouteLevel3
+                                                isLevel3TimeReached={
+                                                    isLevel3TimeReached
+                                                }
+                                            >
+                                                {level2Completed ? (
+                                                    <Level3 />
+                                                ) : (
+                                                    <Navigate to="/level2" />
+                                                )}
+                                            </ProtectedRouteLevel3>
+                                        }
+                                    />
+                                </Routes>
+                            </>
+                        </ProtectedRoute>
                     }
                 />
             </Routes>

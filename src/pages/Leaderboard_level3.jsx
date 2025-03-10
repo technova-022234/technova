@@ -13,6 +13,7 @@ const Level3Leaderboard = () => {
                     "https://technova-sgyr.onrender.com/api/leaderboard/level3"
                 );
                 setLeaderboard(response.data.leaderboard);
+                setError("");
             } catch (error) {
                 setError("Failed to load leaderboard.");
                 console.error(error);
@@ -21,7 +22,14 @@ const Level3Leaderboard = () => {
             }
         };
 
+        // Fetch data immediately when component mounts
         fetchLeaderboard();
+
+        // Set up polling every 5 seconds
+        const intervalId = setInterval(fetchLeaderboard, 5000);
+
+        // Clean up the interval on unmount to avoid memory leaks
+        return () => clearInterval(intervalId);
     }, []);
 
     return (
@@ -37,15 +45,9 @@ const Level3Leaderboard = () => {
                 <table className="w-full border-collapse">
                     <thead>
                         <tr className="bg-indigo-800">
-                            <th className="p-3 border border-indigo-700">
-                                Rank
-                            </th>
-                            <th className="p-3 border border-indigo-700">
-                                Team
-                            </th>
-                            <th className="p-3 border border-indigo-700">
-                                Email
-                            </th>
+                            <th className="p-3 border border-indigo-700">Rank</th>
+                            <th className="p-3 border border-indigo-700">Team</th>
+                            <th className="p-3 border border-indigo-700">Email</th>
                             <th className="p-3 border border-indigo-700">
                                 Questions Submitted
                             </th>
@@ -73,15 +75,9 @@ const Level3Leaderboard = () => {
                                     {player.level3.correctAnswers}
                                 </td>
                                 <td className="p-3 border border-indigo-700">
-                                    {isNaN(
-                                        new Date(
-                                            player.level3.submissionTime
-                                        ).getTime()
-                                    )
+                                    {isNaN(new Date(player.level3.submissionTime).getTime())
                                         ? "Not Submitted"
-                                        : new Date(
-                                              player.level3.submissionTime
-                                          ).toLocaleString()}
+                                        : new Date(player.level3.submissionTime).toLocaleString()}
                                 </td>
                             </tr>
                         ))}

@@ -21,11 +21,18 @@ const Leaderboard = () => {
             }
         };
 
+        // Fetch immediately upon mounting
         fetchLeaderboard();
+
+        // Set an interval to fetch every 5 seconds (5000 milliseconds)
+        const intervalId = setInterval(fetchLeaderboard, 5000);
+
+        // Cleanup the interval on component unmount
+        return () => clearInterval(intervalId);
     }, []);
 
     return (
-        <div className="min-h-screen p-6 bg-gradient-to-br from-indigo-900 to-black text-white  shadow-lg max-w-8xl mx-auto">
+        <div className="min-h-screen p-6 bg-gradient-to-br from-indigo-900 to-black text-white shadow-lg max-w-8xl mx-auto">
             <h2 className="text-3xl font-bold mb-6 text-center">
                 🚀 Level 1 Leaderboard
             </h2>
@@ -37,21 +44,11 @@ const Leaderboard = () => {
                 <table className="w-full border-collapse">
                     <thead>
                         <tr className="bg-indigo-800">
-                            <th className="p-3 border border-indigo-700">
-                                Rank
-                            </th>
-                            <th className="p-3 border border-indigo-700">
-                                Team
-                            </th>
-                            <th className="p-3 border border-indigo-700">
-                                Email
-                            </th>
-                            <th className="p-3 border border-indigo-700">
-                                Score
-                            </th>
-                            <th className="p-3 border border-indigo-700">
-                                Time
-                            </th>
+                            <th className="p-3 border border-indigo-700">Rank</th>
+                            <th className="p-3 border border-indigo-700">Team</th>
+                            <th className="p-3 border border-indigo-700">Email</th>
+                            <th className="p-3 border border-indigo-700">Score</th>
+                            <th className="p-3 border border-indigo-700">Time</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -73,15 +70,9 @@ const Leaderboard = () => {
                                     {player.level1.score}
                                 </td>
                                 <td className="p-3 border border-indigo-700">
-                                    {isNaN(
-                                        new Date(
-                                            player.level1.submissionTime
-                                        ).getTime()
-                                    )
+                                    {isNaN(new Date(player.level1.submissionTime).getTime())
                                         ? "Not Submitted"
-                                        : new Date(
-                                              player.level1.submissionTime
-                                          ).toLocaleString()}
+                                        : new Date(player.level1.submissionTime).toLocaleString()}
                                 </td>
                             </tr>
                         ))}
