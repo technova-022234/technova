@@ -1,6 +1,7 @@
 import React from 'react';
 
 const specialWords = ["order", "random", "chaos", "harmony", "silence"];
+const highlightColors = ["text-red-500", "text-blue-500", "text-green-500", "text-yellow-500", "text-purple-500"];
 
 // Utility to generate a random alphanumeric string of a given length.
 function generateRandomString(length) {
@@ -28,7 +29,11 @@ const AntiqueClock = () => {
     let specialIndex = 0;
     for (let i = 0; i < totalWords; i++) {
       if (specialIndices.includes(i)) {
-        words.push({ word: shuffledSpecialWords[specialIndex], special: true });
+        words.push({ 
+          word: shuffledSpecialWords[specialIndex], 
+          special: true, 
+          color: highlightColors[specialIndex] 
+        });
         specialIndex++;
       } else {
         words.push({ word: generateRandomString(Math.floor(Math.random() * 8) + 3), special: false });
@@ -39,7 +44,7 @@ const AntiqueClock = () => {
 
   // Build the paragraph as an array of inline spans.
   const paragraph = content.map((item, idx) => (
-    <span key={idx} className={item.special ? "text-red-500 font-bold text-xl" : ""}>
+    <span key={idx} className={item.special ? `${item.color} font-bold text-xl` : ""}>
       {item.word}{" "}
     </span>
   ));
