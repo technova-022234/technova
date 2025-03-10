@@ -9,10 +9,15 @@ const Leaderboard = () => {
     useEffect(() => {
         const fetchLeaderboard = async () => {
             try {
-                const response = await axios.get(
+                const response = await fetch(
                     "https://technova-sgyr.onrender.com/api/leaderboard/level1"
                 );
-                setLeaderboard(response.data.leaderboard);
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                const data = await response.json();
+                console.log(data.leaderboard)
+                setLeaderboard(data.leaderboard);
             } catch (error) {
                 setError("Failed to load leaderboard.");
                 console.error(error);
@@ -21,13 +26,10 @@ const Leaderboard = () => {
             }
         };
 
-        // Fetch immediately upon mounting
         fetchLeaderboard();
 
-        // Set an interval to fetch every 5 seconds (5000 milliseconds)
-        const intervalId = setInterval(fetchLeaderboard, 5000);
+        const intervalId = setInterval(fetchLeaderboard, 2000);
 
-        // Cleanup the interval on component unmount
         return () => clearInterval(intervalId);
     }, []);
 
@@ -44,11 +46,21 @@ const Leaderboard = () => {
                 <table className="w-full border-collapse">
                     <thead>
                         <tr className="bg-indigo-800">
-                            <th className="p-3 border border-indigo-700">Rank</th>
-                            <th className="p-3 border border-indigo-700">Team</th>
-                            <th className="p-3 border border-indigo-700">Email</th>
-                            <th className="p-3 border border-indigo-700">Score</th>
-                            <th className="p-3 border border-indigo-700">Time</th>
+                            <th className="p-3 border border-indigo-700">
+                                Rank
+                            </th>
+                            <th className="p-3 border border-indigo-700">
+                                Team
+                            </th>
+                            <th className="p-3 border border-indigo-700">
+                                Email
+                            </th>
+                            <th className="p-3 border border-indigo-700">
+                                Score
+                            </th>
+                            <th className="p-3 border border-indigo-700">
+                                Time
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -70,9 +82,15 @@ const Leaderboard = () => {
                                     {player.level1.score}
                                 </td>
                                 <td className="p-3 border border-indigo-700">
-                                    {isNaN(new Date(player.level1.submissionTime).getTime())
+                                    {isNaN(
+                                        new Date(
+                                            player.level1.submissionTime
+                                        ).getTime()
+                                    )
                                         ? "Not Submitted"
-                                        : new Date(player.level1.submissionTime).toLocaleString()}
+                                        : new Date(
+                                              player.level1.submissionTime
+                                          ).toLocaleString()}
                                 </td>
                             </tr>
                         ))}

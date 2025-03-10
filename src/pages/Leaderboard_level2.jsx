@@ -9,11 +9,15 @@ const Level2Leaderboard = () => {
     useEffect(() => {
         const fetchLeaderboard = async () => {
             try {
-                // Assuming your API endpoint for level2 leaderboard is /api/leaderboard/level2
-                const response = await axios.get(
+                const response = await fetch(
                     "https://technova-sgyr.onrender.com/api/leaderboard/level2"
                 );
-                setLeaderboard(response.data.leaderboard);
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                const data = await response.json();
+                // console.log(data.leaderboard)
+                setLeaderboard(data.leaderboard);
                 setError("");
             } catch (err) {
                 setError("Failed to load leaderboard.");
@@ -23,11 +27,11 @@ const Level2Leaderboard = () => {
             }
         };
 
-        // Fetch immediately when component mounts
+        // Fetch immediately when the component mounts
         fetchLeaderboard();
 
-        // Set up polling every 5 seconds
-        const intervalId = setInterval(fetchLeaderboard, 5000);
+        // Set up polling every 2000 milliseconds (2 seconds) for faster updates
+        const intervalId = setInterval(fetchLeaderboard, 2000);
 
         // Clean up interval on component unmount
         return () => clearInterval(intervalId);
@@ -46,13 +50,27 @@ const Level2Leaderboard = () => {
                 <table className="w-full border-collapse border">
                     <thead>
                         <tr className="bg-indigo-800">
-                            <th className="p-2 border border-indigo-700">Rank</th>
-                            <th className="p-2 border border-indigo-700">Team</th>
-                            <th className="p-2 border border-indigo-700">Email</th>
-                            <th className="p-2 border border-indigo-700">Level 1 Score</th>
-                            <th className="p-2 border border-indigo-700">Level 1 Time</th>
-                            <th className="p-2 border border-indigo-700">Level 2 Moves</th>
-                            <th className="p-2 border border-indigo-700">Level 2 Time</th>
+                            <th className="p-2 border border-indigo-700">
+                                Rank
+                            </th>
+                            <th className="p-2 border border-indigo-700">
+                                Team
+                            </th>
+                            <th className="p-2 border border-indigo-700">
+                                Email
+                            </th>
+                            <th className="p-2 border border-indigo-700">
+                                Level 1 Score
+                            </th>
+                            <th className="p-2 border border-indigo-700">
+                                Level 1 Time
+                            </th>
+                            <th className="p-2 border border-indigo-700">
+                                Level 2 Moves
+                            </th>
+                            <th className="p-2 border border-indigo-700">
+                                Level 2 Time
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -74,17 +92,29 @@ const Level2Leaderboard = () => {
                                     {player.level1.score}
                                 </td>
                                 <td className="p-3 border border-indigo-700">
-                                    {isNaN(new Date(player.level1.submissionTime).getTime())
+                                    {isNaN(
+                                        new Date(
+                                            player.level1.submissionTime
+                                        ).getTime()
+                                    )
                                         ? "Not Submitted"
-                                        : new Date(player.level1.submissionTime).toLocaleString()}
+                                        : new Date(
+                                              player.level1.submissionTime
+                                          ).toLocaleString()}
                                 </td>
                                 <td className="p-2 border border-indigo-700 font-bold">
                                     {player.level2.moves}
                                 </td>
                                 <td className="p-3 border border-indigo-700">
-                                    {isNaN(new Date(player.level2.submissionTime).getTime())
+                                    {isNaN(
+                                        new Date(
+                                            player.level2.submissionTime
+                                        ).getTime()
+                                    )
                                         ? "Not Submitted"
-                                        : new Date(player.level2.submissionTime).toLocaleString()}
+                                        : new Date(
+                                              player.level2.submissionTime
+                                          ).toLocaleString()}
                                 </td>
                             </tr>
                         ))}
