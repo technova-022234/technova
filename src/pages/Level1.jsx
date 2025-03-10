@@ -12,7 +12,7 @@ const questions = [
     {
         question: `Navigation Protocol:
 Our ship’s advanced navigation system has intercepted encrypted coordinates for critical energy nodes. To plot the most energy‐efficient route connecting all nodes with the least distance possible and safely traverse by covering all points, What is the total weight of this optimized route? (Hover on Edges to get the distance, Answer in word form.)`,
-        correctAnswer: "Six",
+        correctAnswer: "Sixteen",
         hints: [
             "Focus on connecting nodes with minimal weights.",
             "Remember: the goal is to minimize the total energy consumption.",
@@ -59,7 +59,7 @@ Which word unlocks the hidden sequence?`,
         question: `Control Panel Conundrum:
 Our vessel boasts five control panels aligned across the cockpit, each dedicated to a unique system: Navigation, Communications, Weapons, Shields, and Engines.
 Clues:
-• The Navigation panel is immediately to the left of the Engines panel.
+• The Navigation panel is immediately to the left of the Engine panel.
 • The Communications panel is not adjacent to the Weapons panel.
 • The Shields panel is located somewhere to the left of the Communications panel.
 • The Engines panel is not in position 3.
@@ -271,8 +271,16 @@ const SpaceshipConsole = () => {
         if (submittedQuestions[currentQuestionIndex]) return;
         const normalizedAnswer = answer.trim().toLowerCase();
         const normalizedCorrect = currentQuestion.correctAnswer.toLowerCase();
-
-        if (normalizedAnswer === normalizedCorrect) {
+    
+        // Use custom validation for the 5th question (index 4)
+        let isCorrect;
+        if (currentQuestionIndex === 4) {
+            isCorrect = normalizedAnswer.includes("engine");
+        } else {
+            isCorrect = normalizedAnswer === normalizedCorrect;
+        }
+    
+        if (isCorrect) {
             // Calculate reward based on hints already revealed.
             const questionScore = Math.max(5, 0);
             const newTotalScore = score + questionScore;
@@ -288,7 +296,7 @@ const SpaceshipConsole = () => {
                 [currentQuestionIndex]: finalAnswer,
             }));
             setAnswer(finalAnswer);
-
+    
             // Log the submission time and update on the backend.
             const now = new Date();
             const utcTime = now.getTime() + now.getTimezoneOffset() * 60000;
@@ -323,7 +331,7 @@ const SpaceshipConsole = () => {
                 `Incorrect. ${penalty} marks deducted. Keep trying, space explorer!`
             );
         }
-    };
+    };    
 
     const handleNextQuestion = () => {
         if (currentQuestionIndex < questions.length - 1) {
