@@ -23,6 +23,8 @@ import { useSelector } from "react-redux";
 import InstructionsPageLevel2 from "./pages/InstructionsPageLevel2";
 import InstructionsPageLevel1 from "./pages/InstructionsLevel1";
 import InstructionsPageLevel3 from "./pages/InstructionsLevel3";
+import Completedpage from "./pages/Completedpage";
+import EliminationPage from "./pages/Eliminationpage";
 
 // General ProtectedRoute for routes available only after the overall event time is reached
 const ProtectedRoute = ({ children, isTimeReached }) => {
@@ -206,6 +208,9 @@ const App = () => {
                         </ProtectedRoute>
                     }
                 />
+                <Route path="/completedpage" element={<Completedpage />} />
+                <Route path="/eliminationpage" element={<EliminationPage />} />
+
                 <Route
                     path="/leaderboard_level2"
                     element={
