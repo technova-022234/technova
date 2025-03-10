@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Loginpage = ({setUser}) => {
     const [formData, setFormData] = useState({ email: "", password: "" });
     const [error, setError] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
 
     const handleChange = (e) => {
@@ -200,26 +202,39 @@ const Loginpage = ({setUser}) => {
                     >
                         Password
                     </label>
-                    <input
-                        type="password"
-                        id="password"
-                        name="password"
-                        placeholder="Enter your password"
-                        value={formData.password}
-                        onChange={handleChange}
-                        className="p-3 border border-white/30 rounded-lg w-full text-black shadow-md focus:ring-2 focus:ring-purple-300 outline-none"
-                    />
-                    <button
-                        type="submit"
-                        className="w-full mt-6 p-3 rounded-lg bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"
-                    >
-                        Login
-                    </button>
-                    {error && <p className="mt-4 text-red-500">{error}</p>}
-                </form>
+                    <div className="relative">
+            <input
+              type={showPassword ? "text" : "password"}
+              id="password"
+              name="password"
+              placeholder="Enter your password"
+              value={formData.password}
+              onChange={handleChange}
+              className="p-3 pr-10 border border-white/30 rounded-lg w-full text-black shadow-md focus:ring-2 focus:ring-purple-300 outline-none"
+            />
+            <div
+              className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer"
+              onClick={() => setShowPassword((prev) => !prev)}
+            >
+              {showPassword ? (
+                <FaEyeSlash className="text-gray-700" />
+              ) : (
+                <FaEye className="text-gray-700" />
+              )}
             </div>
-        </div>
-    );
+          </div>
+          <button
+            type="submit"
+            className="w-full mt-6 p-3 rounded-lg bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"
+          >
+            Login
+          </button>
+          {error && <p className="mt-4 text-red-500">{error}</p>}
+        </form>
+      </div>
+    </div>
+  );
 };
+
 
 export default Loginpage;
