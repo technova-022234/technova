@@ -22,11 +22,11 @@ const Level3 = () => {
     const initialSubmissionTimes = storedData.submissionTimes || [];
 
     const questions = [
-        "Decode the enigmatic string by applying a shift halfway through the alphabet to reveal the concealed password?  \n Enigmatic string : 'O1A4EL'",
-        "At times, viewing things in reverse can expose hidden order—try flipping your perspective.\n Encrypted message:'X0MGI0O'\n",
-        "Recall the early whispers from space , a secret word from that time might help realign this scrambled message.   \n Scrambled message : 'K3RR3V'",
+        "Decode the enigmatic string by applying a shift halfway through the alphabet to reveal the concealed password? Does the communication code have a relation? \n Enigmatic string : 'O1A4EL'",
+        "At times, viewing things in reverse can expose hidden order—try flipping your perspective.\n Remember the faded note under the clock ? Encrypted message:'X0MGI0O'",
+        "Uncover the secret word born from intertwined clues; remember, the legth may be the key to zenithium. \n Encrypted Message: xzujwstaf" ,
     ];
-    const correctAnswers = ["B1N4RY", "C0NTR0L", "S3CR3T"]; // Replace with your correct answers
+    const correctAnswers = ["B1N4RY", "C0NTR0L", "SUPERNOVA"]; // Replace with your correct answers
 
     const hackingStatements = [
         "Accessing system files...",
