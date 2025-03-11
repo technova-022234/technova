@@ -7,8 +7,8 @@ const Loadingpage = () => {
     const navigate = useNavigate();
 
     // Set the target IST time for the event (6:00 PM IST)
-    const targetHour = 8; // 6:00 PM
-    const targetMinute = 1;
+    const targetHour = 17; // 6:00 PM
+    const targetMinute = 15;
 
     // Function to check current IST time
     const checkISTTime = () => {
