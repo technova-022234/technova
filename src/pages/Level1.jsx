@@ -269,10 +269,11 @@ const SpaceshipConsole = () => {
 
     const handleSubmitAnswer = async () => {
         if (submittedQuestions[currentQuestionIndex]) return;
+    
         const normalizedAnswer = answer.trim().toLowerCase();
         const normalizedCorrect = currentQuestion.correctAnswer.toLowerCase();
     
-        // Use custom validation for the 5th question (index 4)
+        // Custom validation for the 5th question (index 4)
         let isCorrect;
         if (currentQuestionIndex === 4) {
             isCorrect = normalizedAnswer.includes("engine");
@@ -282,20 +283,30 @@ const SpaceshipConsole = () => {
     
         if (isCorrect) {
             // Calculate reward based on hints already revealed.
-            const questionScore = Math.max(5, 0);
+            const questionScore = 5; // fixed reward for correct answer
             const newTotalScore = score + questionScore;
             setScore(newTotalScore);
             setFeedback(`Correct! You earned ${questionScore} marks.`);
-            setSubmittedQuestions((prev) => ({
-                ...prev,
-                [currentQuestionIndex]: true,
-            }));
             const finalAnswer = `✔ Correct! (${currentQuestion.correctAnswer})`;
             setUserAnswers((prev) => ({
                 ...prev,
                 [currentQuestionIndex]: finalAnswer,
             }));
             setAnswer(finalAnswer);
+    
+            // Update submittedQuestions using a callback to ensure updated state is used for navigation.
+            setSubmittedQuestions((prevSubmitted) => {
+                const updatedSubmitted = { ...prevSubmitted, [currentQuestionIndex]: true };
+    
+                // Auto-navigation logic:
+                if (currentQuestionIndex < questions.length - 1) {
+                    setCurrentQuestionIndex(currentQuestionIndex + 1);
+                } else if (Object.keys(updatedSubmitted).length < questions.length) {
+                    // If on the last question but not all questions have been answered, loop back to the first question.
+                    setCurrentQuestionIndex(0);
+                }
+                return updatedSubmitted;
+            });
     
             // Log the submission time and update on the backend.
             const now = new Date();
@@ -327,12 +338,10 @@ const SpaceshipConsole = () => {
             const penalty = 2;
             const newTotalScore = score - penalty;
             setScore(newTotalScore);
-            setFeedback(
-                `Incorrect. ${penalty} marks deducted. Keep trying, space explorer!`
-            );
+            setFeedback(`Incorrect. ${penalty} marks deducted. Keep trying, space explorer!`);
         }
-    };    
-
+    };
+    
     const handleNextQuestion = () => {
         if (currentQuestionIndex < questions.length - 1) {
             setCurrentQuestionIndex(currentQuestionIndex + 1);

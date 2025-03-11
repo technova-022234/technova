@@ -112,4 +112,41 @@
   .animate-bounce-slow {
     animation: bounce-slow 2s ease-in-out infinite;
   }
-  
+/* Mission Completed - Scale Up & Glow */
+@keyframes scaleUpGlow {
+    0% {
+        opacity: 0;
+        transform: scale(0.5);
+        text-shadow: 0 0 5px cyan;
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.1);
+        text-shadow: 0 0 10px cyan, 0 0 20px cyan;
+    }
+    100% {
+        opacity: 1; /* Stay visible */
+        transform: scale(1);
+        text-shadow: 0 0 5px cyan;
+    }
+}
+
+.animate-scale-glow {
+    animation: scaleUpGlow 1.5s ease-out forwards;
+}
+
+/* Congratulations - Slide In from Left */
+@keyframes slideInLeft {
+    0% {
+        opacity: 0;
+        transform: translateX(-50px);
+    }
+    100% {
+        opacity: 1; /* Stay visible */
+        transform: translateX(0);
+    }
+}
+
+.animate-slide-left {
+    animation: slideInLeft 1s ease-out forwards;
+}

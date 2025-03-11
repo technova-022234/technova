@@ -9,17 +9,20 @@ const Completedpage = () => {
         backgroundImage: "url('images/image2.jpg')",
       }}
     >
-      {/* Animated heading */}
-      <h1 className="text-5xl font-extrabold mb-6 text-cyan-400">
-        Mission Completed!
+      {/* Mission Completed with Scale & Glow Effect */}
+      <h1 className="text-6xl font-extrabold mb-6 text-cyan-400 
+        opacity-0 animate-scale-glow">
+        🚀Mission Completed!
       </h1>
 
-      {/* Congratulatory messages */}
-      <p className="text-2xl mb-4 text-purple-300">
-        Congratulations! You have successfully cleared all 3 levels.
+      {/* Congratulations with Slide-in from Left */}
+      <p className="text-2xl mb-4 text-gray-300 opacity-0 animate-slide-left">
+          Congratulations! You have successfully cleared all 3 levels.
       </p>
-      <p className="text-xl text-pink-300">
-              Thank you for Playing!
+      
+      {/* Thank You message with Glow Effect */}
+      <p className="text-lg text-pink-400 animate-glow">
+        Thank you for Playing!
       </p>
     </div>
   );
