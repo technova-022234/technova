@@ -50,7 +50,7 @@ const getWarpTimeLeft = () => {
     const istNow = new Date(istString);
     // Create a target date set to today at 12:00 PM IST.
     const target = new Date(istNow);
-    target.setHours(21, 45, 0, 0);
+    target.setHours(8, 30, 0, 0);
     const diff = target - istNow;
     return diff > 0 ? diff : 0;
 };
@@ -65,6 +65,7 @@ const formatTime = (milliseconds) => {
 
 const Level2Story = () => {
     const [sceneIndex, setSceneIndex] = useState(0);
+    const [waiting, setWaiting] = useState(false);
     const dialogueRef = useRef(null);
     const navigate = useNavigate();
 
@@ -104,26 +105,41 @@ const Level2Story = () => {
             const data = await response.json();
             const leaderboard = data.leaderboard;
             const top10 = leaderboard.slice(0, 10);
-            const email = localStorage.getItem("email");
-            if (email && top10.some((item) => item.email === email)) {
-                localStorage.setItem("level3Qualified", "true");
-                try {
-                    await fetch(
-                        "https://technova-sgyr.onrender.com/api/update-storage",
-                        {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({
-                                email,
-                                level3Qualified: true,
-                            }),
-                        }
-                    );
-                } catch (updateError) {
-                    console.error(
-                        "Error updating backend storage:",
-                        updateError
-                    );
+            const anyInvalid = top10.some((player) => {
+                const level1Time = new Date(
+                    player.level1.submissionTime
+                ).getTime();
+                const level2Time = new Date(
+                    player.level2.submissionTime
+                ).getTime();
+                return isNaN(level1Time) || isNaN(level2Time);
+            });
+
+            if (anyInvalid) {
+                setWaiting(true);
+            } else {
+                setWaiting(false);
+                const email = localStorage.getItem("email");
+                if (email && top10.some((item) => item.email === email)) {
+                    localStorage.setItem("level3Qualified", "true");
+                    try {
+                        await fetch(
+                            "https://technova-sgyr.onrender.com/api/update-storage",
+                            {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify({
+                                    email,
+                                    level3Qualified: true,
+                                }),
+                            }
+                        );
+                    } catch (updateError) {
+                        console.error(
+                            "Error updating backend storage:",
+                            updateError
+                        );
+                    }
                 }
             }
         } catch (error) {
@@ -149,12 +165,28 @@ const Level2Story = () => {
                 setWarpTimeLeft(left);
                 if (left <= 0) {
                     clearInterval(timer);
-                    handleFinalNavigation();
+                    if (!waiting) {
+                        handleFinalNavigation();
+                    }
                 }
             }, 1000);
             return () => clearInterval(timer);
         }
-    }, [sceneIndex, navigate]);
+    }, [sceneIndex, waiting, navigate]);
+
+    useEffect(() => {
+        if (sceneIndex === scenes.length - 1 && warpTimeLeft <= 0 && waiting) {
+            const pollInterval = setInterval(async () => {
+                await checkLeaderboardQualification();
+                // If waiting becomes false, then all top 10 have valid submission times.
+                if (!waiting) {
+                    clearInterval(pollInterval);
+                    handleFinalNavigation();
+                }
+            }, 2000);
+            return () => clearInterval(pollInterval);
+        }
+    }, [sceneIndex, warpTimeLeft, waiting, navigate]);
 
     // Advance scene function. If on last scene, do not advance until the countdown is over.
     const advanceScene = () => {
@@ -162,7 +194,7 @@ const Level2Story = () => {
             setSceneIndex(sceneIndex + 1);
         } else {
             // On the last scene, only navigate if countdown is finished.
-            if (warpTimeLeft <= 0) {
+            if (warpTimeLeft <= 0 && !waiting) {
                 handleFinalNavigation();
             }
         }
@@ -235,8 +267,11 @@ const Level2Story = () => {
                             {/* Show warp countdown only on the last scene */}
                             {sceneIndex === scenes.length - 1 && (
                                 <div className="mt-4 text-blue-100 text-lg">
-                                    Warping will be completed in:{" "}
-                                    {formatTime(warpTimeLeft)}
+                                    {waiting
+                                        ? "Waiting for other players..."
+                                        : `Warping will be completed in:${" "} ${formatTime(
+                                              warpTimeLeft
+                                          )}`}
                                 </div>
                             )}
                         </div>

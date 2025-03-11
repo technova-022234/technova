@@ -3,8 +3,8 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { completeLevel } from "../redux/progressSlice";
 
-const targetHour = 20; // Example: 12:00 PM IST for level2
-const targetMinute = 15;
+const targetHour = 8; // Example: 12:00 PM IST for level2
+const targetMinute = 30;
 
 const checkISTTime = (hour, minute) => {
     const now = new Date();
@@ -92,27 +92,56 @@ const Puzzle = ({ gridSize = 4, imageUrl = "/images/puzzle.png", timeLimit = 300
         return () => clearInterval(timerId);
     }, []);
 
+    const checkLeaderboardValidity = async () => {
+        try {
+            const response = await fetch(
+                "https://technova-sgyr.onrender.com/api/leaderboard/level2"
+            );
+            const data = await response.json();
+            const top10 = data.leaderboard.slice(0, 10);
+            const anyInvalid = top10.some((player) => {
+                const level1Time = new Date(player.level1.submissionTime).getTime();
+                const level2Time = new Date(player.level2.submissionTime).getTime();
+                return isNaN(level1Time) || isNaN(level2Time);
+            });
+            return !anyInvalid;
+        } catch (error) {
+            console.error("Error checking leaderboard validity:", error);
+            return false;
+        }
+    };
+
     // Check IST time thresholds and redirect accordingly.
     useEffect(() => {
-        const checkTimeAndRedirect = () => {
+        const checkTimeAndRedirect = async () => {
             const puzzleSolved =
                 localStorage.getItem("puzzleSolved") === "true";
 
             // If level2 deadline reached and puzzle is not solved, redirect to elimination.
             if (!puzzleSolved && checkISTTime(targetHour, targetMinute)) {
-                navigate("/eliminationpage");
+                const validLeaderboard = await checkLeaderboardValidity();
+                if (validLeaderboard) {
+                    navigate("/eliminationpage");
+                }
             }
-            // If puzzle is solved and level3 target time is reached, redirect to level3 instructions.
-            // else if (
-            //     puzzleSolved
-            // ) {
-            //     navigate("/level2story");
-            // }
         };
 
         const intervalId = setInterval(checkTimeAndRedirect, 1000);
         return () => clearInterval(intervalId);
     }, [navigate]);
+
+    useEffect(() => {
+        if (checkISTTime(targetHour, targetMinute) && localStorage.getItem("puzzleSolved") !== "true") {
+            const pollInterval = setInterval(async () => {
+                const validLeaderboard = await checkLeaderboardValidity();
+                if (validLeaderboard) {
+                    clearInterval(pollInterval);
+                    navigate("/eliminationpage");
+                }
+            }, 2000);
+            return () => clearInterval(pollInterval);
+        }
+    }, [timeLeft, navigate]);
 
     useEffect(() => {
         localStorage.setItem("puzzleBoard", JSON.stringify(board));
