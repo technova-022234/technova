@@ -115,6 +115,8 @@ const Level2Story = () => {
                 return isNaN(level1Time) || isNaN(level2Time);
             });
 
+            console.log(anyInvalid)
+            
             if (anyInvalid) {
                 setWaiting(true);
             } else {
@@ -150,9 +152,9 @@ const Level2Story = () => {
     const handleFinalNavigation = async () => {
         await checkLeaderboardQualification();
         const qualified = localStorage.getItem("level3Qualified");
-        if (qualified === "true") {
+        if (!waiting && qualified === "true") {
             navigate("/level2storycontinued");
-        } else {
+        } else if(!waiting && qualified === "false") {
             navigate("/eliminationpage");
         }
     };
