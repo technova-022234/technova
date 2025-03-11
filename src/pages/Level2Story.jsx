@@ -152,7 +152,7 @@ const Level2Story = () => {
     const handleFinalNavigation = async () => {
         await checkLeaderboardQualification();
         const qualified = localStorage.getItem("level3Qualified");
-        if (!waiting && qualified === "true") {
+        if (true) {
             navigate("/level2storycontinued");
         } else if(!waiting && qualified === "false") {
             navigate("/eliminationpage");
