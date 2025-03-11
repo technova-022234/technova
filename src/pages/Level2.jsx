@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { completeLevel } from "../redux/progressSlice";
 
-const targetHour = 8; // Example: 12:00 PM IST for level2
+const targetHour = 17; // Example: 12:00 PM IST for level2
 const targetMinute = 30;
 
 const checkISTTime = (hour, minute) => {
