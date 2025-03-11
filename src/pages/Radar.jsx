@@ -10,9 +10,9 @@ const Radar = () => {
     // Alpha's coordinate (7.2, 7.2) is the closest to (7,7) compared to beta and Gamma.
     const points = useMemo(() => {
         const fixedPoints = [
-            { label: "Alpha", x_label: 7.2, y_label: 7.2 },
-            { label: "beta", x_label: 10, y_label: 10 },
-            { label: "Gamma", x_label: 12, y_label: 12 },
+            { label: "Alpha", x_label: 7, y_label: 10 },
+            { label: "beta", x_label: 2, y_label: 8 },
+            { label: "Gamma", x_label: 7, y_label: 12 },
         ];
 
         const generatedPoints = [];

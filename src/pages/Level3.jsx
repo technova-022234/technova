@@ -10,6 +10,12 @@ const Level3 = () => {
             navigate("/level2story");
         }
     }, [navigate]);
+
+    useEffect(() => {
+        if (localStorage.getItem("level3Completed") === "true") {
+            navigate("/completedpage");
+        }
+    }, [navigate]);
     // Load stored level3 data from localStorage if it exists.
     const storedData = JSON.parse(localStorage.getItem("submissionData")) || {};
     // If submissionTimes exist, assume they are already ISO strings.
@@ -213,6 +219,28 @@ const Level3 = () => {
         }
     };
 
+    const updateStorageWithCompletion = async () => {
+        if (!userEmail) return;
+        const level3Completed = true
+        try {
+            const response = await fetch(
+                "https://technova-sgyr.onrender.com/api/update-storage",
+                {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email: userEmail, level3Completed }),
+                }
+            );
+            const data = await response.json();
+            console.log("Level3 storage updated with completion:", data);
+        } catch (error) {
+            console.error(
+                "Error updating level3 storage with completion:",
+                error
+            );
+        }
+    };
+
     const handleHackingComplete = (resultMessage) => {
         setHackingText("");
         setInputValue("");
@@ -233,6 +261,9 @@ const Level3 = () => {
                 } else {
                     setTimeout(() => {
                         setFirewallsBroken(true);
+                        localStorage.setItem("level3Completed", "true");
+                        updateStorageWithCompletion();
+                        navigate("/completedpage")
                     }, 2000);
                 }
             }, 1000);

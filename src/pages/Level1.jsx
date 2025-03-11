@@ -14,10 +14,10 @@ const questions = [
 Our ship’s advanced navigation system has intercepted encrypted coordinates for critical energy nodes. To plot the most energy‐efficient route connecting all nodes with the least distance possible and safely traverse by covering all points, What is the total weight of this optimized route? (Hover on Edges to get the distance, Answer in word form.)`,
         correctAnswer: "Sixteen",
         hints: [
-            "Focus on connecting nodes with minimal weights.",
-            "Remember: the goal is to minimize the total energy consumption.",
-            "Visualize linking all nodes without cycles.",
-            "Optimal connections yield the lowest sum.",
+            "Ensure every vertex is connected by selecting the lightest available edge.",
+            "Aim to reduce overall cost by focusing on the smallest weights.",
+            "Maintain a tree structure by avoiding any cycles as you add edges.",
+            "Achieve optimality by minimizing the total sum of all edge weights.",
         ],
     },
     {
@@ -27,8 +27,8 @@ Our spacecraft’s sensor suite is evaluating three critical signals. If the cir
         hints: [
             "At least two active signals are needed.",
             "Binary sensor logic is in effect.",
-            "Majority rule applies.",
-            "Check that two or more inputs are on.",
+            "AND gates apply a*b",
+            "OR gates apply a+b",
         ],
     },
     {
@@ -36,8 +36,8 @@ Our spacecraft’s sensor suite is evaluating three critical signals. If the cir
 Radar has locked onto three asteroids in our flight path. To prioritize evasion measures, identify which asteroid is closest to our rocket(7, 7). Which asteroid is our primary threat?`,
         correctAnswer: "Alpha",
         hints: [
-            "Analyze the strength of the radar signals.",
             "The nearest object will return the strongest echo.",
+            "Analyze the strength of the radar signals.",
             "Triangulation points to the first detected target.",
             "Alpha usually signifies the primary threat.",
         ],
@@ -49,10 +49,10 @@ Deep within the control room, an antique clock malfunctions, cycling through fiv
 Which word unlocks the hidden sequence?`,
         correctAnswer: "Chaos",
         hints: [
+            "Observe the colored words",
             "Time can be unpredictable.",
-            "Expect the unexpected in this anomaly.",
-            "Not sequential but disruptive.",
-            "Disorder reveals the truth.",
+            "Time has no order",
+            "Even random is predictable",
         ],
     },
     {
@@ -71,8 +71,8 @@ Determine which function is assigned to the panel in the 4th position.
         hints: [
             "Map out the positions logically.",
             "Remember: panels have fixed relative positions.",
-            "Clues are key—use process of elimination.",
-            "Focus on the sequence from left to right.",
+            "Weapons is immediately left to the navigation panel",
+            "Communication is immediately right to engines",
         ],
     },
 ];
@@ -269,10 +269,10 @@ const SpaceshipConsole = () => {
 
     const handleSubmitAnswer = async () => {
         if (submittedQuestions[currentQuestionIndex]) return;
-    
+
         const normalizedAnswer = answer.trim().toLowerCase();
         const normalizedCorrect = currentQuestion.correctAnswer.toLowerCase();
-    
+
         // Custom validation for the 5th question (index 4)
         let isCorrect;
         if (currentQuestionIndex === 4) {
@@ -280,7 +280,7 @@ const SpaceshipConsole = () => {
         } else {
             isCorrect = normalizedAnswer === normalizedCorrect;
         }
-    
+
         if (isCorrect) {
             // Calculate reward based on hints already revealed.
             const questionScore = 5; // fixed reward for correct answer
@@ -293,21 +293,26 @@ const SpaceshipConsole = () => {
                 [currentQuestionIndex]: finalAnswer,
             }));
             setAnswer(finalAnswer);
-    
+
             // Update submittedQuestions using a callback to ensure updated state is used for navigation.
             setSubmittedQuestions((prevSubmitted) => {
-                const updatedSubmitted = { ...prevSubmitted, [currentQuestionIndex]: true };
-    
+                const updatedSubmitted = {
+                    ...prevSubmitted,
+                    [currentQuestionIndex]: true,
+                };
+
                 // Auto-navigation logic:
                 if (currentQuestionIndex < questions.length - 1) {
                     setCurrentQuestionIndex(currentQuestionIndex + 1);
-                } else if (Object.keys(updatedSubmitted).length < questions.length) {
+                } else if (
+                    Object.keys(updatedSubmitted).length < questions.length
+                ) {
                     // If on the last question but not all questions have been answered, loop back to the first question.
                     setCurrentQuestionIndex(0);
                 }
                 return updatedSubmitted;
             });
-    
+
             // Log the submission time and update on the backend.
             const now = new Date();
             const utcTime = now.getTime() + now.getTimezoneOffset() * 60000;
@@ -338,10 +343,12 @@ const SpaceshipConsole = () => {
             const penalty = 2;
             const newTotalScore = score - penalty;
             setScore(newTotalScore);
-            setFeedback(`Incorrect. ${penalty} marks deducted. Keep trying, space explorer!`);
+            setFeedback(
+                `Incorrect. ${penalty} marks deducted. Keep trying, space explorer!`
+            );
         }
     };
-    
+
     const handleNextQuestion = () => {
         if (currentQuestionIndex < questions.length - 1) {
             setCurrentQuestionIndex(currentQuestionIndex + 1);
