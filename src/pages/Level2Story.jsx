@@ -104,7 +104,7 @@ const Level2Story = () => {
             );
             const data = await response.json();
             const leaderboard = data.leaderboard;
-            const top10 = leaderboard.slice(0, 7);
+            const top10 = leaderboard.slice(0, 6);
             const anyInvalid = top10.some((player) => {
                 const level1Time = new Date(
                     player.level1.submissionTime
