@@ -51,7 +51,7 @@ const targetMinute = 5;
 
 // Level3 target time (for level2story continued, level3 instructions, and level3)
 const targetHourLevel3 = 17; // Example: 3:00 PM IST
-const targetMinuteLevel3 = 30;
+const targetMinuteLevel3 = 15;
 
 // Function to check the current IST time against a target time.
 const checkISTTime = (hour, minute) => {

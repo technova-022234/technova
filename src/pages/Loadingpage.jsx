@@ -8,7 +8,7 @@ const Loadingpage = () => {
 
     // Set the target IST time for the event (6:00 PM IST)
     const targetHour = 17; // 6:00 PM
-    const targetMinute = 5;
+    const targetMinute = 15;
 
     // Function to check current IST time
     const checkISTTime = () => {
