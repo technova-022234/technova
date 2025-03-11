@@ -112,16 +112,20 @@ const Level2Story = () => {
                 const level2Time = new Date(
                     player.level2.submissionTime
                 ).getTime();
+                console.log("level 1", player.level1.submissionTime);
+                console.log("level 2", player.level2.submissionTime);
+                console.log("check", isNaN(level1Time) || isNaN(level2Time));
                 return isNaN(level1Time) || isNaN(level2Time);
             });
 
-            console.log(anyInvalid)
-            
+            console.log("invalid", anyInvalid);
+
             if (anyInvalid) {
                 setWaiting(true);
             } else {
                 setWaiting(false);
-                const email = localStorage.getItem("email");
+                const email = localStorage.getItem("userEmail");
+                console.log("verify", top10.some((item) => item.email === email))
                 if (email && top10.some((item) => item.email === email)) {
                     localStorage.setItem("level3Qualified", "true");
                     try {
@@ -142,6 +146,11 @@ const Level2Story = () => {
                             updateError
                         );
                     }
+                } else if (
+                    email &&
+                    !top10.some((item) => item.email === email)
+                ) {
+                    localStorage.setItem("level3Qualified", "false");
                 }
             }
         } catch (error) {
@@ -152,9 +161,11 @@ const Level2Story = () => {
     const handleFinalNavigation = async () => {
         await checkLeaderboardQualification();
         const qualified = localStorage.getItem("level3Qualified");
-        if (true) {
+        console.log("waiting", waiting);
+        console.log("qualified", qualified);
+        if (!waiting && qualified == "true") {
             navigate("/level2storycontinued");
-        } else if(!waiting && qualified === "false") {
+        } else if (!waiting && qualified === "false") {
             navigate("/eliminationpage");
         }
     };

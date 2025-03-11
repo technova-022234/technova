@@ -4,12 +4,12 @@ import { TypeAnimation } from "react-type-animation";
 
 const Level3 = () => {
     const navigate = useNavigate();
-    // useEffect(() => {
-    //     const qualified = localStorage.getItem("level3Qualified");
-    //     if (qualified !== "true") {
-    //         navigate("/level2story");
-    //     }
-    // }, [navigate]);
+    useEffect(() => {
+        const qualified = localStorage.getItem("level3Qualified");
+        if (qualified !== "true") {
+            navigate("/level2story");
+        }
+    }, [navigate]);
     // Load stored level3 data from localStorage if it exists.
     const storedData = JSON.parse(localStorage.getItem("submissionData")) || {};
     // If submissionTimes exist, assume they are already ISO strings.
