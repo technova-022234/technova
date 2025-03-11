@@ -98,7 +98,7 @@ const Puzzle = ({ gridSize = 4, imageUrl = "/images/puzzle.png", timeLimit = 300
                 "https://technova-sgyr.onrender.com/api/leaderboard/level2"
             );
             const data = await response.json();
-            const top10 = data.leaderboard.slice(0, 10);
+            const top10 = data.leaderboard.slice(0, 5);
             const anyInvalid = top10.some((player) => {
                 const level1Time = new Date(player.level1.submissionTime).getTime();
                 const level2Time = new Date(player.level2.submissionTime).getTime();
