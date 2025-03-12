@@ -163,9 +163,9 @@ const Level2Story = () => {
         const qualified = localStorage.getItem("level3Qualified");
         console.log("waiting", waiting);
         console.log("qualified", qualified);
-        if (!waiting && qualified == "true") {
+        if (true) {
             navigate("/level2storycontinued");
-        } else if (!waiting && qualified === "false") {
+        } else if (true) {
             navigate("/level2storycontinued");
         }
     };
