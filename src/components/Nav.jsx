@@ -84,7 +84,9 @@ const NavOverlay = ({ isOpen, setIsOpen }) => {
     const items = [
         { level: "story", url: "/story" },
         { level: "level1", url: "/level1" },
+        { level: "Comms", url: "/level1story"},
         { level: "level2", url: "/level2" },
+        { level: "firewalls", url: "/level2story"},
         { level: "level3", url: "/level3" },
     ];
 
@@ -120,7 +122,6 @@ const NavOverlay = ({ isOpen, setIsOpen }) => {
                             item.level === "story" ||
                             item.level === "level1" ||
                             progress[item.level];
-
                         return (
                             <li
                                 key={index}

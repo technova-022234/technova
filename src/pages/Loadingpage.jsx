@@ -7,8 +7,8 @@ const Loadingpage = () => {
     const navigate = useNavigate();
 
     // Set the target IST time for the event (6:00 PM IST)
-    const targetHour = 17; // 6:00 PM
-    const targetMinute = 15;
+    const targetHour = 12; // 6:00 PM
+    const targetMinute = 0;
 
     // Function to check current IST time
     const checkISTTime = () => {
@@ -61,7 +61,7 @@ const Loadingpage = () => {
             <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
                 <h1 className="text-8xl font-bold mb-4">TECH NOVA</h1>
                 {/* Display the event start time */}
-                <p className="text-xl mb-8">The event starts at 6:00 PM IST</p>
+                <p className="text-xl mb-8">The event starts at 12:00 PM IST</p>
             </div>
             <div className="absolute top-[65%] left-1/2 transform -translate-x-1/2 w-72 h-12 bg-gray-700 rounded-full overflow-hidden">
                 {progress < 100 ? (

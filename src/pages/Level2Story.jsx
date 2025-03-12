@@ -50,7 +50,7 @@ const getWarpTimeLeft = () => {
     const istNow = new Date(istString);
     // Create a target date set to today at 12:00 PM IST.
     const target = new Date(istNow);
-    target.setHours(17, 15, 0, 0);
+    target.setHours(12, 40, 0, 0);
     const diff = target - istNow;
     return diff > 0 ? diff : 0;
 };
@@ -104,7 +104,7 @@ const Level2Story = () => {
             );
             const data = await response.json();
             const leaderboard = data.leaderboard;
-            const top10 = leaderboard.slice(0, 6);
+            const top10 = leaderboard.slice(0, 10);
             const anyInvalid = top10.some((player) => {
                 const level1Time = new Date(
                     player.level1.submissionTime

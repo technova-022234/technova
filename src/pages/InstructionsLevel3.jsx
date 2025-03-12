@@ -44,7 +44,7 @@ const InstructionsPageLevel3 = () => {
                 <section className="mb-6">
                     <h2 className="text-[1.75rem] mb-2">Description</h2>
                     <p className="text-base leading-6">
-                        We have reached the origin of zenitium but is surrounded with fire walls and we need to crack the firewalls. Enter the correct decrypted passwords
+                        We have reached the origin of zenithium but is surrounded with fire walls and we need to crack the firewalls. Enter the correct decrypted passwords
                     </p>
                 </section>
                 <section>

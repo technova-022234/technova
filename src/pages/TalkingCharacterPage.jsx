@@ -90,7 +90,6 @@ const CinematicSequence = () => {
             setSceneIndex(sceneIndex + 1);
         } else {
             dispatch(completeLevel("story"))
-            console.log("HI")
             // On the last scene, navigate to level1
             navigate("/instructions");
         }
@@ -142,10 +141,10 @@ const CinematicSequence = () => {
 
             {sceneIndex === 0 && (
                 <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="p-8 bg-blue-900 bg-opacity-90 border border-blue-500 rounded-md shadow-lg">
+                    <div className="p-8 bg-blue-900 bg-opacity-90 border border-blue-500 rounded-md shadow-lg max-w-[80%]">
                         <TypeAnimation
                             sequence={[
-                                "In the year 2145, a mysterious anomaly disrupts the known order of the universe...",
+                                "Ten years ago, a mysterious item called Zenitium fell to Earth. It triggered a revolutionary change that reshaped the future. Due to its uniqueness, scientists from around the world began researching its origin, and a decade later, they achieved a breakthrough.",
                             ]}
                             speed={50} // Adjust typing speed (ms per character) as desired.
                             cursor={true}
