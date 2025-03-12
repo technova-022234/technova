@@ -47,11 +47,11 @@ const ProtectedRouteLevel3 = ({ children, isLevel3TimeReached }) => {
 // Overall event target (for example, for login and level1/level2 pages)
 // Adjust these values as needed.
 const targetHour = 12; // Example: 12:00 PM IST
-const targetMinute = 0;
+const targetMinute = 15;
 
 // Level3 target time (for level2story continued, level3 instructions, and level3)
 const targetHourLevel3 = 12; // Example: 3:00 PM IST
-const targetMinuteLevel3 = 40;
+const targetMinuteLevel3 = 55;
 
 // Function to check the current IST time against a target time.
 const checkISTTime = (hour, minute) => {

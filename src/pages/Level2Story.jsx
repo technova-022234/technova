@@ -50,7 +50,7 @@ const getWarpTimeLeft = () => {
     const istNow = new Date(istString);
     // Create a target date set to today at 12:00 PM IST.
     const target = new Date(istNow);
-    target.setHours(12, 40, 0, 0);
+    target.setHours(12, 55, 0, 0);
     const diff = target - istNow;
     return diff > 0 ? diff : 0;
 };

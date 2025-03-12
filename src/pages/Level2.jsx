@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { completeLevel } from "../redux/progressSlice";
 
 const targetHour = 12; // Example: 12:00 PM IST for level2
-const targetMinute = 40;
+const targetMinute = 55;
 
 const checkISTTime = (hour, minute) => {
     const now = new Date();
