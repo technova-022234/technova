@@ -166,7 +166,7 @@ const Level2Story = () => {
         if (!waiting && qualified == "true") {
             navigate("/level2storycontinued");
         } else if (!waiting && qualified === "false") {
-            navigate("/eliminationpage");
+            navigate("/level2storycontinued");
         }
     };
 

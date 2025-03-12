@@ -4,12 +4,12 @@ import { TypeAnimation } from "react-type-animation";
 
 const Level3 = () => {
     const navigate = useNavigate();
-    useEffect(() => {
-        const qualified = localStorage.getItem("level3Qualified");
-        if (qualified !== "true") {
-            navigate("/level2story");
-        }
-    }, [navigate]);
+    // useEffect(() => {
+    //     const qualified = localStorage.getItem("level3Qualified");
+    //     if (qualified !== "true") {
+    //         navigate("/level2story");
+    //     }
+    // }, [navigate]);
 
     useEffect(() => {
         if (localStorage.getItem("level3Completed") === "true") {

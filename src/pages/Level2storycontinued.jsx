@@ -36,13 +36,13 @@ const Level2StoryContinued = () => {
     const player1Name = localStorage.getItem("player1") || "Player 1";
     const player2Name = localStorage.getItem("player2") || "Player 2";
 
-    useEffect(() => {
-        const qualified = localStorage.getItem("level3Qualified");
-        console.log(qualified)
-        if (qualified !== "true") {
-            navigate("/level2story");
-        }
-    }, [navigate]);
+    // useEffect(() => {
+    //     const qualified = localStorage.getItem("level3Qualified");
+    //     console.log(qualified)
+    //     if (qualified !== "true") {
+    //         navigate("/level2story");
+    //     }
+    // }, [navigate]);
 
     useEffect(() => {
         if (dialogueRef.current) {
