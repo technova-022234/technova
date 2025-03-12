@@ -73,6 +73,9 @@ const RulesSection = () => {
                     Wrong Answers: Each wrong answer deducts -2 points from your
                     score.
                 </li>
+                <li>
+                    There is 40 min time limit to complete both Level-1 and 2 (i.e. 12:40PM)
+                </li>
                 <li>Cost of a Hint: Requesting a hint costs you -1 point.</li>
             </ul>
             <div className="mt-4 flex items-center">

@@ -11,6 +11,8 @@ const RulesSection = () => {
                 </li>
                 <li>First 2 persons to crack all 3 firewalls win</li>
                 <li>You may need to visit back and recall the clues from level 1 and 2</li>
+                <li>Only the top 10 teams will qualify after Level 2.</li>
+                <li>If fewer than 10 teams submit before the time limit, the first 10 teams to submit will qualify.</li>
                 <li>Hint: All three messages are encrypted by only shifting or substituting</li>
             </ul>
         </div>
