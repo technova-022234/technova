@@ -203,9 +203,9 @@ const App = () => {
                 <Route
                     path="/leaderboard_level1"
                     element={
-                        <ProtectedRoute isTimeReached={isTimeReached}>
+                        // <ProtectedRoute isTimeReached={isTimeReached}>
                             <Leaderboard />
-                        </ProtectedRoute>
+                        // </ProtectedRoute>
                     }
                 />
                 <Route path="/completedpage" element={<Completedpage />} />
@@ -214,17 +214,17 @@ const App = () => {
                 <Route
                     path="/leaderboard_level2"
                     element={
-                        <ProtectedRoute isTimeReached={isTimeReached}>
+                        // <ProtectedRoute isTimeReached={isTimeReached}>
                             <Level2Leaderboard />
-                        </ProtectedRoute>
+                        // </ProtectedRoute>
                     }
                 />
                 <Route
                     path="/leaderboard_level3"
                     element={
-                        <ProtectedRoute isTimeReached={isTimeReached}>
+                        // <ProtectedRoute isTimeReached={isTimeReached}>
                             <Level3Leaderboard />
-                        </ProtectedRoute>
+                    //    </ProtectedRoute>
                     }
                 />
                 <Route
